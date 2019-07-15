@@ -3,6 +3,7 @@ package ua.training.hospital.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter
@@ -10,13 +11,14 @@ import java.time.LocalDateTime;
 @ToString
 @EqualsAndHashCode
 
-@Entity
+@MappedSuperclass
 public abstract class Therapy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long idTherapy;
 
-    @Column
+    @Column(nullable = false)
+    @NotNull
     String name;
 
     @Column

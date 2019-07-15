@@ -1,8 +1,10 @@
 package ua.training.hospital.entity;
 
 import lombok.*;
+import ua.training.hospital.entity.enums.UserRole;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -17,18 +19,28 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long idUser;
 
-    @Column
+    @Column(nullable = false)
+    @NotNull
     String name;
 
-    @Column
-    String surName;
+    @Column(nullable = false)
+    @NotNull
+    String surname;
 
-    @Column
+    @Column(nullable = false)
+    @NotNull
+    String patronymic;
+
+    @Column(nullable = false, unique = true)
+    @NotNull
     String email;
 
-    @Column
+    @Column(nullable = false)
+    @NotNull
     String passwordHash;
 
-    @Column
-    String role;
+    @Column(nullable = false)
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    UserRole role;
 }

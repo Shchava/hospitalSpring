@@ -3,6 +3,8 @@ package ua.training.hospital.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -18,11 +20,18 @@ public class Diagnosis {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long idDiagnosis;
 
-    @Column
+    @Column(nullable = false)
+    @NotNull
     String name;
 
     @Column
     String description;
+
+    @Column
+    LocalDateTime assigned;
+
+    @Column
+    LocalDateTime cured;
 
     @ManyToOne
     User patient;
@@ -31,11 +40,13 @@ public class Diagnosis {
     User doctor;
 
     @ManyToMany
-    List<Medicament> assignedMedicament;
+    List<Medicine> assignedMedicine;
+
+    @ManyToMany
+    List<Procedure> assignedProcedures;
 
     @ManyToMany
     List<Operation> assignedOperations;
 
-    @ManyToMany
-    List<Procedure> assignedProcedures;
+
 }

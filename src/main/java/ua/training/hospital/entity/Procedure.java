@@ -1,22 +1,25 @@
 package ua.training.hospital.entity;
 
 import lombok.*;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
 @ToString
-//@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 
 @Entity
+@Table(name = "Treatment")
 public class Procedure extends Therapy{
-   // @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    long idProcedure;
+    @Column
+    int room;
+
+    @Column
+    @ElementCollection
+    List<LocalDateTime> appointmentDates;
 }
