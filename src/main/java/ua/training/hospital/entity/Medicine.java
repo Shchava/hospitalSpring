@@ -4,7 +4,7 @@ import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -18,5 +18,5 @@ public class Medicine extends Therapy {
     @Column
     int count;
     @Column
-    LocalDateTime refill;
+    LocalDate refill;
 }
