@@ -1,5 +1,12 @@
 package ua.training.hospital.entity.enums;
 
-public enum UserRole {
-    PATIENT, DOCTOR, NURSE
+import org.springframework.security.core.GrantedAuthority;
+
+public enum UserRole implements GrantedAuthority {
+    PATIENT, DOCTOR, NURSE;
+
+    @Override
+    public String getAuthority() {
+        return name();
+    }
 }

@@ -2,6 +2,8 @@ package ua.training.hospital.service.user;
 
 import ua.training.hospital.entity.User;
 
+import java.util.Optional;
+
 public interface UserService {
-    User getUser(String email);
+    Optional<User> getUser(String email);
 }

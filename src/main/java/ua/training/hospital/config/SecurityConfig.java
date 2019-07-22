@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ua.training.hospital.service.user.UserDetailsServiceImpl;
 
 @Configuration
@@ -25,29 +26,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(new BCryptPasswordEncoder());
     }
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.csrf()
-//                .disable()
-//                .authorizeRequests()
-//                .antMatchers("/resources/**", "/**").permitAll()
-//                .anyRequest().permitAll()
-//                .and();
-//
-//        http.formLogin()
-//                .loginPage("/login")
-//                .loginProcessingUrl("/j_spring_security_check")
-//                .failureUrl("/login?error")
-//                .usernameParameter("j_username")
-//                .passwordParameter("j_password")
-//                .permitAll();
-//
-//        http.logout()
-//                .permitAll()
-//                .logoutUrl("/logout")
-//                .logoutSuccessUrl("/login?logout")
-//                .invalidateHttpSession(true);
-//    }
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/css/*").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin().loginPage("/login").usernameParameter("email").permitAll()
+                .and()
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll();
+    }
 
 
 }
