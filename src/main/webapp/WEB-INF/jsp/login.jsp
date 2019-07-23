@@ -1,3 +1,4 @@
+<%@ page import="java.util.Enumeration" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -16,6 +17,12 @@
     <div class="row">
         <div class="col login-form-1">
             <h3><spring:message code="login.label"/></h3>
+            <c:if test="${logout}">
+                <div class="alert alert-info" role="alert"><spring:message code="login.logoutMessage" /></div>
+            </c:if>
+            <c:if test="${error}">
+                <div class="alert alert-danger" role="alert"><spring:message code="login.loginError" /></div>
+            </c:if>
             <form method="POST">
                 <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
                 <div class="form-group">
