@@ -13,11 +13,7 @@ public class StartController {
     public String index(Model model){
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            System.out.println(((UserDetails)principal).getUsername());
-        } else {
-            System.out.println(principal.toString());
-        }
+
 
         return "index";
     }
