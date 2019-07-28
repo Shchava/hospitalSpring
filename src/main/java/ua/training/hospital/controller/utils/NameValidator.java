@@ -16,8 +16,8 @@ public class NameValidator implements ConstraintValidator<NameValidation,String>
     }
 
     @Override
-    public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
-        return email.matches(namePattern);
+    public boolean isValid(String name, ConstraintValidatorContext constraintValidatorContext) {
+        return name.matches(namePattern);
     }
 
 }
