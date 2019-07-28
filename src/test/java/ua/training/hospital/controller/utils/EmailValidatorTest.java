@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,7 +17,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = EmailValidatorTest.Config.class)
+@SpringBootTest
 @TestPropertySource(locations = {"classpath:regexp.properties"})
 public class EmailValidatorTest {
     @Autowired
@@ -58,13 +59,5 @@ public class EmailValidatorTest {
     @Test
     public void WrongFormatAddress() {
         assertFalse(validator.isValid("address", context));
-    }
-
-    @Configuration
-    static class Config {
-        @Bean
-        public EmailValidator getEmailValidator() {
-            return new EmailValidator();
-        }
     }
 }
