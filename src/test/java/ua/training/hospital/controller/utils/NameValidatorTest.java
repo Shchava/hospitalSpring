@@ -29,6 +29,8 @@ public class NameValidatorTest {
 
     @Test
     public void testNameCheckFirstLetter() {
+        assertFalse(validator.isValid("абвгде", context));
+        assertFalse(validator.isValid("afbcde", context));
         assertFalse(validator.isValid("'gagga", context));
         assertFalse(validator.isValid("Ибвгдж", context));
         assertFalse(validator.isValid("Ьбвгдж", context));
