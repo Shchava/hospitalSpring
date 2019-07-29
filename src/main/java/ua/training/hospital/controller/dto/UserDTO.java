@@ -8,9 +8,6 @@ import ua.training.hospital.controller.utils.PasswordMatches;
 import ua.training.hospital.controller.utils.PasswordValidation;
 import ua.training.hospital.entity.enums.UserRole;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -45,7 +42,4 @@ public class UserDTO {
 
     @NotNull(message = "{role.null}")
     private UserRole role;
-
-//    private UserRole role;
-
 }
