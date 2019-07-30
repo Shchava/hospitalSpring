@@ -16,12 +16,17 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import ua.training.hospital.Application;
 import ua.training.hospital.controller.dto.UserDTO;
+import ua.training.hospital.entity.User;
 import ua.training.hospital.entity.enums.UserRole;
+import ua.training.hospital.entity.exceptions.EmailExistsException;
+import ua.training.hospital.service.user.UserService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,6 +41,9 @@ public class RegisterControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @MockBean
+    private UserService userService;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -44,6 +52,8 @@ public class RegisterControllerTest {
 
     @Before
     public void setUp(){
+        given(userService.registerUser(user)).willReturn(Optional.ofNullable(new User()));
+
         user.setName("Testname");
         user.setSurname("Testsurname");
         user.setPatronymic("Testpatronymic");
@@ -55,6 +65,27 @@ public class RegisterControllerTest {
     @Test
     public void testGetRegistrationForm() throws Exception {
         mvc.perform(get("/registration"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testRegisterValidUser() throws Exception {
+        mvc.perform(post("/registration")
+                .with(csrf())
+                .flashAttr("user",user))
+                .andExpect(model().hasNoErrors())
+                .andExpect(model().attribute("registered",true))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testRegisterExistingUser() throws Exception {
+        given(userService.registerUser(user)).willThrow(new EmailExistsException("email exists"));
+        mvc.perform(post("/registration")
+                .with(csrf())
+                .flashAttr("user",user))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("user", "email"))
                 .andExpect(status().isOk());
     }
 

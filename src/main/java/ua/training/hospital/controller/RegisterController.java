@@ -1,5 +1,6 @@
 package ua.training.hospital.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,11 +13,17 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import ua.training.hospital.controller.dto.UserDTO;
 import ua.training.hospital.entity.User;
+import ua.training.hospital.entity.exceptions.EmailExistsException;
+import ua.training.hospital.service.user.UserService;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 public class RegisterController {
+    @Autowired
+    UserService userService;
+
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String registration(Model model) {
         UserDTO userDto = new UserDTO();
@@ -32,15 +39,21 @@ public class RegisterController {
             WebRequest request,
             Errors errors
     ) {
-        User registered = new User();
+        Optional<User> registered = Optional.empty();
         if (!result.hasErrors()) {
-            registered = new User();//TODO register user
-        }
-        if (registered == null) {
-            result.rejectValue("email", "message.regError");
-        }
-        if (result.hasErrors()) {
-            return new ModelAndView("register", "user", user);
+            try {
+                registered = userService.registerUser(user);
+
+                if (registered.isPresent()) {
+                    ModelAndView success = new ModelAndView("login");
+                    success.addObject("registered", true);
+                    return success;
+                } else {
+                    result.rejectValue("email", "registration.error");
+                }
+            } catch (EmailExistsException ex) {
+                result.rejectValue("email", "email.exists");
+            }
         }
         return new ModelAndView("register", "user", user);
     }
