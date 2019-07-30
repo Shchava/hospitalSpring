@@ -31,9 +31,6 @@
                         <a class="dropdown-item" href="?lang=<spring:message code="header.language.EN.tag"/>"><spring:message code="header.language.EN"/></a>
                     </div>
                 </li>
-                <li>
-                    <a class="nav-link" href="/logout"><spring:message code="header.logout"/><span class="sr-only">(current)</span></a>
-                </li>
             </ul>
         </div>
     </nav>
@@ -45,6 +42,9 @@
 
 
             <h3><spring:message code="login.label"/></h3>
+            <c:if test="${registered}">
+                <div class="alert alert-info" role="alert"><spring:message code="login.registered" /></div>
+            </c:if>
             <c:if test="${logout}">
                 <div class="alert alert-info" role="alert"><spring:message code="login.logoutMessage" /></div>
             </c:if>
