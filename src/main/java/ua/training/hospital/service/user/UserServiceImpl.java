@@ -1,8 +1,11 @@
 package ua.training.hospital.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ua.training.hospital.controller.dto.UserDTO;
 import ua.training.hospital.entity.User;
+import ua.training.hospital.entity.exceptions.EmailExistsException;
 import ua.training.hospital.repository.UserRepository;
 
 import java.util.Optional;
@@ -12,8 +15,36 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public Optional<User> getUser(String email) {
-        return Optional.of(repository.findByEmail(email));
+        return Optional.ofNullable(repository.findByEmail(email));
+    }
+
+    @Override
+    public Optional<User> registerUser(UserDTO userDto) {
+        if (emailExists(userDto.getEmail())) {
+            throw new EmailExistsException("There is an account with that email address:" + userDto.getEmail());
+        }
+        User userToCreate =  User.builder()
+                .name(userDto.getName())
+                .surname(userDto.getSurname())
+                .patronymic(userDto.getPatronymic())
+                .email(userDto.getEmail())
+                .passwordHash(encodePassword(userDto.getPassword()))
+                .role(userDto.getRole())
+                .build();
+
+       return Optional.ofNullable(repository.save(userToCreate));
+    }
+
+    private String encodePassword(String password){
+        return passwordEncoder.encode(password);
+    }
+
+    private boolean emailExists(String email){
+        return repository.findByEmail(email) != null;
     }
 }
