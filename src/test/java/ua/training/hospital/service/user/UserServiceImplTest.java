@@ -5,6 +5,9 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ua.training.hospital.controller.dto.UserDTO;
 import ua.training.hospital.entity.User;
@@ -22,9 +25,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class UserServiceImplTest {
     @Mock
     UserRepository repository;
-
-    @Mock
-    PasswordEncoder encoder;
 
     @InjectMocks
     UserServiceImpl service = new UserServiceImpl();;

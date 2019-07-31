@@ -1,10 +1,13 @@
 package ua.training.hospital.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.training.hospital.controller.dto.UserDTO;
 import ua.training.hospital.entity.User;
+import ua.training.hospital.entity.dto.ShowUserToDoctorDTO;
 import ua.training.hospital.entity.exceptions.EmailExistsException;
 import ua.training.hospital.repository.UserRepository;
 
@@ -39,6 +42,17 @@ public class UserServiceImpl implements UserService {
 
        return Optional.ofNullable(repository.save(userToCreate));
     }
+
+    @Override
+    public Page<User> findPatients(int pageNumber, int UsersPerPage) {
+        return repository.findAllPatients(PageRequest.of(pageNumber,UsersPerPage));
+    }
+
+    @Override
+    public Page<ShowUserToDoctorDTO> findPatientsToShow(int pageNumber, int UsersPerPage) {
+        return repository.findPatientsForDoctorPage(PageRequest.of(pageNumber,UsersPerPage));
+    }
+
 
     private String encodePassword(String password){
         return passwordEncoder.encode(password);
