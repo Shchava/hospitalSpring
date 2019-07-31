@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 
 @Entity
-public class Operation extends Therapy {
+public class Surgery extends Therapy {
     @Column
     LocalDateTime date;
 }
