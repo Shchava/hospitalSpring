@@ -20,11 +20,15 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class UserServiceImplTest {
     @Mock
     UserRepository repository;
+
+
 
     @InjectMocks
     UserServiceImpl service = new UserServiceImpl();;
@@ -82,5 +86,13 @@ public class UserServiceImplTest {
 
         testUser.setEmail(notExistEmail);
         assertEquals(testUser,service.registerUser(dto).get());
+    }
+
+    @Test
+    public void testGetUserById(){
+        given(repository.findByIdUser(5)).willReturn(testUser);
+        assertEquals(testUser,service.getUser(5).get());
+        assertFalse(service.getUser(11).isPresent());
+
     }
 }

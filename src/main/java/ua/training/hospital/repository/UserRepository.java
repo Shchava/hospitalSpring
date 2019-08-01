@@ -12,6 +12,8 @@ import ua.training.hospital.entity.dto.ShowUserToDoctorDTO;
 public interface UserRepository extends PagingAndSortingRepository<User,Long> {
     User findByEmail(String email);
 
+    User findByIdUser(long id);
+
     @Query("SELECT u FROM User u " +
             " WHERE u.role='PATIENT'")
     Page<User> findAllPatients(Pageable pageable);

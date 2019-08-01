@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface UserService {
     Optional<User> getUser(String email);
+    Optional<User> getUser(long id);
     Optional<User> registerUser(UserDTO userDto);
     Page<User> findPatients(int pageNumber, int UsersPerPage);
     Page<ShowUserToDoctorDTO> findPatientsToShow(int pageNumber, int UsersPerPage);
