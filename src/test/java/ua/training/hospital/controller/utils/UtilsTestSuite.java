@@ -8,7 +8,8 @@ import org.junit.runners.Suite;
         EmailValidatorTest.class,
         NameValidatorTest.class,
         PasswordMatchesValidatorTest.class,
-        PasswordValidatorTest.class
+        PasswordValidatorTest.class,
+        PaginationUtilsTest.class
 })
 public class UtilsTestSuite {
 }

@@ -46,7 +46,7 @@ public class Diagnosis {
     List<Procedure> assignedProcedures;
 
     @ManyToMany
-    List<Operation> assignedOperations;
+    List<Surgery> assignedSurgeries;
 
 
 }

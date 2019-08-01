@@ -5,6 +5,7 @@ import ua.training.hospital.entity.enums.UserRole;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Setter
@@ -44,4 +45,23 @@ public class User {
     @NotNull
     @Enumerated(EnumType.STRING)
     UserRole role;
+
+    @Column
+    String info;
+
+
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+    List<Diagnosis> setDiagnoses;
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    List<Diagnosis> myDiagnoses;
+
+    public User(@NotNull String name) {
+        this.name = name;
+    }
+
+    public User(@NotNull String name, Diagnosis myDiagnoses) {
+        this.name = name;
+        System.out.println(myDiagnoses);
+    }
 }
