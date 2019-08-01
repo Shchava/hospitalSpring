@@ -13,7 +13,8 @@
     <link rel="stylesheet" href="/css/doctorPageMarkUp.css"/>
     <link rel="stylesheet" href="/css/listOfEntries.css"/>
     <link rel="stylesheet" href="/css/pagination.css"/>
-    <title><spring:message code="registration.title"/></title>
+    <title>${patient.surname} ${patient.name} ${patient.patronymic}</title>
+
     <style>
         .diagnosesTitle{
             float: right;
