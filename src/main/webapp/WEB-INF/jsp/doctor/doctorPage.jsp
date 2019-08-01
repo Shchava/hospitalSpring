@@ -11,6 +11,8 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <%--    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">--%>
 
+    <link rel="stylesheet" href="/css/doctorPageMarkUp.css"/>
+    <link rel="stylesheet" href="/css/listOfEntries.css"/>
     <link rel="stylesheet" href="/css/doctorPage.css">
     <link rel="stylesheet" href="/css/pagination.css">
 
