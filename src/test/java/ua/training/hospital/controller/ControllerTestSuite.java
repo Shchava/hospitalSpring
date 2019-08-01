@@ -7,7 +7,8 @@ import ua.training.hospital.controller.utils.UtilsTestSuite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         UtilsTestSuite.class,
-        RegisterControllerTest.class
+        RegisterControllerTest.class,
+        ShowPatientControllerTest.class
 
 })
 public class ControllerTestSuite {
