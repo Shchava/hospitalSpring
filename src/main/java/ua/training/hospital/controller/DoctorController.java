@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import ua.training.hospital.controller.utils.PaginationUtils;
 import ua.training.hospital.entity.dto.ShowUserToDoctorDTO;
 import ua.training.hospital.service.user.UserService;
 
@@ -17,6 +18,9 @@ public class DoctorController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    PaginationUtils paginationUtils;
+
     @RequestMapping(value = "/doctor/page", method = RequestMethod.GET)
     public String defaultGetDoctorPage(Model model){
         return getDoctorPage(0,10,model);
@@ -24,13 +28,8 @@ public class DoctorController {
 
     @RequestMapping(value = "/doctor/page/{pageNumber}", method = RequestMethod.GET)
     public String getDoctorPage(@PathVariable(required = false) int pageNumber, @RequestParam(defaultValue = "10") int recordsPerPage, Model model) {
-        if(pageNumber < 0){
-            pageNumber = 0;
-        }
-
-        if(recordsPerPage < 1){
-            recordsPerPage = 1;
-        }
+        pageNumber = paginationUtils.checkPageNumber(pageNumber);
+        recordsPerPage = paginationUtils.checkRecordsPerPage(recordsPerPage);
 
         Page<ShowUserToDoctorDTO> page = userService.findPatientsToShow(pageNumber,recordsPerPage);
         model.addAttribute("page", page);
