@@ -13,5 +13,5 @@ public class ShowUserToDoctorDTO {
     String surname;
     String patronymic;
     String email;
-    String LastDiagnosisName;
+    String lastDiagnosisName;
 }
