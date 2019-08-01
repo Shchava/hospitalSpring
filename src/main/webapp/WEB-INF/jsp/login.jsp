@@ -7,7 +7,6 @@
 <head>
     <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-
     <title><spring:message code="login.title"/></title>
 </head>
 
