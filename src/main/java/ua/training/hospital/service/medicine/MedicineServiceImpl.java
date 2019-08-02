@@ -13,7 +13,7 @@ public class MedicineServiceImpl implements MedicineService{
     MedicineRepository repository;
 
     @Override
-    public Page<Medicine> findMedicineByDiagnosisId(int pageNumber, int UsersPerPage, long diagnosisId) {
-        return repository.findMedicineByDiagnosisId(PageRequest.of(pageNumber, UsersPerPage), diagnosisId);
+    public Page<Medicine> findMedicineByDiagnosisId(int pageNumber, int MedicinePerPage, long diagnosisId) {
+        return repository.findMedicineByDiagnosisId(PageRequest.of(pageNumber, MedicinePerPage), diagnosisId);
     }
 }

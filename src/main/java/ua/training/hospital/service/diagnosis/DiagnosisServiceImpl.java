@@ -17,8 +17,8 @@ public class DiagnosisServiceImpl implements DiagnosisService {
     DiagnosisRepository repository;
 
     @Override
-    public Page<Diagnosis> findDiagnosesByPatientId(int pageNumber, int UsersPerPage, long patientId) {
-        return repository.findDiagnosesByPatient_IdUser(PageRequest.of(pageNumber, UsersPerPage), patientId);
+    public Page<Diagnosis> findDiagnosesByPatientId(int pageNumber, int DiagnosesPerPage, long patientId) {
+        return repository.findDiagnosesByPatient_IdUser(PageRequest.of(pageNumber, DiagnosesPerPage), patientId);
     }
 
     @Override

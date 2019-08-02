@@ -5,6 +5,6 @@ import ua.training.hospital.controller.dto.DiagnosisDTO;
 import ua.training.hospital.entity.Diagnosis;
 
 public interface DiagnosisService {
-    Page<Diagnosis> findDiagnosesByPatientId(int pageNumber, int UsersPerPage, long patientId);
+    Page<Diagnosis> findDiagnosesByPatientId(int pageNumber, int DiagnosesPerPage, long patientId);
     boolean addDiagnosis(DiagnosisDTO dto,long patientId,String doctorEmail);
 }
