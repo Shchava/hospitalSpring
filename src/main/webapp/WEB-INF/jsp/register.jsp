@@ -8,6 +8,7 @@
 <head>
     <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="/css/forms.css">
     <link rel="stylesheet" href="/css/register.css">
     <title><spring:message code="registration.title"/></title>
 
