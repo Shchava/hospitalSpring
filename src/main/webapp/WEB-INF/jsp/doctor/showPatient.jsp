@@ -13,10 +13,11 @@
     <link rel="stylesheet" href="/css/doctorPageMarkUp.css"/>
     <link rel="stylesheet" href="/css/listOfEntries.css"/>
     <link rel="stylesheet" href="/css/pagination.css"/>
+    <link rel="stylesheet" href="/css/showPatient.css"/>
     <title>${patient.surname} ${patient.name} ${patient.patronymic}</title>
 
     <style>
-        .diagnosesTitle{
+        .diagnosesTitle {
             float: right;
         }
     </style>
@@ -96,13 +97,17 @@
                                             type="button" data-toggle="dropdown">${page.size}</button>
                                     <ul class="dropdown-menu ">
                                         <li><a class="dropdown-item"
-                                               href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=5">5</a></li>
+                                               href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=5">5</a>
+                                        </li>
                                         <li><a class="dropdown-item"
-                                               href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=10">10</a></li>
+                                               href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=10">10</a>
+                                        </li>
                                         <li><a class="dropdown-item"
-                                               href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=15">15</a></li>
+                                               href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=15">15</a>
+                                        </li>
                                         <li><a class="dropdown-item"
-                                               href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=20">20</a></li>
+                                               href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=20">20</a>
+                                        </li>
                                     </ul>
                                 </div>
                                 <span> <spring:message code="pagination.entries"/></span>
@@ -137,8 +142,9 @@
                         <tr>
                             <th><c:out value="${diagnosis.idDiagnosis}"/></th>
                             <th><c:out value="${diagnosis.name}"/>
-                            <th><c:out value="${diagnosis.assigned.format(foramter)}" /> </th>
-                            <th><c:out value="${diagnosis.doctor.surname}"/> <c:out value="${diagnosis.doctor.name}"/></th>
+                            <th><c:out value="${diagnosis.assigned.format(foramter)}"/></th>
+                            <th><c:out value="${diagnosis.doctor.surname}"/> <c:out
+                                    value="${diagnosis.doctor.name}"/></th>
                             <th><c:out value="${diagnosis.cured}"/></th>
                             <th><a class="btn btn-primary" href="#" role="button"><spring:message
                                     code="doctor.showPatient.diagnosesList.open"/></a>
@@ -147,8 +153,24 @@
                     </c:forEach>
                     </tbody>
                 </table>
-
-                <a role="button" class="btn btn-primary btn-lg btn-block">+</a>
+                <div id="addDiagnosis" class="hidden-form">
+                    <springForm:form method="POST" modelAttribute="newDiagnosis" action="/doctor/patient${patient.idUser}/addDiagnosis">
+                        <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
+                        <input type="hidden" name="pageNumber" value="${page.number}">
+                        <input type="hidden" name="recordsPerPage" value="${page.size}">
+                        <div class="form-group">
+                            <label><spring:message code="doctor.showPatient.newDiagnosis.name"/></label>
+                            <springForm:errors path="name" cssClass="alert-danger error-message" />
+                            <springForm:input path="name" type="text" class="form-control" required="required"/>
+                        </div>
+                        <div class="form-group">
+                            <label><spring:message code="doctor.showPatient.newDiagnosis.description"/></label>
+                            <springForm:textarea path="description" type="text" class="form-control input-description"/>
+                        </div>
+                        <button role="button" class="btn btn-primary btn-lg btn-block">add</button>
+                    </springForm:form>
+                </div>
+                <button id="showAddDiagnosisForm" role="button" class="btn btn-primary btn-lg btn-block">+</button>
                 <div class="clearfix">
                     <div class="hint-text"><spring:message code="pagination.label.showing"/> <b><c:out
                             value="${page.numberOfElements}"/></b> <spring:message code="pagination.label.outOf"/>
@@ -206,5 +228,17 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+
+<script>
+    // document.documentElement.className = 'js';
+
+    $(document).ready(function () {
+        $("#showAddDiagnosisForm").click(function () {
+            $("#showAddDiagnosisForm").hide();
+            $("#addDiagnosis").show();
+            return false;
+        });
+    });
+</script>
 </body>
 </html>
