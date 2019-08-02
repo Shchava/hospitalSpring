@@ -28,10 +28,10 @@ public abstract class Therapy {
     @Column
     LocalDateTime assigned;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     User assignedBy;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diagnosis")
     Diagnosis diagnosis;
 }
