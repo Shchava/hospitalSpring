@@ -1,5 +1,6 @@
 package ua.training.hospital.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,6 +32,7 @@ public abstract class Therapy {
     @ManyToOne(fetch = FetchType.EAGER)
     User assignedBy;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diagnosis")
     Diagnosis diagnosis;
