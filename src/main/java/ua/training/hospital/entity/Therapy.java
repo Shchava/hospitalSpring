@@ -28,7 +28,7 @@ public abstract class Therapy {
     @Column
     LocalDateTime assigned;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     User assignedBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
