@@ -31,6 +31,7 @@ public abstract class Therapy {
     @ManyToOne
     User assignedBy;
 
-    @OneToMany
-    List<Diagnosis> diagnosis;
+    @ManyToOne
+    @JoinColumn(name = "diagnosis")
+    Diagnosis diagnosis;
 }
