@@ -39,14 +39,4 @@ public class Diagnosis {
     @ManyToOne
     User doctor;
 
-    @ManyToMany
-    List<Medicine> assignedMedicine;
-
-    @ManyToMany
-    List<Procedure> assignedProcedures;
-
-    @ManyToMany
-    List<Surgery> assignedSurgeries;
-
-
 }
