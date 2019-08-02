@@ -1,3 +1,6 @@
 .hidden-form {
     display: none;
 }
+.diagnosesTitle {
+    float: right;
+}
