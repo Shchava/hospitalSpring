@@ -9,12 +9,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.training.hospital.entity.Diagnosis;
 import ua.training.hospital.entity.Medicine;
+import ua.training.hospital.entity.Procedure;
+import ua.training.hospital.entity.Surgery;
 import ua.training.hospital.service.medicine.MedicineService;
+import ua.training.hospital.service.procedure.ProcedureService;
+import ua.training.hospital.service.surgery.SurgeryService;
 
 @Controller
 public class ShowDiagnosisController {
     @Autowired
     MedicineService medicineService;
+
+    @Autowired
+    ProcedureService procedureService;
+
+    @Autowired
+    SurgeryService surgeryService;
 
     @RequestMapping(value = "/doctor/patient{idPatient}/diagnosis{idDiagnosis}", method = RequestMethod.GET)
     public String getDoctorPage(@PathVariable long idPatient,
@@ -28,7 +38,7 @@ public class ShowDiagnosisController {
 
     @ResponseBody
     @RequestMapping(value = "/getMedicine{idDiagnosis}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    public Page<Medicine> getDoctorPage(@PathVariable long idDiagnosis,
+    public Page<Medicine> getMedicine(@PathVariable long idDiagnosis,
                                         @RequestParam(defaultValue = "0") int pageNumber,
                                         @RequestParam(defaultValue = "10") int recordsPerPage,
                                         Model model) {
@@ -36,6 +46,30 @@ public class ShowDiagnosisController {
 
         model.addAttribute("diagnosis",new Diagnosis());
         return page;
-//        return Json()
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getProcedures{idDiagnosis}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public Page<Procedure> getProcedures(@PathVariable long idDiagnosis,
+                                         @RequestParam(defaultValue = "0") int pageNumber,
+                                         @RequestParam(defaultValue = "10") int recordsPerPage,
+                                         Model model) {
+        Page<Procedure> page = procedureService.findProceduresByDiagnosisId(pageNumber,recordsPerPage,idDiagnosis);
+
+        model.addAttribute("medicine",new Diagnosis());
+        return page;
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/getSurgeries{idDiagnosis}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public Page<Surgery> getSurgeries(@PathVariable long idDiagnosis,
+                                      @RequestParam(defaultValue = "0") int pageNumber,
+                                      @RequestParam(defaultValue = "10") int recordsPerPage,
+                                      Model model) {
+        Page<Surgery> page = surgeryService.findSurgeriesByDiagnosisId(pageNumber,recordsPerPage,idDiagnosis);
+
+        model.addAttribute("surgery",new Diagnosis());
+        return page;
     }
 }
