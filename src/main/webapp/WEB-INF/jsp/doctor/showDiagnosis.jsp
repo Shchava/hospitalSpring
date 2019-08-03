@@ -125,21 +125,17 @@
                                 <div class="col-sm-3">
                                     <div class="show-entries">
                                         <span><spring:message code="pagination.show"/></span>
-                                        <div class="dropdown">
-                                            <button class="btn btn-primary  float-none dropdown-toggle paginationDropdown"
+                                        <div id="medicineEntriesDropdown" class="dropdown">
+                                            <button id="medicineEntriesDropdownButton" class="btn btn-primary  float-none dropdown-toggle paginationDropdown"
                                                     type="button" data-toggle="dropdown">${page.size}</button>
                                             <ul class="dropdown-menu ">
-                                                <li><a class="dropdown-item"
-                                                       href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=5">5</a>
+                                                <li><a class="dropdown-item">5</a>
                                                 </li>
-                                                <li><a class="dropdown-item"
-                                                       href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=10">10</a>
+                                                <li><a class="dropdown-item">10</a>
                                                 </li>
-                                                <li><a class="dropdown-item"
-                                                       href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=15">15</a>
+                                                <li><a class="dropdown-item">15</a>
                                                 </li>
-                                                <li><a class="dropdown-item"
-                                                       href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=20">20</a>
+                                                <li><a class="dropdown-item">20</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -171,57 +167,25 @@
                             </tr>
                             </thead>
                             <tbody id = "medicineTbody">
-                            <c:forEach items="${page.content}" var="diagnosis">
-                                <tr>
-                                    <th><c:out value="${diagnosis.idDiagnosis}"/></th>
-                                    <th><c:out value="${diagnosis.name}"/>
-                                    <th><c:out value="${diagnosis.assigned.format(foramter)}"/></th>
-                                    <th><c:out value="${diagnosis.doctor.surname}"/> <c:out
-                                            value="${diagnosis.doctor.name}"/></th>
-                                    <th><c:out value="${diagnosis.cured}"/></th>
-                                    <th><a class="btn btn-primary" href="#" role="button"><spring:message
-                                            code="doctor.showPatient.diagnosesList.open"/></a>
-                                    </th>
-                                </tr>
-                            </c:forEach>
                             </tbody>
                         </table>
                         <div class="clearfix">
-                            <div class="hint-text"><spring:message code="pagination.label.showing"/> <b><c:out
-                                    value="${page.numberOfElements}"/></b> <spring:message code="pagination.label.outOf"/>
-                                <b>${page.totalElements}</b> <spring:message code="pagination.label.entries"/></div>
+                            <div class="hint-text"><spring:message code="pagination.label.showing"/> <b id = "medicinePageEntries"></b> <spring:message code="pagination.label.outOf"/>
+                                <b id="medicineTotalEntries"></b> <spring:message code="pagination.label.entries"/></div>
 
 
                             <ul class="pagination">
-                                <c:if test="${!page.first}">
-                                    <li class="page-item"><a class="page-link"
-                                                             href="/doctor/patient${patient.idUser}/${page.number - 1}?recordsPerPage=${page.size}"><spring:message
-                                            code="pagination.previous"/></a>
-                                    </li>
-                                </c:if>
 
-                                <c:forEach begin="1" end="${page.totalPages}" var="i">
-                                    <c:choose>
-                                        <c:when test="${page.number + 1 eq i}">
-                                            <li class="page-item active"><a class="page-link">
-                                                    ${i} <span class="sr-only"><spring:message
-                                                    code="pagination.current"/></span></a>
-                                            </li>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <li class="page-item"><a class="page-link"
-                                                                     href="/doctor/patient${patient.idUser}/${i}?recordsPerPage=${page.size}">${i}</a>
-                                            </li>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </c:forEach>
+                                <li id="medicinePreviousPage" class="page-item">
+                                    <a class="page-link"><spring:message code="pagination.previous"/></a>
+                                </li>
 
-                                <c:if test="${!page.last}">
-                                    <li class="page-item"><a class="page-link"
-                                                             href="/doctor/patient${patient.idUser}/${page.number+1}?recordsPerPage=${page.size}"><spring:message
-                                            code="pagination.next"/></a>
-                                    </li>
-                                </c:if>
+                                <div id="medicinePages"></div>
+
+
+                                <li id="medicineNextPage" class="page-item">
+                                    <a class="page-link"><spring:message code="pagination.next"/></a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -242,7 +206,7 @@
 
 
 <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
-<script src="/webjars/popper.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
 <script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -251,23 +215,23 @@
                 $("#medicineContainer").hide();
             } else {
                 $("#medicineContainer").show();
-                loadMedicine();
+
+                loadMedicine(0,5);
             }
         });
 
 
     });
     
-    function loadMedicine() {
+    function loadMedicine(page,recordsPerPage) {
         $.ajax({
             type: 'GET',
-            url: "/getMedicine${diagnosis.idDiagnosis}",
+            url: "/getMedicine${diagnosis.idDiagnosis}/?pageNumber="+page+"&recordsPerPage="+recordsPerPage,
             contentType: "text/plain",
             dataType: 'json',
             success: function (data) {
-                var myJsonData = data;
-                console.log(data);
-                populateDataTable(myJsonData);
+                populateMedicineDataTable(data);
+                setPaginationData(data)
             },
             error: function (e) {
                 console.log("There was an error with your request...");
@@ -276,8 +240,61 @@
         });
     }
 
-    function populateDataTable(data) {
-        console.log('-----------');
+    function setPaginationData(data) {
+        console.log(data);
+        var page = data.pageable.pageNumber;
+        var recordsPerPage = data.pageable.pageSize;
+
+        $('#medicineEntriesDropdownButton').html(recordsPerPage);
+        $('#medicineEntriesDropdown a').click(function(e) {
+            e.preventDefault(); // cancel the link behaviour
+            var x = $(this).text();
+            console.log(x+"fsf");
+            loadMedicine(page,x);
+        });
+        $('#medicinePageEntries').html(data.numberOfElements);
+        $('#medicineTotalEntries').html(data.totalElements);
+
+        if(data.first) {
+            $('#medicinePreviousPage').hide();
+        }else{
+            $('#medicinePreviousPage').click(function(e) {
+                loadMedicine(page - 1,recordsPerPage);
+            })
+        }
+
+        if(data.last) {
+            $('#medicineNextPage').hide();
+        }else{
+            $('#medicineNextPage').click(function(e) {
+                loadMedicine(page + 1,recordsPerPage);
+            })
+        }
+
+        $("#medicinePages").html("");
+        for (var i = 1; i <= data.totalPages; i++ ){
+            if(i-1==data.number){
+                $("#medicinePages").append(
+                    "<li class='page-item active'>" +
+                    "<a class='page-link'>" + i + "</a>" +
+                    "</li>");
+            }else{
+                $("#medicinePages").append(
+                    "<li class='page-item'>" +
+                    "<a id='medicinePage"+ i +"' class='page-link'>" + i + "</a>" +
+                    "</li>");
+
+                $('#medicinePage'+ i).click(function(e) {
+                    var pag = i;
+                    loadMedicine(pag,recordsPerPage);
+                })
+            }
+        }
+
+
+    }
+
+    function populateMedicineDataTable(data) {
         for (var i = 0; i < data.numberOfElements; i++) {
             console.log(data.content[i]);
             addMedicineRow(data.content[i]);
@@ -285,8 +302,6 @@
     }
 
     function addMedicineRow(dataEntry) {
-        console.log("fs");
-<%--        ${dateFormat}--%>
         var row =
             "<tr>" +
                 "<th>" + dataEntry.idTherapy + "</th>" +
@@ -319,37 +334,7 @@
                 dataContainer.toggle();
             }
         });
-
-
     }
-
-    <%--<th><spring:message code="doctor.showDiagnosis.showMedicine.id"/></th>--%>
-    <%--<th><spring:message code="doctor.showDiagnosis.showMedicine.name"/></th>--%>
-    <%--<th><spring:message code="doctor.showDiagnosis.showMedicine.assigned"/></th>--%>
-    <%--<th><spring:message code="doctor.showDiagnosis.showMedicine.assignedBy"/></th>--%>
-    <%--<th><spring:message code="doctor.showDiagnosis.showMedicine.count"/></th>--%>
-    <%--<th><spring:message code="doctor.showDiagnosis.showMedicine.open"/></th>--%>
-
-
-        // $("#medicineTable").empty();
-        //
-        // var Length = Object.keys(data.numberOfElements);
-        // Console.log(Length);
-        //
-        // for(var i = 1; i < length+1; i++) {
-        //     var customer = data.content['customer'+i];
-        //
-        //
-        //     $('#example').dataTable().fnAddData( [
-        //         customer.first_name,
-        //         customer.last_name,
-        //         customer.occupation,
-        //         customer.email_address
-        //     ]);
-        // }
-
-
-
 </script>
 </body>
 </html>

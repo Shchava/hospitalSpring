@@ -6,10 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import ua.training.hospital.entity.Diagnosis;
 import ua.training.hospital.entity.Medicine;
 import ua.training.hospital.service.medicine.MedicineService;
@@ -32,8 +29,10 @@ public class ShowDiagnosisController {
     @ResponseBody
     @RequestMapping(value = "/getMedicine{idDiagnosis}",produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public Page<Medicine> getDoctorPage(@PathVariable long idDiagnosis,
+                                        @RequestParam(defaultValue = "0") int pageNumber,
+                                        @RequestParam(defaultValue = "10") int recordsPerPage,
                                         Model model) {
-        Page<Medicine> page = medicineService.findMedicineByDiagnosisId(0,10,idDiagnosis);
+        Page<Medicine> page = medicineService.findMedicineByDiagnosisId(pageNumber,recordsPerPage,idDiagnosis);
 
         model.addAttribute("diagnosis",new Diagnosis());
         return page;
