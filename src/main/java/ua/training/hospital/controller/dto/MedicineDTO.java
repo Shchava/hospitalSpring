@@ -17,7 +17,7 @@ public class MedicineDTO {
     String description;
 
     @NotNull(message = "{medicine.count.null}")
-    int count;
+    Integer count;
 
     LocalDate refill;
 }

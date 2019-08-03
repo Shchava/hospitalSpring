@@ -62,6 +62,31 @@
         .procedureAdditionalInfo{
             display: none;
         }
+
+        .addNewMedicine{
+            display: none;
+        }
+
+        .addNewProcedure{
+            display: none;
+        }
+
+        .addNewSurgery{
+            display: none;
+        }
+
+        .fieldError{
+            display: none;
+        }
+
+        .createNotification{
+            display: none;
+        }
+
+        .pageContainer{
+            width: max-content;
+            max-width: 600px;
+        }
     </style>
 </head>
 <body>
@@ -131,6 +156,10 @@
                 <div class="clearfix"></div>
                 <div id="medicineContainer" class="medicine-container">
                     <div class="table-wrapper">
+
+                        <div id="medicineCreated" class="alert alert-info createNotification" role="alert"><spring:message code="doctor.showDiagnosis.medicineCreated" /></div>
+                        <div id="medicineCreationError" class="alert alert-danger fieldError" role="alert"></div>
+
                         <div class="table-filter">
                             <div class="row">
                                 <div class="col-sm-3">
@@ -197,7 +226,31 @@
                             </ul>
                         </div>
                     </div>
+                    <div id="addMedicine" class="addNewMedicine">
+                        <form id="addMedicineForm" action="/doctor/diagnosis${diagnosis.idDiagnosis}/addMedicine" method="POST" enctype="utf8">
+                            <div class="form-group">
+                                <label><spring:message code="doctor.showDiagnosis.addTherapy.name"/></label>
+                                <div id = "medicineNameFieldError" class="alert alert-danger fieldError" role="alert" required="required"></div>
+                                <input type="text" name="name" class="form-control" value="" />
+                            </div>
+                            <div class="form-group">
+                                <label><spring:message code="doctor.showDiagnosis.addTherapy.description"/></label>
+                                <textarea  type="text" name="description" class="form-control  input-description" value=""></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label><spring:message code="doctor.showDiagnosis.addMedicine.count"/></label>
+                                <div id = "medicineCountFieldError" class="alert alert-danger fieldError" role="alert"></div>
+                                <input  type="number" class="form-control" name="count" value="" required="required"/>
+                            </div>
+                            <div class="form-group">
+                                <label><spring:message code="doctor.showDiagnosis.addMedicine.refill"/></label>
+                                <input type='date' class="form-control" />
+                            </div>
+                        </form>
+                    </div>
+                    <button id="addMedicineBtn" role="button" class="btn btn-primary btn-lg btn-block show-button"><spring:message code="doctor.showDiagnosis.addMedicine.button"/></button>
                 </div>
+
                 <button id="showProcedures" role="button" class="btn btn-primary btn-lg btn-block show-button"><spring:message code="doctor.showDiagnosis.showProcedures"/></button>
 
                 <div class="clearfix"></div>
@@ -350,7 +403,7 @@
                 </div>
 
             </div>
-
+            <div><h1>.</h1></div>
         </div>
         <div class="col-sm-2 sidenav">
 
@@ -372,6 +425,14 @@
                 $("#medicineContainer").show();
 
                 loadMedicine(0,10);
+
+                $("#addMedicineBtn").click(function () {
+                    if ($("#addMedicine").is(":visible")) {
+                        sendAddMedicine();
+                    } else {
+                        $("#addMedicine").show();
+                    }
+                })
             }
         });
 
@@ -400,6 +461,8 @@
     //Loading medicine
     
     function loadMedicine(page,recordsPerPage) {
+
+        console.log(page);
         $.ajax({
             type: 'GET',
             url: "/getMedicine${diagnosis.idDiagnosis}/?pageNumber="+page+"&recordsPerPage="+recordsPerPage,
@@ -754,6 +817,64 @@
                 dataContainer.toggle();
             }
         });
+    }
+
+    //add new therapy functions
+
+    function sendAddMedicine(){
+        $("#medicineCreated").hide();
+
+        var formData= getFormData($('#addMedicineForm'));
+        console.log(formData);
+
+        $.ajax({
+            type: 'POST',
+            url: "/doctor/diagnosis${diagnosis.idDiagnosis}/addMedicine",
+            dataType: 'json',
+            contentType: 'application/json',
+            data : JSON.stringify(formData),
+            success: function (data) {
+                $("#medicineNameFieldError").hide();
+                $("#medicineCountFieldError").hide();
+                $("#addMedicine").hide();
+                console.log(data);
+                if(data.response === "created") {
+                    $("#medicineCreated").show();
+                }else{
+                    $("#medicineCreationError").show();
+                }
+
+            },
+            error: function (data) {
+                console.log(data);
+                data.responseJSON.errors.forEach(function(error) {
+                    console.log(error);
+                    if(error.field === "name"){
+                        var errMessage = $("#medicineNameFieldError");
+                        errMessage.html(error.defaultMessage);
+                        errMessage.show();
+
+                    }else if(error.field === "count"){
+                        var errMessage = $("#medicineCountFieldError");
+                        errMessage.html(error.defaultMessage);
+                        errMessage.show();
+                    }else{
+                        var errMessage = $("#medicineCreationError");
+                        errMessage.html(error.defaultMessage);
+                        errMessage.show();
+                    }
+                });
+            }
+        });
+
+        function getFormData($form){
+            var unindexed_array = $form.serializeArray();
+            var indexed_array = {};
+            $.map(unindexed_array, function(n, i){
+                indexed_array[n['name']] = n['value'];
+            });
+            return indexed_array;
+        }
     }
 
 </script>
