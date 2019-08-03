@@ -35,7 +35,7 @@ public class MedicineServiceImplTest {
     }
 
     @Test
-    public void testFindDiagnosesByPatientId() {
+    public void testFindMedicineByDiagnosisId() {
         assertEquals(medicines, service.findMedicineByDiagnosisId(2, 5, 10));
         verify(repository, times(1)).findMedicineByDiagnosisId(PageRequest.of(2, 5), 10L);
     }

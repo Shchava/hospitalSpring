@@ -1,4 +1,4 @@
-package ua.training.hospital.service.procedure;
+package ua.training.hospital.service.surgery;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,8 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import ua.training.hospital.entity.Procedure;
-import ua.training.hospital.repository.ProcedureRepository;
+import ua.training.hospital.entity.Surgery;
+import ua.training.hospital.repository.SurgeryRepository;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -17,25 +17,25 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class ProcedureServiceImplTest {
+public class SurgeryServiceImplTest {
     @Mock
-    ProcedureRepository repository;
+    SurgeryRepository repository;
 
     @Mock
-    Page<Procedure> procedures;
+    Page<Surgery> procedures;
 
     @InjectMocks
-    ProcedureServiceImpl service = new ProcedureServiceImpl();
+    SurgeryServiceImpl service = new SurgeryServiceImpl();
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        given(repository.findProceduresByDiagnosisId(any(), anyLong())).willReturn(procedures);
+        given(repository.findSurgeriesByDiagnosisId(any(), anyLong())).willReturn(procedures);
     }
 
     @Test
     public void testFindProceduresByDiagnosisId() {
-        assertEquals(procedures, service.findProceduresByDiagnosisId(2, 5, 10));
-        verify(repository, times(1)).findProceduresByDiagnosisId(PageRequest.of(2, 5), 10L);
+        assertEquals(procedures, service.findSurgeriesByDiagnosisId(2, 5, 10));
+        verify(repository, times(1)).findSurgeriesByDiagnosisId(PageRequest.of(2, 5), 10L);
     }
 }
