@@ -10,6 +10,7 @@ import ua.training.hospital.repository.DiagnosisRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class DiagnosisServiceImpl implements DiagnosisService {
@@ -31,6 +32,11 @@ public class DiagnosisServiceImpl implements DiagnosisService {
                 patientId,
                 doctorEmail
         );
+    }
+
+    @Override
+    public Optional<Diagnosis> getDiagnosis(long idDiagnosis) {
+        return repository.findById(idDiagnosis);
     }
 
     private LocalDateTime getAssignedTime() {

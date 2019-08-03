@@ -11,12 +11,16 @@ import ua.training.hospital.entity.Diagnosis;
 import ua.training.hospital.entity.Medicine;
 import ua.training.hospital.entity.Procedure;
 import ua.training.hospital.entity.Surgery;
+import ua.training.hospital.service.diagnosis.DiagnosisService;
 import ua.training.hospital.service.medicine.MedicineService;
 import ua.training.hospital.service.procedure.ProcedureService;
 import ua.training.hospital.service.surgery.SurgeryService;
 
 @Controller
 public class ShowDiagnosisController {
+    @Autowired
+    DiagnosisService diagnosisService;
+
     @Autowired
     MedicineService medicineService;
 
@@ -30,9 +34,12 @@ public class ShowDiagnosisController {
     public String getDoctorPage(@PathVariable long idPatient,
                                 @PathVariable long idDiagnosis,
                                 Model model) {
-        Diagnosis diag = new Diagnosis();
-        diag.setIdDiagnosis(3);
-        model.addAttribute("diagnosis",diag);
+
+        diagnosisService.getDiagnosis(idDiagnosis).ifPresent(diagnosis -> {
+            model.addAttribute("diagnosis",diagnosis);
+        });
+
+        model.addAttribute("newMedicine",new Medicine());
         return "doctor/showDiagnosis";
     }
 
@@ -44,7 +51,6 @@ public class ShowDiagnosisController {
                                         Model model) {
         Page<Medicine> page = medicineService.findMedicineByDiagnosisId(pageNumber,recordsPerPage,idDiagnosis);
 
-        model.addAttribute("diagnosis",new Diagnosis());
         return page;
     }
 
@@ -55,8 +61,6 @@ public class ShowDiagnosisController {
                                          @RequestParam(defaultValue = "10") int recordsPerPage,
                                          Model model) {
         Page<Procedure> page = procedureService.findProceduresByDiagnosisId(pageNumber,recordsPerPage,idDiagnosis);
-
-        model.addAttribute("medicine",new Diagnosis());
         return page;
     }
 
@@ -68,8 +72,6 @@ public class ShowDiagnosisController {
                                       @RequestParam(defaultValue = "10") int recordsPerPage,
                                       Model model) {
         Page<Surgery> page = surgeryService.findSurgeriesByDiagnosisId(pageNumber,recordsPerPage,idDiagnosis);
-
-        model.addAttribute("surgery",new Diagnosis());
         return page;
     }
 }

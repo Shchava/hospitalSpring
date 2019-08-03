@@ -13,6 +13,7 @@ import ua.training.hospital.entity.Diagnosis;
 import ua.training.hospital.repository.DiagnosisRepository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -28,6 +29,8 @@ public class DiagnosisServiceImplTest {
 
     @Mock
     Page<Diagnosis> diagnoses;
+
+    @Mock Diagnosis diagnosis;
 
     @InjectMocks
     DiagnosisServiceImpl service = new DiagnosisServiceImpl();
@@ -54,6 +57,12 @@ public class DiagnosisServiceImplTest {
         verify(repository, times(1)).findDiagnosesByPatient_IdUser(PageRequest.of(2, 5), 10L);
     }
 
+    @Test
+    public void testFindDiagnosis(){
+        given(repository.findById(4L)).willReturn(Optional.of(diagnosis));
+        assertEquals(diagnosis,service.getDiagnosis(4).get());
+
+    }
 
     @Test
     public void addDiagnosis() {
