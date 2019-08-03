@@ -190,9 +190,7 @@
                                 <li id="medicinePreviousPage" class="page-item">
                                     <a class="page-link"><spring:message code="pagination.previous"/></a>
                                 </li>
-
-                                <div id="medicinePages"></div>
-
+                                <ul id="medicinePages" class="pagination"></ul>
                                 <li id="medicineNextPage" class="page-item">
                                     <a class="page-link"><spring:message code="pagination.next"/></a>
                                 </li>
@@ -266,7 +264,7 @@
                                     <a class="page-link"><spring:message code="pagination.previous"/></a>
                                 </li>
 
-                                <div id="procedurePages"></div>
+                                <ul id="procedurePages" class="pagination"></ul>
 
                                 <li id="procedureNextPage" class="page-item">
                                     <a class="page-link"><spring:message code="pagination.next"/></a>
@@ -274,6 +272,7 @@
                             </ul>
                         </div>
                     </div>
+
                 </div>
 
                 <button id="showSurgeries" role="button" class="btn btn-primary btn-lg btn-block"><spring:message code="doctor.showDiagnosis.showSurgeries"/></button>
@@ -340,7 +339,7 @@
                                     <a class="page-link"><spring:message code="pagination.previous"/></a>
                                 </li>
 
-                                <div id="surgeryPages"></div>
+                                <ul id="surgeryPages" class="pagination"></ul>
 
                                 <li id="surgeryNextPage" class="page-item">
                                     <a class="page-link"><spring:message code="pagination.next"/></a>
@@ -435,7 +434,9 @@
         if(data.first) {
             $('#medicinePreviousPage').hide();
         }else{
-            $('#medicinePreviousPage').click(function(e) {
+            var prevButton = $('#medicinePreviousPage').show();
+            prevButton.off("click");
+            prevButton.click(function(e) {
                 loadMedicine(page - 1,recordsPerPage);
             })
         }
@@ -443,7 +444,10 @@
         if(data.last) {
             $('#medicineNextPage').hide();
         }else{
-            $('#medicineNextPage').click(function(e) {
+            var nextButton = $('#medicineNextPage');
+            nextButton.show();
+            nextButton.off("click");
+            nextButton.click(function(e) {
                 loadMedicine(page + 1,recordsPerPage);
             })
         }
@@ -462,7 +466,7 @@
                     "</li>");
 
                 $('#medicinePage'+ i).click(function(e) {
-                    var pag = i;
+                    var pag = $(this).text() - 1;
                     loadMedicine(pag,recordsPerPage);
                 })
             }
@@ -472,8 +476,8 @@
     }
 
     function populateMedicineDataTable(data) {
+        $("#medicineTbody").html("");
         for (var i = 0; i < data.numberOfElements; i++) {
-            console.log(data.content[i]);
             addMedicineRow(data.content[i]);
         }
     }
@@ -498,10 +502,9 @@
                     "<p>" + new Date(dataEntry.refill).toLocaleString() + "</p>" +
                 "</th>" +
             "</tr>";
-        console.log(row);
 
 
-        $("#medicineTbody").html(row);
+        $("#medicineTbody").append(row);
 
         var dataContainer = $("#mAd" + dataEntry.idTherapy);
         $("#showMedicineData" + dataEntry.idTherapy).click(function () {
@@ -551,7 +554,9 @@
         if(data.first) {
             $('#procedurePreviousPage').hide();
         }else{
-            $('#procedurePreviousPage').click(function(e) {
+            var prevButton = $('#procedurePreviousPage').show();
+            prevButton.off("click");
+            prevButton.click(function(e) {
                 loadProcedures(page - 1,recordsPerPage);
             })
         }
@@ -559,7 +564,10 @@
         if(data.last) {
             $('#procedureNextPage').hide();
         }else{
-            $('#procedureNextPage').click(function(e) {
+            var nextButton = $('#procedureNextPage');
+            nextButton.show();
+            nextButton.off("click");
+            nextButton.click(function(e) {
                 loadProcedures(page + 1,recordsPerPage);
             })
         }
@@ -578,7 +586,7 @@
                     "</li>");
 
                 $('#procedurePage'+ i).click(function(e) {
-                    var pag = i;
+                    var pag = $(this).text() - 1;
                     loadProcedures(pag,recordsPerPage);
                 })
             }
@@ -588,8 +596,8 @@
     }
 
     function populateProceduresDataTable(data) {
+        $("#procedureTbody").clear();
         for (var i = 0; i < data.numberOfElements; i++) {
-            console.log(data.content[i]);
             addProcedureRow(data.content[i]);
         }
     }
@@ -614,10 +622,9 @@
             // "<p>" + new Date(dataEntry.refill).toLocaleString() + "</p>" +
             "</th>" +
             "</tr>";
-        console.log(row);
 
 
-        $("#procedureTbody").html(row);
+        $("#procedureTbody").append(row);
 
         var dataContainer = $("#prAd" + dataEntry.idTherapy);
         $("#showProcedureData" + dataEntry.idTherapy).click(function () {
@@ -668,7 +675,9 @@
         if(data.first) {
             $('#surgeryPreviousPage').hide();
         }else{
-            $('#surgeryPreviousPage').click(function(e) {
+            var prevButton = $('#surgeryPreviousPage').show();
+            prevButton.off("click");
+            prevButton.click(function(e) {
                 loadSurgeries(page - 1,recordsPerPage);
             })
         }
@@ -676,7 +685,10 @@
         if(data.last) {
             $('#surgeryNextPage').hide();
         }else{
-            $('#surgeryNextPage').click(function(e) {
+            var nextButton = $('#surgeryNextPage');
+            nextButton.show();
+            nextButton.off("click");
+            nextButton.click.click(function(e) {
                 loadSurgeries(page + 1,recordsPerPage);
             })
         }
@@ -695,7 +707,7 @@
                     "</li>");
 
                 $('#surgeryPage'+ i).click(function(e) {
-                    var pag = i;
+                    var pag = $(this).text() - 1;
                     loadSurgeries(pag,recordsPerPage);
                 })
             }
@@ -705,8 +717,8 @@
     }
 
     function populateSurgeryDataTable(data) {
+        $("#surgeryTbody").html("");
         for (var i = 0; i < data.numberOfElements; i++) {
-            console.log(data.content[i]);
             addSurgeryRow(data.content[i]);
         }
     }
@@ -732,7 +744,7 @@
         console.log(row);
 
 
-        $("#surgeryTbody").html(row);
+        $("#surgeryTbody").append(row);
 
         var dataContainer = $("#suAd" + dataEntry.idTherapy);
         $("#showSurgeryData" + dataEntry.idTherapy).click(function () {
