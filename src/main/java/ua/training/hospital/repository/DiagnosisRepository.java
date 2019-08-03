@@ -2,6 +2,7 @@ package ua.training.hospital.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -11,13 +12,8 @@ import ua.training.hospital.entity.Diagnosis;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
-public interface DiagnosisRepository extends PagingAndSortingRepository<Diagnosis, Long> {
+public interface DiagnosisRepository extends JpaRepository<Diagnosis, Long> {
     Page<Diagnosis> findDiagnosesByPatient_IdUser(Pageable page, Long patientId);
-
-    //    @Modifying
-//    @Query(value = "INSERT INTO diagnosis(assigned,cured,description,name,doctor_id_user,patient_id_user) " +
-//            "SELECT :diagnos."
-//            ,nativeQuery = true)
 
     @Modifying
     @Query(value = "INSERT INTO diagnosis(name,description,assigned,patient_id_user,doctor_id_user) " +
