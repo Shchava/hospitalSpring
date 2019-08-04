@@ -32,7 +32,7 @@ public class ProcedureServiceImpl implements ProcedureService {
 
     @Override
     @Transactional
-    public Optional<Procedure> createMedicine(ProcedureDTO dto, long diagnosisId, String doctorEmail) {
+    public Optional<Procedure> createProcedure(ProcedureDTO dto, long diagnosisId, String doctorEmail) {
         Procedure toCreate = new Procedure();
         toCreate.setName(dto.getName());
         toCreate.setDescription(dto.getDescription());

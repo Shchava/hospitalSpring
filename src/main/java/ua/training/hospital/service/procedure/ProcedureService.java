@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface ProcedureService {
     Page<Procedure> findProceduresByDiagnosisId(int pageNumber, int ProcedurePerPage, long diagnosisId);
-    Optional<Procedure> createMedicine(ProcedureDTO dto, long diagnosisId, String doctorEmail);
+    Optional<Procedure> createProcedure(ProcedureDTO dto, long diagnosisId, String doctorEmail);
 }

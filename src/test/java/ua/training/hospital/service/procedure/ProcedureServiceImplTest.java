@@ -16,7 +16,6 @@ import ua.training.hospital.repository.DiagnosisRepository;
 import ua.training.hospital.repository.ProcedureRepository;
 import ua.training.hospital.repository.UserRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -84,7 +83,7 @@ public class ProcedureServiceImplTest {
     @Test
     public void addProcedure() {
         LocalDateTime before = LocalDateTime.now();
-        assertTrue(service.createMedicine(dto, 7, doctorEmail).isPresent());
+        assertTrue(service.createProcedure(dto, 7, doctorEmail).isPresent());
         LocalDateTime after = LocalDateTime.now();
 
         verify(repository, times(1)).save(procedureCaptor.capture());
