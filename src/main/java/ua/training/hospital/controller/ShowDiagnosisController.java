@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import ua.training.hospital.controller.dto.CreationResponse;
 import ua.training.hospital.controller.dto.MedicineDTO;
 import ua.training.hospital.controller.dto.ProcedureDTO;
+import ua.training.hospital.controller.dto.SurgeryDTO;
 import ua.training.hospital.entity.Medicine;
 import ua.training.hospital.entity.Procedure;
 import ua.training.hospital.entity.Surgery;
@@ -108,7 +109,6 @@ public class ShowDiagnosisController {
             @PathVariable long idDiagnosis,
             @Validated @RequestBody ProcedureDTO procedureDto,
             BindingResult result,
-            Errors errors,
             Principal principal){
 
         if(result.hasErrors()){
@@ -118,6 +118,27 @@ public class ShowDiagnosisController {
         Optional<Procedure> created =  procedureService.createProcedure(procedureDto,idDiagnosis,principal.getName());
         if(!created.isPresent()){
             result.reject("{procedure.cannotCreate}");
+            return new ResponseEntity<>(new CreationResponse("cant create entity",result.getAllErrors()), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(new CreationResponse("created",result.getAllErrors()), HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/doctor/diagnosis{idDiagnosis}/addSurgery",
+            method = RequestMethod.POST)
+    public ResponseEntity<CreationResponse> addSurgery(
+            @PathVariable long idDiagnosis,
+            @Validated @RequestBody SurgeryDTO surgeryDto,
+            BindingResult result,
+            Principal principal){
+
+        if(result.hasErrors()){
+            return new ResponseEntity<>(new CreationResponse("wrongData",result.getAllErrors()), HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<Surgery> created =  surgeryService.createSurgery(surgeryDto,idDiagnosis,principal.getName());
+        if(!created.isPresent()){
+            result.reject("{surgery.cannotCreate}");
             return new ResponseEntity<>(new CreationResponse("cant create entity",result.getAllErrors()), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(new CreationResponse("created",result.getAllErrors()), HttpStatus.OK);

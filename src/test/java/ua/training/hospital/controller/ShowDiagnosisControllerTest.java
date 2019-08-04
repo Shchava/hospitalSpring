@@ -3,17 +3,14 @@ package ua.training.hospital.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -21,13 +18,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ua.training.hospital.controller.dto.MedicineDTO;
 import ua.training.hospital.controller.dto.ProcedureDTO;
+import ua.training.hospital.controller.dto.SurgeryDTO;
 import ua.training.hospital.entity.Diagnosis;
 import ua.training.hospital.entity.Medicine;
 import ua.training.hospital.entity.Procedure;
+import ua.training.hospital.entity.Surgery;
 import ua.training.hospital.service.diagnosis.DiagnosisService;
 import ua.training.hospital.service.medicine.MedicineService;
 import ua.training.hospital.service.procedure.ProcedureService;
+import ua.training.hospital.service.surgery.SurgeryService;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -61,6 +62,9 @@ public class ShowDiagnosisControllerTest {
     @MockBean
     private ProcedureService procedureService;
 
+    @MockBean
+    private SurgeryService surgeryService;
+
     @Mock
     Diagnosis mockDiagnosis;
 
@@ -70,6 +74,9 @@ public class ShowDiagnosisControllerTest {
     @Mock
     Procedure mockProcedure;
 
+    @Mock
+    Surgery mockSurgery;
+
     MedicineDTO medicineDTO = new MedicineDTO();
     @Captor
     ArgumentCaptor<MedicineDTO> medicineDTOCaptor;
@@ -77,6 +84,10 @@ public class ShowDiagnosisControllerTest {
     ProcedureDTO procedureDTO = new ProcedureDTO();
     @Captor
     ArgumentCaptor<ProcedureDTO> procedureDTOCaptor;
+
+    SurgeryDTO surgeryDTO = new SurgeryDTO();
+    @Captor
+    ArgumentCaptor<SurgeryDTO> surgeryDTOCaptor;
 
     String doctorEmail = "doctor@example.com";
 
@@ -93,11 +104,14 @@ public class ShowDiagnosisControllerTest {
         procedureDTO.setName("testMedicineName");
         procedureDTO.setRoom(301);
 
+        surgeryDTO.setName("testMedicineName");
+        surgeryDTO.setSurgeryDate(LocalDateTime.of(2019,8,5,12,30));
+
         MockitoAnnotations.initMocks(this);
         given(diagnosisService.getDiagnosis(Mockito.anyLong())).willReturn(Optional.of(mockDiagnosis));
         given(medicineService.createMedicine(any(),eq(22L),any())).willReturn(Optional.of(mockMedicine));
         given(procedureService.createProcedure(any(),eq(22L),any())).willReturn(Optional.of(mockProcedure));
-
+        given(surgeryService.createSurgery(any(),eq(22L),any())).willReturn(Optional.of(mockSurgery));
 
     }
 
@@ -142,5 +156,22 @@ public class ShowDiagnosisControllerTest {
         verify(procedureService,times(1)).createProcedure(procedureDTOCaptor.capture(),eq(22L),any());
         assertEquals(procedureDTO.getName(),procedureDTOCaptor.getValue().getName());
         assertEquals(procedureDTO.getRoom(),procedureDTOCaptor.getValue().getRoom());
+    }
+
+    @Test
+    @WithMockUser(roles = "DOCTOR")
+    public void testAddSurgery()throws Exception{
+        MvcResult result = mvc.perform(post("/doctor/diagnosis22/addSurgery")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\" : \"testMedicineName\",\n" +
+                        "  \"surgeryDate\" : \"2019-08-05T12:30:00\"}"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        assertTrue(result.getResponse().getContentAsString().contains("\"message\":\"created\""));
+        verify(surgeryService,times(1)).createSurgery(surgeryDTOCaptor.capture(),eq(22L),any());
+        assertEquals(surgeryDTO.getName(),surgeryDTOCaptor.getValue().getName());
+        assertEquals(surgeryDTO.getSurgeryDate(),surgeryDTOCaptor.getValue().getSurgeryDate());
     }
 }

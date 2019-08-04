@@ -19,6 +19,6 @@ public class SurgeryDTO {
     String description;
 
     @DateTimeFormat
-    @NotNull
-    LocalDateTime date;
+    @NotNull(message = "{surgery.surgeryDate.null}")
+    LocalDateTime surgeryDate;
 }

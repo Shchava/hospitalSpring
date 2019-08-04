@@ -58,7 +58,7 @@ public class SurgeryServiceImplTest {
         dto = new SurgeryDTO();
         dto.setName("Test name");
         dto.setDescription("Test description");
-        dto.setDate(LocalDateTime.of(2019,9,5,12,0));
+        dto.setSurgeryDate(LocalDateTime.of(2019,9,5,12,0));
 
         initMocks(this);
         given(repository.findSurgeriesByDiagnosisId(any(), anyLong())).willReturn(surgeries);

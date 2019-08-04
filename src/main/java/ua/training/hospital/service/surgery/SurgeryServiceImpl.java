@@ -34,7 +34,7 @@ public class SurgeryServiceImpl implements SurgeryService {
         Surgery toCreate = new Surgery();
         toCreate.setName(dto.getName());
         toCreate.setDescription(dto.getDescription());
-        toCreate.setDate(dto.getDate());
+        toCreate.setDate(dto.getSurgeryDate());
         toCreate.setAssigned(getAssignedTime());
         toCreate.setDiagnosis(diagnosisRepository.getOne(diagnosisId));
         toCreate.setAssignedBy(userRepository.findByEmail(doctorEmail));
