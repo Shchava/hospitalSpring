@@ -35,6 +35,10 @@
         <spring:message code="doctor.showDiagnosis.showMedicine.refill"/>
     </c:set>
 
+    <c:set var="procedureAppointmentDates">
+        <spring:message code="doctor.showDiagnosis.showProcedure.appointMentDates"/>
+    </c:set>
+
     <c:set var="JSdateFormat">
         <spring:message code="JS.dateFormat"/>
     </c:set>
@@ -739,6 +743,11 @@
     }
 
     function addProcedureRow(dataEntry) {
+        var dates = "";
+        for(var i = 0; i < dataEntry.appointmentDates.length; i++){
+            dates +=  "<p>" + new Date(dataEntry.appointmentDates[i]).toLocaleString() + "</p>";
+        }
+
         var row =
             "<tr>" +
             "<th>" + dataEntry.idTherapy + "</th>" +
@@ -754,8 +763,8 @@
             "<p>" + dataEntry.description + "</p>" +
             "<h6>${therapyDoctorEmail}</h6>" +
             "<p>" + dataEntry.assignedBy.email + "</p>" +
-            "<h6>${medicineRefill}</h6>" +
-            // "<p>" + new Date(dataEntry.refill).toLocaleString() + "</p>" +
+            "<h6>${procedureAppointmentDates}</h6>" +
+            dates +
             "</th>" +
             "</tr>";
 
