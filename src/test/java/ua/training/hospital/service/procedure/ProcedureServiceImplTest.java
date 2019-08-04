@@ -48,8 +48,8 @@ public class ProcedureServiceImplTest {
     @InjectMocks
     ProcedureServiceImpl service = new ProcedureServiceImpl();
 
-    String doctorEmail = "test@email.com";
-    ProcedureDTO dto;
+    private String doctorEmail = "test@email.com";
+    private ProcedureDTO dto;
 
     @Captor
     ArgumentCaptor<Procedure> procedureCaptor;
