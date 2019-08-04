@@ -9,11 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ua.training.hospital.controller.dto.CreationResponse;
 import ua.training.hospital.controller.dto.MedicineDTO;
-import ua.training.hospital.entity.Diagnosis;
+import ua.training.hospital.controller.dto.ProcedureDTO;
 import ua.training.hospital.entity.Medicine;
 import ua.training.hospital.entity.Procedure;
 import ua.training.hospital.entity.Surgery;
@@ -22,7 +23,6 @@ import ua.training.hospital.service.medicine.MedicineService;
 import ua.training.hospital.service.procedure.ProcedureService;
 import ua.training.hospital.service.surgery.SurgeryService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.Optional;
 
@@ -44,12 +44,10 @@ public class ShowDiagnosisController {
     public String getDoctorPage(@PathVariable long idPatient,
                                 @PathVariable long idDiagnosis,
                                 Model model) {
-
         diagnosisService.getDiagnosis(idDiagnosis).ifPresent(diagnosis -> {
             model.addAttribute("diagnosis",diagnosis);
         });
 
-        model.addAttribute("newMedicine",new Medicine());
         return "doctor/showDiagnosis";
     }
 
@@ -98,6 +96,28 @@ public class ShowDiagnosisController {
         Optional<Medicine> created =  medicineService.createMedicine(medicineDto,idDiagnosis,principal.getName());
         if(!created.isPresent()){
             result.reject("{medicine.cannotCreate}");
+            return new ResponseEntity<>(new CreationResponse("cant create entity",result.getAllErrors()), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(new CreationResponse("created",result.getAllErrors()), HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/doctor/diagnosis{idDiagnosis}/addProcedure",
+            method = RequestMethod.POST)
+    public ResponseEntity<CreationResponse> addProcedure(
+            @PathVariable long idDiagnosis,
+            @Validated @RequestBody ProcedureDTO procedureDto,
+            BindingResult result,
+            Errors errors,
+            Principal principal){
+
+        if(result.hasErrors()){
+            return new ResponseEntity<>(new CreationResponse("wrongData",result.getAllErrors()), HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<Procedure> created =  procedureService.createProcedure(procedureDto,idDiagnosis,principal.getName());
+        if(!created.isPresent()){
+            result.reject("{procedure.cannotCreate}");
             return new ResponseEntity<>(new CreationResponse("cant create entity",result.getAllErrors()), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(new CreationResponse("created",result.getAllErrors()), HttpStatus.OK);

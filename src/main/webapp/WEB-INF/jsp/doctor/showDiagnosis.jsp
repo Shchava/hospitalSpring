@@ -5,6 +5,7 @@
 <%@ taglib prefix="springForm" uri="http://www.springframework.org/tags/form" %>
 <%@ page isELIgnored="false" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.LocalDate" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -41,7 +42,16 @@
     <c:set var="dateFormat">
         <spring:message code="dateFormat"/>
     </c:set>
+
+
+    <c:set var="removeDate">
+        <spring:message code="doctor.showDiagnosis.removeDateField"/>
+    </c:set>
+
+
     <c:set var="foramter" value='${DateTimeFormatter.ofPattern(dateFormat)}'/>
+
+<%--    <jsp:useBean id="now" class="java.time.LocalDateTime" />--%>
 
     <style>
         .medicine-container{
@@ -157,7 +167,7 @@
                 <div id="medicineContainer" class="medicine-container">
                     <div class="table-wrapper">
 
-                        <div id="medicineCreated" class="alert alert-info createNotification" role="alert"><spring:message code="doctor.showDiagnosis.medicineCreated" /></div>
+                               <div id="medicineCreated" class="alert alert-info createNotification" role="alert"><spring:message code="doctor.showDiagnosis.medicineCreated" /></div>
                         <div id="medicineCreationError" class="alert alert-danger fieldError" role="alert"></div>
 
                         <div class="table-filter">
@@ -258,6 +268,10 @@
                 <div id="procedureContainer" class="procedure-container">
                     <div class="table-wrapper">
                         <div class="table-filter">
+
+                            <div id="procedureCreated" class="alert alert-info createNotification" role="alert"><spring:message code="doctor.showDiagnosis.procedureCreated" /></div>
+                            <div id="procedureCreationError" class="alert alert-danger fieldError" role="alert"></div>
+
                             <div class="row">
                                 <div class="col-sm-3">
                                     <div class="show-entries">
@@ -326,8 +340,41 @@
                         </div>
                     </div>
 
-                </div>
 
+                    <div id="addProcedure" class="addNewProcedure">
+                        <form id="addProcedureForm"  method="POST" enctype="utf8">
+                            <div class="form-group">
+                                <label><spring:message code="doctor.showDiagnosis.addTherapy.name"/></label>
+                                <div id = "procedureNameFieldError" class="alert alert-danger fieldError" role="alert" required="required"></div>
+                                <input type="text" name="name" class="form-control" value="" />
+                            </div>
+                            <div class="form-group">
+                                <label><spring:message code="doctor.showDiagnosis.addTherapy.description"/></label>
+                                <textarea  type="text" name="description" class="form-control  input-description" value=""></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label><spring:message code="doctor.showDiagnosis.addProcedure.room"/></label>
+                                <div id = "procedureRoomFieldError" class="alert alert-danger fieldError" role="alert"></div>
+                                <input  type="number" class="form-control" name="room" value="" required="required"/>
+                            </div>
+
+                            <div id="appointmentDatesDiv" class="form-group assignedDatesWrap">
+                                <label><spring:message code="doctor.showDiagnosis.addProcedure.apponitmentdates"/></label>
+                                <button id="addAssignedDateBtn" class="add_field_button"><spring:message code="doctor.showDiagnosis.addProcedure.addNewDate"/></button>
+
+<%--                                <div><input type="datetime-local"--%>
+<%--                                           value="2019-08-04T00:00"--%>
+<%--                                            min="2019-08-04T00:00" max="2100-06-14T00:00"--%>
+<%--                                            name="appointmentDates"></div>--%>
+                            </div>
+
+                        </form>
+                    </div>
+
+                    <button id="addProcedureBtn" role="button" class="btn btn-primary btn-lg btn-block show-button"><spring:message code="doctor.showDiagnosis.addProcedure.button"/></button>
+
+                </div>
                 <button id="showSurgeries" role="button" class="btn btn-primary btn-lg btn-block"><spring:message code="doctor.showDiagnosis.showSurgeries"/></button>
                 <div class="clearfix"></div>
                 <div id="surgeryContainer" class="procedure-container">
@@ -443,6 +490,14 @@
                 $("#procedureContainer").show();
 
                 loadProcedures(0,10);
+
+                $("#addProcedureBtn").click(function () {
+                    if ($("#addProcedure").is(":visible")) {
+                        sendAddProcedure();
+                    } else {
+                        $("#addProcedure").show();
+                    }
+                })
             }
         });
 
@@ -456,6 +511,24 @@
             }
         });
 
+
+        var x;
+        $("#addAssignedDateBtn").click(function(e){
+            e.preventDefault();
+
+            x++;
+            $("#appointmentDatesDiv").append('<div>' +
+                '<input type="datetime-local" name="appointmentDates" ' +
+                'value="'+ new Date().toJSON().slice(0,19) +
+                '" min="' + new Date().toJSON().slice(0,19) +
+                '" max="2100-06-14T00:00"/>' +
+                '<a href="#" class="remove_field">${removeDate}</a></div>');
+
+        });
+
+        $("#appointmentDatesDiv").on("click",".remove_field", function(e){
+            e.preventDefault(); $(this).parent('div').remove(); x--;
+        })
     });
 
     //Loading medicine
@@ -659,7 +732,7 @@
     }
 
     function populateProceduresDataTable(data) {
-        $("#procedureTbody").clear();
+        $("#procedureTbody").html("");
         for (var i = 0; i < data.numberOfElements; i++) {
             addProcedureRow(data.content[i]);
         }
@@ -838,9 +911,10 @@
                 $("#medicineCountFieldError").hide();
                 $("#addMedicine").hide();
                 console.log(data);
-                if(data.response === "created") {
+                if(data.message === "created") {
                     $("#medicineCreated").show();
                 }else{
+                    $("#medicineCreationError").html(data.message);
                     $("#medicineCreationError").show();
                 }
 
@@ -867,16 +941,91 @@
             }
         });
 
-        function getFormData($form){
-            var unindexed_array = $form.serializeArray();
-            var indexed_array = {};
-            $.map(unindexed_array, function(n, i){
-                indexed_array[n['name']] = n['value'];
-            });
-            return indexed_array;
-        }
+
+
+
     }
 
+    function sendAddProcedure() {
+
+        $("#procedureCreated").hide();
+
+        var formData= getFormData($("#addProcedureForm"));
+        console.log(formData);
+        console.log(JSON.stringify(formData));
+        $.ajax({
+            type: 'POST',
+            url: "/doctor/diagnosis${diagnosis.idDiagnosis}/addProcedure",
+            dataType: 'json',
+            contentType: 'application/json',
+            data : JSON.stringify(formData),
+            success: function (data) {
+                console.log(data);
+
+                $("#procedureNameFieldError").hide();
+                $("#procedureRoomFieldError").hide();
+                $("#addProcedure").hide();
+                console.log(data);
+                if(data.message === "created") {
+                    $("#procedureCreated").show();
+                }else{
+                    $("#procedureCreationError").html(data.message);
+                    $("#procedureCreationError").show();
+                }
+
+            },
+            error: function (data) {
+                console.log(data);
+                if(data.responseJSON.errors !== 'undefined' && data.responseJSON.errors.length > 0) {
+                    data.responseJSON.errors.forEach(function (error) {
+                        if (error.field === "name") {
+                            var errMessage = $("#procedureNameFieldError");
+                            errMessage.html(error.defaultMessage);
+                            errMessage.show();
+
+                        } else if (error.field === "room") {
+                            var errMessage = $("#procedureRoomFieldError");
+                            errMessage.html(error.defaultMessage);
+                            errMessage.show();
+                        } else {
+                            var errMessage = $("#procedureCreationError");
+                            errMessage.html(data.responseJSON.message);
+                            errMessage.show();
+                        }
+                    });
+                }else{
+                    var errMessage = $("#procedureCreationError");
+                    errMessage.html(data.responseJSON.message);
+                    errMessage.show();
+                }
+            }
+        });
+
+        // console.log(getFormData($("#addProcedureForm")))
+    }
+
+    function getFormData($form){
+        var unindexed_array = $form.serializeArray();
+
+        console.log(unindexed_array);
+
+        var indexed_array = {};
+
+        var dateIndex = 0;
+        $.map(unindexed_array, function(n, i){
+            if(n['name']==="appointmentDates"){
+                console.log("-----");
+                console.log(n);
+                if(dateIndex === 0){
+                   indexed_array['appointmentDates'] = [];
+                }
+                indexed_array.appointmentDates[(dateIndex++)] = n['value'];
+            }else {
+                indexed_array[n['name']] = n['value'];
+            }
+        });
+        return indexed_array;
+    }
 </script>
 </body>
 </html>

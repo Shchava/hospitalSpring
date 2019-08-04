@@ -12,6 +12,6 @@ import java.util.List;
 @Getter
 @Setter
 public class CreationResponse {
-    String response;
+    String message;
     List<ObjectError> errors;
 }
