@@ -531,16 +531,15 @@
                 $("#medicineContainer").hide();
             } else {
                 $("#medicineContainer").show();
-
                 loadMedicine(0, 10);
+            }
+        });
 
-                $("#addMedicineBtn").click(function () {
-                    if ($("#addMedicine").is(":visible")) {
-                        sendAddMedicine();
-                    } else {
-                        $("#addMedicine").show();
-                    }
-                })
+        $("#addMedicineBtn").click(function () {
+            if ($("#addMedicine").is(":visible")) {
+                sendAddMedicine();
+            } else {
+                $("#addMedicine").show();
             }
         });
 
@@ -549,19 +548,17 @@
                 $("#procedureContainer").hide();
             } else {
                 $("#procedureContainer").show();
-
                 loadProcedures(0, 10);
-
-                $("#addProcedureBtn").click(function () {
-                    if ($("#addProcedure").is(":visible")) {
-                        sendAddProcedure();
-                    } else {
-                        $("#addProcedure").show();
-                    }
-                })
             }
         });
 
+        $("#addProcedureBtn").click(function () {
+            if ($("#addProcedure").is(":visible")) {
+                sendAddProcedure();
+            } else {
+                $("#addProcedure").show();
+            }
+        });
         $("#showSurgeries").click(function () {
             if ($("#surgeryContainer").is(":visible")) {
                 $("#surgeryContainer").hide();
@@ -572,17 +569,15 @@
 
                 $("#surgeryDateField").val(new Date().toJSON().slice(0, 19));
                 $("#surgeryDateField").attr("min", (new Date().toJSON().slice(0, 19)));
-
-                $("#addSurgeryBtn").click(function () {
-                    if ($("#addSurgery").is(":visible")) {
-                        sendAddSurgery();
-                    } else {
-                        $("#addSurgery").show();
-                    }
-                })
             }
         });
-
+        $("#addSurgeryBtn").click(function () {
+            if ($("#addSurgery").is(":visible")) {
+                sendAddSurgery();
+            } else {
+                $("#addSurgery").show();
+            }
+        });
 
         var x;
         $("#addAssignedDateBtn").click(function (e) {
