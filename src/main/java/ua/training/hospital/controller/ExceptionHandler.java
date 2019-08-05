@@ -19,15 +19,11 @@ import java.util.ResourceBundle;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
-
 public class ExceptionHandler  extends ResponseEntityExceptionHandler {
     @Autowired
     private MessageSource messageSource;
 
-
-
     @Override
-
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String message = messageSource.getMessage("exceptionHandler.json.message",null,request.getLocale());
         String error = ex.toString();

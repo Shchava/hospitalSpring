@@ -15,12 +15,6 @@
     <link rel="stylesheet" href="/css/pagination.css"/>
     <link rel="stylesheet" href="/css/showPatient.css"/>
     <title>${patient.surname} ${patient.name} ${patient.patronymic}</title>
-
-    <style>
-        .diagnosesTitle {
-            float: right;
-        }
-    </style>
     <c:set var="dateFormat">
         <spring:message code="dateFormat"/>
     </c:set>
@@ -146,7 +140,7 @@
                             <th><c:out value="${diagnosis.doctor.surname}"/> <c:out
                                     value="${diagnosis.doctor.name}"/></th>
                             <th><c:out value="${diagnosis.cured}"/></th>
-                            <th><a class="btn btn-primary" href="#" role="button"><spring:message
+                            <th><a class="btn btn-primary" href="/doctor/patient${patient.idUser}/diagnosis${diagnosis.idDiagnosis}" role="button"><spring:message
                                     code="doctor.showPatient.diagnosesList.open"/></a>
                             </th>
                         </tr>
@@ -230,8 +224,6 @@
         crossorigin="anonymous"></script>
 
 <script>
-    // document.documentElement.className = 'js';
-
     $(document).ready(function () {
         $("#showAddDiagnosisForm").click(function () {
             $("#showAddDiagnosisForm").hide();
