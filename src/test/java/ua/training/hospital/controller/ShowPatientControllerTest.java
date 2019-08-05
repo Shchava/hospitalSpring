@@ -73,7 +73,7 @@ public class ShowPatientControllerTest {
     @Test
     @WithMockUser(roles = "DOCTOR")
     public void testGetShowUserPage() throws Exception {
-        mvc.perform(get("/doctor/patient11"))
+        mvc.perform(get("/patient11"))
                 .andExpect(model().attribute("patient",mockUser))
                 .andExpect(model().attribute("page",mockDiagnosisPage))
                 .andExpect(status().isOk());
@@ -84,7 +84,7 @@ public class ShowPatientControllerTest {
     @Test
     @WithMockUser(roles = "DOCTOR")
     public void testGetShowUserPageWithNumberOfPage() throws Exception {
-        mvc.perform(get("/doctor/patient11/5"))
+        mvc.perform(get("/patient11/5"))
                 .andExpect(model().attribute("patient",mockUser))
                 .andExpect(model().attribute("page",mockDiagnosisPage))
                 .andExpect(status().isOk());
@@ -96,7 +96,7 @@ public class ShowPatientControllerTest {
     @Test
     @WithMockUser(roles = "DOCTOR")
     public void testGetShowUserPageWithNumberOfPageAndRecorsdPerPage() throws Exception {
-        mvc.perform(get("/doctor/patient11/5?recordsPerPage=5"))
+        mvc.perform(get("/patient11/5?recordsPerPage=5"))
                 .andExpect(model().attribute("patient",mockUser))
                 .andExpect(model().attribute("page",mockDiagnosisPage))
                 .andExpect(status().isOk());

@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import ua.training.hospital.entity.enums.UserRole;
 import ua.training.hospital.service.user.UserDetailsServiceImpl;
 
 @Configuration
@@ -36,10 +37,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/css/**","/webjars**","/login**","/registration*","/doctor/**","/doctorine").permitAll()
+                .antMatchers("/css/**","/webjars/**","/login/**","/registration/**").permitAll()
+                .antMatchers("/doctor/diagnosis*/addSurgery","/doctor/patient*/addDiagnosis").hasRole(UserRole.DOCTOR.name())
+                .antMatchers("/patientsList/**","/doctor/diagnosis*/addMedicine","/doctor/diagnosis*/addProcedure").hasAnyRole(UserRole.DOCTOR.name(),UserRole.NURSE.name())
+
                 .anyRequest().authenticated()
                 .and()
-//                .csrf().disable()
                 .formLogin().loginPage("/login").usernameParameter("email").permitAll()
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));

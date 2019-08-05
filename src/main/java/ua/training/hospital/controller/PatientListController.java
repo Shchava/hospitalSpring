@@ -14,19 +14,19 @@ import ua.training.hospital.entity.dto.ShowUserToDoctorDTO;
 import ua.training.hospital.service.user.UserService;
 
 @Controller
-public class DoctorController {
+public class PatientListController {
     @Autowired
     UserService userService;
 
     @Autowired
     PaginationUtils paginationUtils;
 
-    @RequestMapping(value = "/doctor/page", method = RequestMethod.GET)
+    @RequestMapping(value = "/patientsList", method = RequestMethod.GET)
     public String defaultGetDoctorPage(Model model){
         return getDoctorPage(0,10,model);
     }
 
-    @RequestMapping(value = "/doctor/page/{pageNumber}", method = RequestMethod.GET)
+    @RequestMapping(value = "/patientsList/page/{pageNumber}", method = RequestMethod.GET)
     public String getDoctorPage(@PathVariable(required = false) int pageNumber, @RequestParam(defaultValue = "10") int recordsPerPage, Model model) {
         pageNumber = paginationUtils.checkPageNumber(pageNumber);
         recordsPerPage = paginationUtils.checkRecordsPerPage(recordsPerPage);
@@ -34,6 +34,6 @@ public class DoctorController {
         Page<ShowUserToDoctorDTO> page = userService.findPatientsToShow(pageNumber,recordsPerPage);
         model.addAttribute("page", page);
 
-        return "doctor/doctorPage";
+        return "patientsList";
     }
 }

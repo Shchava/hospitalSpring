@@ -1,7 +1,10 @@
 package ua.training.hospital.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +22,7 @@ import java.security.Principal;
 import java.util.Optional;
 
 @Controller
+@Order(SecurityProperties.DEFAULT_FILTER_ORDER)
 public class ShowPatientController {
     @Autowired
     UserService userService;
@@ -29,12 +33,12 @@ public class ShowPatientController {
     @Autowired
     PaginationUtils paginationUtils;
 
-    @RequestMapping(value = "/doctor/patient{idPatient}", method = RequestMethod.GET)
-    public String defaultShowPatient(@PathVariable long idPatient, @RequestParam(defaultValue = "10") int recordsPerPage, Model model) {
+    @RequestMapping(value = "/patient{idPatient}", method = RequestMethod.GET)
+    public String defaultShowPatient(@PathVariable long idPatient, @RequestParam(defaultValue = "10") int recordsPerPage, Model model ,Principal principal) {
         return getShowPatientPage(idPatient, 0, recordsPerPage, model);
     }
 
-    @RequestMapping(value = "/doctor/patient{idPatient}/{pageNumber}", method = RequestMethod.GET)
+    @RequestMapping(value = "/patient{idPatient}/{pageNumber}", method = RequestMethod.GET)
     public String getShowPatientPage(@PathVariable long idPatient,
                                      @PathVariable int pageNumber,
                                      @RequestParam(defaultValue = "10") int recordsPerPage,
@@ -42,7 +46,7 @@ public class ShowPatientController {
 
         getDiagnoses(model, pageNumber, recordsPerPage, idPatient);
         model.addAttribute("newDiagnosis", new DiagnosisDTO());
-        return "doctor/showPatient";
+        return "showPatient";
     }
 
 
@@ -63,7 +67,7 @@ public class ShowPatientController {
         }
 
         getDiagnoses(model, pageNumber, recordsPerPage, idPatient);
-        return new ModelAndView("doctor/showPatient", "newDiagnosis", diagnosisDTO);
+        return new ModelAndView("showPatient", "newDiagnosis", diagnosisDTO);
     }
 
     private void getDiagnoses(Model model, int pageNumber, int recordsPerPage, long idPatient) {
@@ -73,7 +77,7 @@ public class ShowPatientController {
         Optional<User> patient = userService.getUser(idPatient);
         Page<Diagnosis> diagnoses = diagnosisService.findDiagnosesByPatientId(pageNumber, recordsPerPage, idPatient);
 
-        model.addAttribute("patient", patient.get());
+        model.addAttribute("patient", patient.get());//TODO fix no patient, check patient authority
         model.addAttribute("page", diagnoses); //TODO fix another user database query
     }
 }

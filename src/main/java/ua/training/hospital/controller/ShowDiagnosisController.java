@@ -41,7 +41,7 @@ public class ShowDiagnosisController {
     @Autowired
     SurgeryService surgeryService;
 
-    @RequestMapping(value = "/doctor/patient{idPatient}/diagnosis{idDiagnosis}", method = RequestMethod.GET)
+    @RequestMapping(value = "patient{idPatient}/diagnosis{idDiagnosis}", method = RequestMethod.GET)
     public String getDoctorPage(@PathVariable long idPatient,
                                 @PathVariable long idDiagnosis,
                                 Model model) {
@@ -49,7 +49,7 @@ public class ShowDiagnosisController {
             model.addAttribute("diagnosis",diagnosis);
         });
 
-        return "doctor/showDiagnosis";
+        return "showDiagnosis";
     }
 
     @ResponseBody

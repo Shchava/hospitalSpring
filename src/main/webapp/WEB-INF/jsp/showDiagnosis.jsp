@@ -11,7 +11,7 @@
 <html>
 <head>
     <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <sec:csrfMetaTags />
+    <sec:csrfMetaTags/>
     <link rel="stylesheet" href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="/css/doctorPageMarkUp.css"/>
@@ -479,37 +479,33 @@
                             </ul>
                         </div>
                     </div>
-                    <div id="addSurgery" class="addNewProcedure">
-                        <form id="addSurgeryForm" method="POST" enctype="utf8">
-                            <div class="form-group">
-                                <label><spring:message code="doctor.showDiagnosis.addTherapy.name"/></label>
-                                <div id="surgeryNameFieldError" class="alert alert-danger fieldError" role="alert"
-                                     required="required"></div>
-                                <input type="text" name="name" class="form-control" value=""/>
-                            </div>
-                            <div class="form-group">
-                                <label><spring:message code="doctor.showDiagnosis.addTherapy.description"/></label>
-                                <textarea type="text" name="description" class="form-control  input-description"
-                                          value=""></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label><spring:message code="doctor.showDiagnosis.addSurgery.date"/></label>
-                                <div id="surgeryDateFieldError" class="alert alert-danger fieldError"
-                                     role="alert"></div>
-                                <input id="surgeryDateField" type="datetime-local" name="surgeryDate"
-                                       max="2100-06-14T00:00"/>
-                            </div>
-
-
-                        </form>
-
-                    </div>
-                    <button id="addSurgeryBtn" role="button" class="btn btn-primary btn-lg btn-block show-button">
-                        <spring:message code="doctor.showSurgery.addSurgery.button"/></button>
+                    <sec:authorize access="hasRole('DOCTOR')">
+                        <div id="addSurgery" class="addNewProcedure">
+                            <form id="addSurgeryForm" method="POST" enctype="utf8">
+                                <div class="form-group">
+                                    <label><spring:message code="doctor.showDiagnosis.addTherapy.name"/></label>
+                                    <div id="surgeryNameFieldError" class="alert alert-danger fieldError" role="alert"
+                                         required="required"></div>
+                                    <input type="text" name="name" class="form-control" value=""/>
+                                </div>
+                                <div class="form-group">
+                                    <label><spring:message code="doctor.showDiagnosis.addTherapy.description"/></label>
+                                    <textarea type="text" name="description" class="form-control  input-description"
+                                              value=""></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label><spring:message code="doctor.showDiagnosis.addSurgery.date"/></label>
+                                    <div id="surgeryDateFieldError" class="alert alert-danger fieldError"
+                                         role="alert"></div>
+                                    <input id="surgeryDateField" type="datetime-local" name="surgeryDate"
+                                           max="2100-06-14T00:00"/>
+                                </div>
+                            </form>
+                        </div>
+                        <button id="addSurgeryBtn" role="button" class="btn btn-primary btn-lg btn-block show-button">
+                            <spring:message code="doctor.showSurgery.addSurgery.button"/></button>
+                    </sec:authorize>
                 </div>
-
-
             </div>
             <div><h1>.</h1></div>
         </div>
@@ -561,25 +557,31 @@
                 $("#addProcedure").show();
             }
         });
+
         $("#showSurgeries").click(function () {
             if ($("#surgeryContainer").is(":visible")) {
                 $("#surgeryContainer").hide();
             } else {
                 $("#surgeryContainer").show();
-
                 loadSurgeries(0, 10);
-
-                $("#surgeryDateField").val(new Date().toJSON().slice(0, 19));
-                $("#surgeryDateField").attr("min", (new Date().toJSON().slice(0, 19)));
             }
         });
+
+        <sec:authorize access="hasRole('DOCTOR')">
+
         $("#addSurgeryBtn").click(function () {
             if ($("#addSurgery").is(":visible")) {
                 sendAddSurgery();
+
             } else {
                 $("#addSurgery").show();
             }
         });
+
+        $("#surgeryDateField").val(new Date().toJSON().slice(0, 19));
+        $("#surgeryDateField").attr("min", (new Date().toJSON().slice(0, 19)));
+
+        </sec:authorize>
 
         var x;
         $("#addAssignedDateBtn").click(function (e) {
@@ -980,9 +982,9 @@
         var header = $("meta[name='_csrf_header']").attr("content");
 
         $.ajaxSetup({
-           beforeSend: function(xhr){
-               xhr.setRequestHeader(header, token);
-           }
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            }
         });
 
         $.ajax({
@@ -1041,7 +1043,7 @@
         var header = $("meta[name='_csrf_header']").attr("content");
 
         $.ajaxSetup({
-            beforeSend: function(xhr){
+            beforeSend: function (xhr) {
                 xhr.setRequestHeader(header, token);
             }
         });
@@ -1096,6 +1098,8 @@
 
     }
 
+    <sec:authorize access="hasRole('DOCTOR')">
+
     function sendAddSurgery() {
         $("#surgeryCreated").hide();
 
@@ -1107,7 +1111,7 @@
         var header = $("meta[name='_csrf_header']").attr("content");
 
         $.ajaxSetup({
-            beforeSend: function(xhr){
+            beforeSend: function (xhr) {
                 xhr.setRequestHeader(header, token);
             }
         });
@@ -1161,6 +1165,8 @@
         });
     }
 
+    </sec:authorize>
+
     function getFormData($form) {
         var unindexed_array = $form.serializeArray();
 
@@ -1171,7 +1177,6 @@
         var dateIndex = 0;
         $.map(unindexed_array, function (n, i) {
             if (n['name'] === "appointmentDates") {
-                console.log("-----");
                 console.log(n);
                 if (dateIndex === 0) {
                     indexed_array['appointmentDates'] = [];
