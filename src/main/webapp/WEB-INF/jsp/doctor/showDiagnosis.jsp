@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="springForm" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page isELIgnored="false" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 
@@ -10,6 +11,7 @@
 <html>
 <head>
     <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <sec:csrfMetaTags />
     <link rel="stylesheet" href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="/css/doctorPageMarkUp.css"/>
@@ -974,6 +976,15 @@
         var formData = getFormData($('#addMedicineForm'));
         console.log(formData);
 
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        $.ajaxSetup({
+           beforeSend: function(xhr){
+               xhr.setRequestHeader(header, token);
+           }
+        });
+
         $.ajax({
             type: 'POST',
             url: "/doctor/diagnosis${diagnosis.idDiagnosis}/addMedicine",
@@ -1025,6 +1036,16 @@
         var formData = getFormData($("#addProcedureForm"));
         console.log(formData);
         console.log(JSON.stringify(formData));
+
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        $.ajaxSetup({
+            beforeSend: function(xhr){
+                xhr.setRequestHeader(header, token);
+            }
+        });
+
         $.ajax({
             type: 'POST',
             url: "/doctor/diagnosis${diagnosis.idDiagnosis}/addProcedure",
@@ -1081,6 +1102,16 @@
         var formData = getFormData($("#addSurgeryForm"));
         console.log(formData);
         console.log(JSON.stringify(formData));
+
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        $.ajaxSetup({
+            beforeSend: function(xhr){
+                xhr.setRequestHeader(header, token);
+            }
+        });
+
         $.ajax({
             type: 'POST',
             url: "/doctor/diagnosis${diagnosis.idDiagnosis}/addSurgery",
