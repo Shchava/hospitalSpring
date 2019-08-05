@@ -152,9 +152,7 @@
                             <h2>${diagnosis.name}</h2>
                         </div>
                         <div class="col-sm-3">
-                            <a href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=${page.size}"
-                               class="btn btn-primary"><i class="material-icons">&#xE863;</i>
-                                <span><spring:message code="doctor.page.patientsList.refresh"/></span></a>
+
                         </div>
                     </div>
                 </div>
