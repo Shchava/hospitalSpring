@@ -14,6 +14,8 @@ import ua.training.hospital.controller.dto.DiagnosisDTO;
 import ua.training.hospital.controller.utils.PaginationUtils;
 import ua.training.hospital.entity.Diagnosis;
 import ua.training.hospital.entity.User;
+import ua.training.hospital.entity.enums.UserRole;
+import ua.training.hospital.entity.exceptions.ResourceNotFoundException;
 import ua.training.hospital.service.diagnosis.DiagnosisService;
 import ua.training.hospital.service.user.UserService;
 
@@ -34,11 +36,15 @@ public class ShowPatientController {
     PaginationUtils paginationUtils;
 
     @RequestMapping(value = "/patient{idPatient}", method = RequestMethod.GET)
-    public String defaultShowPatient(@PathVariable long idPatient, @RequestParam(defaultValue = "10") int recordsPerPage, Model model ,Principal principal) {
+    @PreAuthorize("hasAnyRole('DOCTOR','NURSE') or #idPatient == authentication.principal.id")
+    public String defaultShowPatient(@PathVariable long idPatient,
+                                     @RequestParam(defaultValue = "10") int recordsPerPage,
+                                     Model model) {
         return getShowPatientPage(idPatient, 0, recordsPerPage, model);
     }
 
     @RequestMapping(value = "/patient{idPatient}/{pageNumber}", method = RequestMethod.GET)
+    @PreAuthorize("hasAnyRole('DOCTOR','NURSE') or  #idPatient == authentication.principal.id")
     public String getShowPatientPage(@PathVariable long idPatient,
                                      @PathVariable int pageNumber,
                                      @RequestParam(defaultValue = "10") int recordsPerPage,
