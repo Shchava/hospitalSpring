@@ -158,11 +158,11 @@
                 </div>
 
                 <div>
-                    <h6>description:</h6>
+                    <h6><spring:message code="doctor.showDiagnosis.description"/></h6>
                     <p>${diagnosis.description}</p>
-                    <h6>diagnosed:</h6>
+                    <h6><spring:message code="doctor.showDiagnosis.diagnosed"/></h6>
                     <p>${diagnosis.assigned}</p>
-                    <h6>diagnosed by</h6>
+                    <h6><spring:message code="doctor.showDiagnosis.diagnosedBy"/></h6>
                     <p>${diagnosis.doctor.surname} ${diagnosis.doctor.name} ${diagnosis.doctor.patronymic}</p>
                 </div>
 

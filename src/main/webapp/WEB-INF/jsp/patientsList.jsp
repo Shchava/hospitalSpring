@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="/css/pagination.css">
 
 
-    <title><spring:message code="doctor.page.title"/></title>
+    <title><spring:message code="patientList.title"/></title>
 
 
 </head>

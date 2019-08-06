@@ -76,9 +76,9 @@
                 </div>
 
                 <div>
-                    <h6>email:</h6>
+                    <h6><spring:message code="doctor.showPatient.patientEmail"/></h6>
                     <p>${patient.email}</p>
-                    <h6>personal info:</h6>
+                    <h6><spring:message code="doctor.showPatient.personalInfo"/></h6>
                     <p>${patient.info}</p>
                 </div>
 
@@ -108,7 +108,7 @@
                                 <span> <spring:message code="pagination.entries"/></span>
                             </div>
                         </div>
-                        <div class="col-sm-3"><h3 class="diagnosesTitle">Diagnoses</h3></div>
+                        <div class="col-sm-3"><h3 class="diagnosesTitle"><spring:message code="showPatient.diagnosesTable"/></h3></div>
 
                         <div class="col-sm-6">
                             <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
@@ -163,10 +163,10 @@
                                 <label><spring:message code="doctor.showPatient.newDiagnosis.description"/></label>
                                 <springForm:textarea path="description" type="text" class="form-control input-description"/>
                             </div>
-                            <button role="button" class="btn btn-primary btn-lg btn-block">add</button>
+                            <button role="button" class="btn btn-primary btn-lg btn-block"><spring:message code="showPatient.addDiagnosis"/></button>
                         </springForm:form>
                     </div>
-                    <button id="showAddDiagnosisForm" role="button" class="btn btn-primary btn-lg btn-block">+</button>
+                    <button id="showAddDiagnosisForm" role="button" class="btn btn-primary btn-lg btn-block"><spring:message code="showPatient.addDiagnosis"/></button>
                 </sec:authorize>
                 <div class="clearfix">
                     <div class="hint-text"><spring:message code="pagination.label.showing"/> <b><c:out
