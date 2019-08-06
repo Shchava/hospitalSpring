@@ -26,7 +26,7 @@ public class PatientListController {
         return getDoctorPage(0,10,model);
     }
 
-    @RequestMapping(value = "/patientsList/page/{pageNumber}", method = RequestMethod.GET)
+    @RequestMapping(value = "/patientsList/{pageNumber}", method = RequestMethod.GET)
     public String getDoctorPage(@PathVariable(required = false) int pageNumber, @RequestParam(defaultValue = "10") int recordsPerPage, Model model) {
         pageNumber = paginationUtils.checkPageNumber(pageNumber);
         recordsPerPage = paginationUtils.checkRecordsPerPage(recordsPerPage);
