@@ -33,10 +33,10 @@ public class Diagnosis {
     @Column
     LocalDateTime cured;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     User patient;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     User doctor;
 
 }

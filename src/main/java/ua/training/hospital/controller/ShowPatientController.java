@@ -14,7 +14,6 @@ import ua.training.hospital.controller.dto.DiagnosisDTO;
 import ua.training.hospital.controller.utils.PaginationUtils;
 import ua.training.hospital.entity.Diagnosis;
 import ua.training.hospital.entity.User;
-import ua.training.hospital.entity.enums.UserRole;
 import ua.training.hospital.entity.exceptions.ResourceNotFoundException;
 import ua.training.hospital.service.diagnosis.DiagnosisService;
 import ua.training.hospital.service.user.UserService;
@@ -49,7 +48,6 @@ public class ShowPatientController {
                                      @PathVariable int pageNumber,
                                      @RequestParam(defaultValue = "10") int recordsPerPage,
                                      Model model) {
-
         getDiagnoses(model, pageNumber, recordsPerPage, idPatient);
         model.addAttribute("newDiagnosis", new DiagnosisDTO());
         return "showPatient";
@@ -80,10 +78,15 @@ public class ShowPatientController {
         pageNumber = paginationUtils.checkPageNumber(pageNumber);
         recordsPerPage = paginationUtils.checkRecordsPerPage(recordsPerPage);
 
-        Optional<User> patient = userService.getUser(idPatient);
+        User patient = getPatient(idPatient);
         Page<Diagnosis> diagnoses = diagnosisService.findDiagnosesByPatientId(pageNumber, recordsPerPage, idPatient);
 
-        model.addAttribute("patient", patient.get());//TODO fix no patient, check patient authority
-        model.addAttribute("page", diagnoses); //TODO fix another user database query
+        model.addAttribute("patient", patient);
+        model.addAttribute("page", diagnoses);
+    }
+
+    User getPatient(long idPatient) {
+        Optional<User> patient = userService.getUser(idPatient);
+        return patient.orElseThrow(ResourceNotFoundException::new);
     }
 }
