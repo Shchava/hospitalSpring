@@ -11,6 +11,7 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import ua.training.hospital.entity.UserAuthentication;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +50,7 @@ public class HospitalAuthenticationSuccessHandler implements AuthenticationSucce
     }
 
     private String determineTargetUrl(Authentication authentication) {
+        UserAuthentication authData = (UserAuthentication)authentication.getPrincipal();
         boolean isPersonal = false;
         boolean isPatient = false;
         Collection<? extends GrantedAuthority> authorities
@@ -66,7 +68,7 @@ public class HospitalAuthenticationSuccessHandler implements AuthenticationSucce
         if (isPersonal) {
             return "/patientsList";
         } else if (isPatient) {
-            return "/patient4";
+            return "/patient" + authData.getId();
         } else {
             throw new IllegalStateException();
         }
