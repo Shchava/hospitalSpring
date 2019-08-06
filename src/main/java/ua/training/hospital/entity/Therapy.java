@@ -1,10 +1,12 @@
 package ua.training.hospital.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,6 +29,11 @@ public abstract class Therapy {
     @Column
     LocalDateTime assigned;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     User assignedBy;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "diagnosis")
+    Diagnosis diagnosis;
 }

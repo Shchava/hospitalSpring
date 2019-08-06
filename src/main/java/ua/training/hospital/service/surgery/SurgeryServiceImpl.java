@@ -1,0 +1,47 @@
+package ua.training.hospital.service.surgery;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import ua.training.hospital.controller.dto.SurgeryDTO;
+import ua.training.hospital.entity.Surgery;
+import ua.training.hospital.repository.DiagnosisRepository;
+import ua.training.hospital.repository.SurgeryRepository;
+import ua.training.hospital.repository.UserRepository;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+@Service
+public class SurgeryServiceImpl implements SurgeryService {
+    @Autowired
+    SurgeryRepository surgeryRepository;
+
+    @Autowired
+    DiagnosisRepository diagnosisRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Override
+    public Page<Surgery> findSurgeriesByDiagnosisId(int pageNumber, int SurgeriesPerPage, long diagnosisId) {
+        return surgeryRepository.findSurgeriesByDiagnosisId(PageRequest.of(pageNumber, SurgeriesPerPage), diagnosisId);
+    }
+
+    @Override
+    public Optional<Surgery> createSurgery(SurgeryDTO dto, long diagnosisId, String doctorEmail) {
+        Surgery toCreate = new Surgery();
+        toCreate.setName(dto.getName());
+        toCreate.setDescription(dto.getDescription());
+        toCreate.setDate(dto.getSurgeryDate());
+        toCreate.setAssigned(getAssignedTime());
+        toCreate.setDiagnosis(diagnosisRepository.getOne(diagnosisId));
+        toCreate.setAssignedBy(userRepository.findByEmail(doctorEmail));
+
+        return Optional.ofNullable(surgeryRepository.save(toCreate));
+    }
+    private LocalDateTime getAssignedTime() {
+        return LocalDateTime.now();
+    }
+}

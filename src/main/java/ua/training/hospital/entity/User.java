@@ -1,5 +1,6 @@
 package ua.training.hospital.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ua.training.hospital.entity.enums.UserRole;
 
@@ -49,10 +50,11 @@ public class User {
     @Column
     String info;
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     List<Diagnosis> setDiagnoses;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
     List<Diagnosis> myDiagnoses;
 

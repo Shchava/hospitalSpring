@@ -2,20 +2,6 @@ body {
     background: #d9d9d9;
 }
 
-.form-control {
-    min-height: 41px;
-    box-shadow: none;
-    border-color: #e1e4e5;
-}
-
-.form-control:focus {
-    border-color: #003300;
-}
-
-.form-control, .btn {
-    border-radius: 3px;
-}
-
 .signup-form {
     width: 60%;
     margin: 0 auto;
@@ -57,13 +43,4 @@ body {
 
 .signup-form a:hover {
     text-decoration: none;
-}
-
-.error-message {
-    border-radius: 6px;
-    padding-left: 10px;
-    height: auto;
-    display: block;
-    margin-top: 0;
-    margin-bottom: 10px;
 }

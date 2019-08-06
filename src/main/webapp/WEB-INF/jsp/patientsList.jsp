@@ -9,7 +9,6 @@
     <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<%--    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">--%>
 
     <link rel="stylesheet" href="/css/doctorPageMarkUp.css"/>
     <link rel="stylesheet" href="/css/listOfEntries.css"/>
@@ -17,7 +16,7 @@
     <link rel="stylesheet" href="/css/pagination.css">
 
 
-    <title><spring:message code="doctor.page.title"/></title>
+    <title><spring:message code="patientList.title"/></title>
 
 
 </head>
@@ -61,7 +60,6 @@
 
         </div>
         <div class="col-sm-8 text-left container">
-            <%--            <div class="container">--%>
             <div class="table-wrapper">
                 <div class="table-title">
                     <div class="row">
@@ -69,7 +67,7 @@
                             <h2><spring:message code="doctor.page.patientsList.title"/></h2>
                         </div>
                         <div class="col-sm-8">
-                            <a href="/doctor/page/${page.number}?recordsPerPage=${page.size}"
+                            <a href="/patientsList/${page.number}?recordsPerPage=${page.size}"
                                class="btn btn-primary"><i class="material-icons">&#xE863;</i>
                                 <span><spring:message code="doctor.page.patientsList.refresh"/></span></a>
                         </div>
@@ -85,13 +83,13 @@
                                             type="button" data-toggle="dropdown">${page.size}</button>
                                     <ul class="dropdown-menu ">
                                         <li><a class="dropdown-item"
-                                               href="/doctor/page/${page.number}?recordsPerPage=5">5</a></li>
+                                               href="/patientsList/${page.number}?recordsPerPage=5">5</a></li>
                                         <li><a class="dropdown-item"
-                                               href="/doctor/page/${page.number}?recordsPerPage=10">10</a></li>
+                                               href="/patientsList/${page.number}?recordsPerPage=10">10</a></li>
                                         <li><a class="dropdown-item"
-                                               href="/doctor/page/${page.number}?recordsPerPage=15">15</a></li>
+                                               href="/patientsList/${page.number}?recordsPerPage=15">15</a></li>
                                         <li><a class="dropdown-item"
-                                               href="/doctor/page/${page.number}?recordsPerPage=20">20</a></li>
+                                               href="/patientsList/${page.number}?recordsPerPage=20">20</a></li>
                                     </ul>
                                 </div>
                                 <span> <spring:message code="pagination.entries"/></span>
@@ -135,7 +133,7 @@
                                     value="${patient.surname}"/></th>
                             <th><c:out value="${patient.email}"/></th>
                             <th><c:out value="${patient.lastDiagnosisName}"/></th>
-                            <th><a class="btn btn-primary" href="/doctor/patient${patient.id}/0?recordsPerPage=${page.size}" role="button"><spring:message
+                            <th><a class="btn btn-primary" href="/patient${patient.id}/0?recordsPerPage=${page.size}" role="button"><spring:message
                                     code="doctor.page.patientsList.open"/></a>
                             </th>
                         </tr>
@@ -153,7 +151,7 @@
                     <ul class="pagination">
                         <c:if test="${!page.first}">
                             <li class="page-item"><a class="page-link"
-                                                     href="/doctor/page/${page.number - 1}?recordsPerPage=${page.size}"><spring:message
+                                                     href="/patientsList/${page.number - 1}?recordsPerPage=${page.size}"><spring:message
                                     code="pagination.previous"/></a>
                             </li>
                         </c:if>
@@ -168,7 +166,7 @@
                                 </c:when>
                                 <c:otherwise>
                                     <li class="page-item"><a class="page-link"
-                                                             href="/doctor/page/${i}?recordsPerPage=${page.size}">${i}</a>
+                                                             href="/patientsList/${i}?recordsPerPage=${page.size}">${i}</a>
                                     </li>
                                 </c:otherwise>
                             </c:choose>
@@ -176,15 +174,13 @@
 
                         <c:if test="${!page.last}">
                             <li class="page-item"><a class="page-link"
-                                                     href="/doctor/page/${page.number+1}?recordsPerPage=${page.size}"><spring:message
+                                                     href="/patientsList/${page.number+1}?recordsPerPage=${page.size}"><spring:message
                                     code="pagination.next"/></a>
                             </li>
                         </c:if>
                     </ul>
                 </div>
             </div>
-            <%--            </div>--%>
-
         </div>
         <div class="col-sm-2 sidenav">
 

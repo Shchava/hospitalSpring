@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="springForm" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page isELIgnored="false" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <html>
@@ -13,12 +14,8 @@
     <link rel="stylesheet" href="/css/doctorPageMarkUp.css"/>
     <link rel="stylesheet" href="/css/listOfEntries.css"/>
     <link rel="stylesheet" href="/css/pagination.css"/>
-    <title><spring:message code="registration.title"/></title>
-    <style>
-        .diagnosesTitle{
-            float: right;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/showPatient.css"/>
+    <title>${patient.surname} ${patient.name} ${patient.patronymic}</title>
     <c:set var="dateFormat">
         <spring:message code="dateFormat"/>
     </c:set>
@@ -71,7 +68,7 @@
                             <h2>${patient.surname} ${patient.name} ${patient.patronymic}</h2>
                         </div>
                         <div class="col-sm-3">
-                            <a href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=${page.size}"
+                            <a href="/patient${patient.idUser}/${page.number}?recordsPerPage=${page.size}"
                                class="btn btn-primary"><i class="material-icons">&#xE863;</i>
                                 <span><spring:message code="doctor.page.patientsList.refresh"/></span></a>
                         </div>
@@ -79,9 +76,9 @@
                 </div>
 
                 <div>
-                    <h6>email:</h6>
+                    <h6><spring:message code="doctor.showPatient.patientEmail"/></h6>
                     <p>${patient.email}</p>
-                    <h6>personal info:</h6>
+                    <h6><spring:message code="doctor.showPatient.personalInfo"/></h6>
                     <p>${patient.info}</p>
                 </div>
 
@@ -95,19 +92,23 @@
                                             type="button" data-toggle="dropdown">${page.size}</button>
                                     <ul class="dropdown-menu ">
                                         <li><a class="dropdown-item"
-                                               href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=5">5</a></li>
+                                               href="/patient${patient.idUser}/${page.number}?recordsPerPage=5">5</a>
+                                        </li>
                                         <li><a class="dropdown-item"
-                                               href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=10">10</a></li>
+                                               href="/patient${patient.idUser}/${page.number}?recordsPerPage=10">10</a>
+                                        </li>
                                         <li><a class="dropdown-item"
-                                               href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=15">15</a></li>
+                                               href="/patient${patient.idUser}/${page.number}?recordsPerPage=15">15</a>
+                                        </li>
                                         <li><a class="dropdown-item"
-                                               href="/doctor/patient${patient.idUser}/${page.number}?recordsPerPage=20">20</a></li>
+                                               href="/patient${patient.idUser}/${page.number}?recordsPerPage=20">20</a>
+                                        </li>
                                     </ul>
                                 </div>
                                 <span> <spring:message code="pagination.entries"/></span>
                             </div>
                         </div>
-                        <div class="col-sm-3"><h3 class="diagnosesTitle">Diagnoses</h3></div>
+                        <div class="col-sm-3"><h3 class="diagnosesTitle"><spring:message code="showPatient.diagnosesTable"/></h3></div>
 
                         <div class="col-sm-6">
                             <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
@@ -136,18 +137,37 @@
                         <tr>
                             <th><c:out value="${diagnosis.idDiagnosis}"/></th>
                             <th><c:out value="${diagnosis.name}"/>
-                            <th><c:out value="${diagnosis.assigned.format(foramter)}" /> </th>
-                            <th><c:out value="${diagnosis.doctor.surname}"/> <c:out value="${diagnosis.doctor.name}"/></th>
+                            <th><c:out value="${diagnosis.assigned.format(foramter)}"/></th>
+                            <th><c:out value="${diagnosis.doctor.surname}"/> <c:out
+                                    value="${diagnosis.doctor.name}"/></th>
                             <th><c:out value="${diagnosis.cured}"/></th>
-                            <th><a class="btn btn-primary" href="#" role="button"><spring:message
+                            <th><a class="btn btn-primary" href="/patient${patient.idUser}/diagnosis${diagnosis.idDiagnosis}" role="button"><spring:message
                                     code="doctor.showPatient.diagnosesList.open"/></a>
                             </th>
                         </tr>
                     </c:forEach>
                     </tbody>
                 </table>
-
-                <a role="button" class="btn btn-primary btn-lg btn-block">+</a>
+                <sec:authorize access="hasRole('DOCTOR')">
+                    <div id="addDiagnosis" class="hidden-form">
+                        <springForm:form method="POST" modelAttribute="newDiagnosis" action="/doctor/patient${patient.idUser}/addDiagnosis">
+                            <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
+                            <input type="hidden" name="pageNumber" value="${page.number}">
+                            <input type="hidden" name="recordsPerPage" value="${page.size}">
+                            <div class="form-group">
+                                <label><spring:message code="doctor.showPatient.newDiagnosis.name"/></label>
+                                <springForm:errors path="name" cssClass="alert-danger error-message" />
+                                <springForm:input path="name" type="text" class="form-control" required="required"/>
+                            </div>
+                            <div class="form-group">
+                                <label><spring:message code="doctor.showPatient.newDiagnosis.description"/></label>
+                                <springForm:textarea path="description" type="text" class="form-control input-description"/>
+                            </div>
+                            <button role="button" class="btn btn-primary btn-lg btn-block"><spring:message code="showPatient.addDiagnosis"/></button>
+                        </springForm:form>
+                    </div>
+                    <button id="showAddDiagnosisForm" role="button" class="btn btn-primary btn-lg btn-block"><spring:message code="showPatient.addDiagnosis"/></button>
+                </sec:authorize>
                 <div class="clearfix">
                     <div class="hint-text"><spring:message code="pagination.label.showing"/> <b><c:out
                             value="${page.numberOfElements}"/></b> <spring:message code="pagination.label.outOf"/>
@@ -157,7 +177,7 @@
                     <ul class="pagination">
                         <c:if test="${!page.first}">
                             <li class="page-item"><a class="page-link"
-                                                     href="/doctor/patient${patient.idUser}/${page.number - 1}?recordsPerPage=${page.size}"><spring:message
+                                                     href="/patient${patient.idUser}/${page.number - 1}?recordsPerPage=${page.size}"><spring:message
                                     code="pagination.previous"/></a>
                             </li>
                         </c:if>
@@ -172,7 +192,7 @@
                                 </c:when>
                                 <c:otherwise>
                                     <li class="page-item"><a class="page-link"
-                                                             href="/doctor/patient${patient.idUser}/${i}?recordsPerPage=${page.size}">${i}</a>
+                                                             href="/patient${patient.idUser}/${i}?recordsPerPage=${page.size}">${i}</a>
                                     </li>
                                 </c:otherwise>
                             </c:choose>
@@ -180,7 +200,7 @@
 
                         <c:if test="${!page.last}">
                             <li class="page-item"><a class="page-link"
-                                                     href="/doctor/patient${patient.idUser}/${page.number+1}?recordsPerPage=${page.size}"><spring:message
+                                                     href="/patient${patient.idUser}/${page.number+1}?recordsPerPage=${page.size}"><spring:message
                                     code="pagination.next"/></a>
                             </li>
                         </c:if>
@@ -205,5 +225,17 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+
+<sec:authorize access="hasRole('DOCTOR')">
+    <script>
+        $(document).ready(function () {
+            $("#showAddDiagnosisForm").click(function () {
+                $("#showAddDiagnosisForm").hide();
+                $("#addDiagnosis").show();
+                return false;
+            });
+        });
+    </script>
+</sec:authorize>
 </body>
 </html>

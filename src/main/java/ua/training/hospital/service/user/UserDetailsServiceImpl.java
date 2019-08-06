@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ua.training.hospital.entity.User;
+import ua.training.hospital.entity.UserAuthentication;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,7 +25,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(()-> new UsernameNotFoundException("user with email "+ email + " not found"));
 
         Set<GrantedAuthority> roles = new HashSet<>();
-        roles.add(new SimpleGrantedAuthority(user.getRole().name()));
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPasswordHash(), roles);
+        roles.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+        return new UserAuthentication(
+                user.getIdUser(),
+                user.getEmail(),
+                user.getPasswordHash(),
+                roles);
     }
 }
