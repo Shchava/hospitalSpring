@@ -17,7 +17,8 @@ Open project directory in terminal and run "mvn spring-boot:run"
 
 ### Resources
 
-date base schema: https://drive.google.com/open?id=1A2dkN_b-7GIGzyVQvRl2miys96RaLPL8
+date base schema: https://drive.google.com/open?id=1A2dkN_b-7GIGzyVQvRl2miys96RaLPL8 
+
 data base dump: https://drive.google.com/file/d/1LD0qlmuS1I_aH9TprDBE7x0y_TUmd_DO/view?usp=sharing
 
 ## Running tests
