@@ -23,9 +23,8 @@ public interface UserRepository extends PagingAndSortingRepository<User,Long> {
             "LEFT JOIN u.myDiagnoses diag " +
             "where (diag.assigned) in (" +
             "select MAX(diag2.assigned) " +
-            "from User as u2 " +
-            "LEFT JOIN u2.myDiagnoses diag2 " +
-            "GROUP BY u2.idUser) " +
+            "from u.myDiagnoses as diag2 " +
+            "GROUP BY diag2.patient) " +
             "OR diag.patient is null " +
             "AND u.role = 'PATIENT'")
     Page<ShowUserToDoctorDTO> findPatientsForDoctorPage(Pageable pageable);
