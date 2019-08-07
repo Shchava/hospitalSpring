@@ -101,9 +101,9 @@
                 <button type="submit" class="btn btn-primary btn-block btn-lg"><spring:message
                         code="registration.signUp"/></button>
             </div>
-
+            <p class="text-center"><spring:message code="registration.loginInvitation"/>
+                <a href="/login"><spring:message code="registration.loginLink"/></a></p>
             <p class="small text-center"><spring:message code="registration.agreement"/></p>
-
         </springForm:form>
     </div>
 </div>
