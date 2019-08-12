@@ -207,12 +207,8 @@
 
 
                                 <div class="col-sm-9">
-                                    <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
                                     <div class="filter-group">
-                                        <label>Name</label>
-                                        <input type="text" class="form-control">
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -318,12 +314,9 @@
 
 
                                 <div class="col-sm-9">
-                                    <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
                                     <div class="filter-group">
-                                        <label>Name</label>
-                                        <input type="text" class="form-control">
-                                    </div>
 
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -438,12 +431,8 @@
 
 
                                 <div class="col-sm-9">
-                                    <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
                                     <div class="filter-group">
-                                        <label>Name</label>
-                                        <input type="text" class="form-control">
                                     </div>
-
                                 </div>
                             </div>
                         </div>
