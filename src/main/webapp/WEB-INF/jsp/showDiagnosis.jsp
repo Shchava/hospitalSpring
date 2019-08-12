@@ -20,6 +20,11 @@
     <link rel="stylesheet" href="/css/showDiagnosis.css"/>
     <title>${diagnosis.name}</title>
 
+    <c:set var="dateFormat">
+        <spring:message code="dateFormat"/>
+    </c:set>
+    <c:set var="foramtter" value='${DateTimeFormatter.ofPattern(dateFormat)}'/>
+
     <c:set var="showMedicineAdditionalInfo">
         <spring:message code="doctor.showDiagnosis.showTherapy.openButton"/>
     </c:set>
@@ -161,7 +166,7 @@
                     <h6><spring:message code="doctor.showDiagnosis.description"/></h6>
                     <p>${diagnosis.description}</p>
                     <h6><spring:message code="doctor.showDiagnosis.diagnosed"/></h6>
-                    <p>${diagnosis.assigned}</p>
+                    <p>${diagnosis.assigned.format(foramtter)}</p>
                     <h6><spring:message code="doctor.showDiagnosis.diagnosedBy"/></h6>
                     <p>${diagnosis.doctor.surname} ${diagnosis.doctor.name} ${diagnosis.doctor.patronymic}</p>
                 </div>
@@ -267,7 +272,7 @@
                             </div>
                             <div class="form-group">
                                 <label><spring:message code="doctor.showDiagnosis.addMedicine.refill"/></label>
-                                <input type='date' class="form-control"/>
+                                <input type='date' name="refill" class="form-control"/>
                             </div>
                         </form>
                     </div>
@@ -403,7 +408,7 @@
 
 
                         <div id="surgeryCreated" class="alert alert-info createNotification" role="alert">
-                            <spring:message code="doctor.showDiagnosis.procedureCreated"/></div>
+                            <spring:message code="doctor.showDiagnosis.surgeryCreated"/></div>
                         <div id="surgeryCreationError" class="alert alert-danger fieldError" role="alert"></div>
 
 
@@ -690,6 +695,15 @@
     }
 
     function addMedicineRow(dataEntry) {
+
+        var refillDate;
+        if(!dataEntry.refill || dataEntry.refill === null || dataEntry.refill === ""){
+            refillDate = " "
+        }else{
+            refillDate = "<h6>${medicineRefill}</h6>" +
+                "<p>" + new Date(dataEntry.refill).toLocaleString().slice(0, 10) + "</p>";
+        }
+
         var row =
             "<tr>" +
             "<th>" + dataEntry.idTherapy + "</th>" +
@@ -705,8 +719,7 @@
             "<p>" + dataEntry.description + "</p>" +
             "<h6>${therapyDoctorEmail}</h6>" +
             "<p>" + dataEntry.assignedBy.email + "</p>" +
-            "<h6>${medicineRefill}</h6>" +
-            "<p>" + new Date(dataEntry.refill).toLocaleString() + "</p>" +
+            refillDate +
             "</th>" +
             "</tr>";
 
@@ -1144,7 +1157,7 @@
                             errMessage.html(error.defaultMessage);
                             errMessage.show();
 
-                        } else if (error.field === "room") {
+                        } else if (error.field === "surgeryDate") {
                             var errMessage = $("#surgeryDateFieldError");
                             errMessage.html(error.defaultMessage);
                             errMessage.show();
