@@ -157,7 +157,8 @@
                             <h2>${diagnosis.name}</h2>
                         </div>
                         <div class="col-sm-3">
-
+                            <button id="closeDiagnosisButton" class="btn btn-primary">
+                                <span><spring:message code="doctor.closeDiagnosis"/></span></button>
                         </div>
                     </div>
                 </div>
