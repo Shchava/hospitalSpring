@@ -1,5 +1,7 @@
 package ua.training.hospital.service.procedure;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +18,8 @@ import java.util.Optional;
 
 @Service
 public class ProcedureServiceImpl implements ProcedureService {
+    private static final Logger logger = LogManager.getLogger(ProcedureServiceImpl.class);
+
     @Autowired
     ProcedureRepository repository;
 
@@ -27,12 +31,15 @@ public class ProcedureServiceImpl implements ProcedureService {
 
     @Override
     public Page<Procedure> findProceduresByDiagnosisId(int pageNumber, int ProcedurePerPage, long diagnosisId) {
+        logger.debug("searching for procedures with diagnosis id " + diagnosisId + " on page " + pageNumber + " with "
+                + ProcedurePerPage + "entries on page");
         return repository.findProceduresByDiagnosisId(PageRequest.of(pageNumber, ProcedurePerPage), diagnosisId);
     }
 
     @Override
     @Transactional
     public Optional<Procedure> createProcedure(ProcedureDTO dto, long diagnosisId, String doctorEmail) {
+        logger.info("trying to create procedure with name" + dto.getName() + "for diagnosis with id " + diagnosisId);
         Procedure toCreate = new Procedure();
         toCreate.setName(dto.getName());
         toCreate.setDescription(dto.getDescription());
