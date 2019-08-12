@@ -1,5 +1,7 @@
 package ua.training.hospital.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,13 +23,17 @@ import java.util.Optional;
 
 @Controller
 public class RegisterController {
+    private static final Logger logger = LogManager.getLogger(RegisterController.class);
+
     @Autowired
     UserService userService;
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String registration(Model model) {
+        logger.debug("requested /registrayion");
         UserDTO userDto = new UserDTO();
         model.addAttribute("user", userDto);
+        logger.debug("returning register.jsp page to user");
         return "register";
     }
 
@@ -39,6 +45,7 @@ public class RegisterController {
             WebRequest request,
             Errors errors
     ) {
+        logger.debug("requested /registrayion post method");
         Optional<User> registered = Optional.empty();
         if (!result.hasErrors()) {
             try {
@@ -47,14 +54,18 @@ public class RegisterController {
                 if (registered.isPresent()) {
                     ModelAndView success = new ModelAndView("login");
                     success.addObject("registered", true);
+                    logger.debug("registration succes, returning login.jsp page");
                     return success;
                 } else {
+                    logger.info("userService.registerUser returned empty object rejecting emil with registartion error message");
                     result.rejectValue("email", "registration.error");
                 }
             } catch (EmailExistsException ex) {
+                logger.info("trying to register with existing email ");
                 result.rejectValue("email", "email.exists");
             }
         }
+        logger.debug("registration unsuccesfull, returning register.jsp page back");
         return new ModelAndView("register", "user", user);
     }
 }

@@ -1,5 +1,7 @@
 package ua.training.hospital.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -12,6 +14,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import ua.training.hospital.Application;
 import ua.training.hospital.controller.dto.ApiError;
 import ua.training.hospital.controller.dto.CreationResponse;
 
@@ -20,6 +23,8 @@ import java.util.ResourceBundle;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class ExceptionHandler  extends ResponseEntityExceptionHandler {
+    private static final Logger logger = LogManager.getLogger(ExceptionHandler.class);
+
     @Autowired
     private MessageSource messageSource;
 
@@ -27,6 +32,7 @@ public class ExceptionHandler  extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String message = messageSource.getMessage("exceptionHandler.json.message",null,request.getLocale());
         String error = ex.toString();
+        logger.warn("trying to pass unparseable JSON: " + ex.toString());
         return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST,message,error));
     }
 

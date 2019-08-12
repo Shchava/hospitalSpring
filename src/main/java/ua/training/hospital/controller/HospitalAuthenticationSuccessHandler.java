@@ -3,6 +3,8 @@ package ua.training.hospital.controller;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,6 +26,7 @@ import java.util.Collection;
 @Setter
 @Component
 public class HospitalAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+    private static final Logger logger = LogManager.getLogger(HospitalAuthenticationSuccessHandler.class);
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
@@ -38,15 +41,14 @@ public class HospitalAuthenticationSuccessHandler implements AuthenticationSucce
 
     private void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException {
-
         String targetUrl = determineTargetUrl(authentication);
-
         if (response.isCommitted()) {
-//            logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
+            logger.warn("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
         }
 
         redirectStrategy.sendRedirect(request, response, targetUrl);
+        logger.debug("Login success, redirecting to: " + targetUrl);
     }
 
     private String determineTargetUrl(Authentication authentication) {
