@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import ua.training.hospital.controller.ShowPatientController;
 import ua.training.hospital.controller.dto.DiagnosisDTO;
 import ua.training.hospital.entity.Diagnosis;
 import ua.training.hospital.repository.DiagnosisRepository;
@@ -36,7 +35,7 @@ public class DiagnosisServiceImpl implements DiagnosisService {
         return 1 == repository.addDiagnosis(
                 dto.getName(),
                 dto.getDescription(),
-                getAssignedTime(),
+                getCurrentTime(),
                 patientId,
                 doctorEmail
         );
@@ -48,7 +47,13 @@ public class DiagnosisServiceImpl implements DiagnosisService {
         return repository.findById(idDiagnosis);
     }
 
-    private LocalDateTime getAssignedTime() {
+    @Transactional
+    public Optional<Diagnosis> closeDiagnosis(long idDiagnosis){
+        logger.info("trying to close diagnosis with id: " + idDiagnosis);
+        return repository.closeDiagnosis(idDiagnosis, getCurrentTime());
+    }
+
+    private LocalDateTime getCurrentTime() {
         return LocalDateTime.now();
     }
 }
