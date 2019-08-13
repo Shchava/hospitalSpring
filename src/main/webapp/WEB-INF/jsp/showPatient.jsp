@@ -135,7 +135,7 @@
                             <th><c:out value="${diagnosis.assigned.format(foramter)}"/></th>
                             <th><c:out value="${diagnosis.doctor.surname}"/> <c:out
                                     value="${diagnosis.doctor.name}"/></th>
-                            <th><c:out value="${diagnosis.cured}"/></th>
+                            <th><c:out value="${diagnosis.cured.format(foramter)}"/></th>
                             <th><a class="btn btn-primary" href="/patient${patient.idUser}/diagnosis${diagnosis.idDiagnosis}" role="button"><spring:message
                                     code="doctor.showPatient.diagnosesList.open"/></a>
                             </th>

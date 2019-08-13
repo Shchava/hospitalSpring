@@ -34,7 +34,7 @@ public interface DiagnosisRepository extends JpaRepository<Diagnosis, Long> {
             "SET diag.cured =:curedDate " +
             "WHERE diag.idDiagnosis = :diagnosisId " +
             "AND diag.cured = null")
-    Optional<Diagnosis> closeDiagnosis(
+    int closeDiagnosis(
             @Param("diagnosisId")long diagnosisId,
             @Param("curedDate") LocalDateTime cured);
 }

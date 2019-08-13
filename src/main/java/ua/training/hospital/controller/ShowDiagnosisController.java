@@ -161,4 +161,20 @@ public class ShowDiagnosisController {
         logger.debug("creation of surgery successful returning  \"created\" creation response\"");
         return new ResponseEntity<>(new CreationResponse("created",result.getAllErrors()), HttpStatus.OK);
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/doctor/diagnosis{idDiagnosis}/closeDiagnosis",
+            method = RequestMethod.PATCH)
+    public ResponseEntity<ClosingResponse> closeDiagnosis(
+            @PathVariable long idDiagnosis,
+            Model model){
+        logger.debug("requested /doctor/diagnosis" + idDiagnosis + "/closeDiagnosis patch method");
+        if(diagnosisService.closeDiagnosis(idDiagnosis)){
+            logger.info("diagnosis with id: " + idDiagnosis + " closed");
+            return new ResponseEntity<>(new ClosingResponse("closed"),HttpStatus.OK);
+        }else{
+            logger.info("cant close diagnosis with id: "+ idDiagnosis);
+            return new ResponseEntity<>(new ClosingResponse("cantClose"),HttpStatus.BAD_REQUEST);
+        }
+    }
 }

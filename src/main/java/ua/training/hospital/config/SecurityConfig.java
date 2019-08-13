@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/css/**","/webjars/**","/login/**","/registration/**").permitAll()
-                .antMatchers("/doctor/diagnosis*/addSurgery","/doctor/patient*/addDiagnosis").hasRole(UserRole.DOCTOR.name())
+                .antMatchers("/doctor/diagnosis*/addSurgery","/doctor/patient*/addDiagnosis","/doctor/diagnosis*/closeDiagnosis").hasRole(UserRole.DOCTOR.name())
                 .antMatchers("/patientsList/**","/doctor/diagnosis*/addMedicine","/doctor/diagnosis*/addProcedure").hasAnyRole(UserRole.DOCTOR.name(),UserRole.NURSE.name())
 
                 .anyRequest().authenticated()

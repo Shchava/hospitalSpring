@@ -100,7 +100,7 @@
             display: none;
         }
 
-        .createNotification {
+        .notification {
             display: none;
         }
 
@@ -157,11 +157,17 @@
                             <h2>${diagnosis.name}</h2>
                         </div>
                         <div class="col-sm-3">
-                            <button id="closeDiagnosisButton" class="btn btn-primary">
-                                <span><spring:message code="doctor.closeDiagnosis"/></span></button>
+                            <c:if test="${empty diagnosis.cured}">
+                                <button id="closeDiagnosisButton" class="btn btn-primary">
+                                    <span><spring:message code="doctor.closeDiagnosis"/></span></button>
+                            </c:if>
                         </div>
                     </div>
                 </div>
+
+                <div id="closed" class="alert alert-info notification" role="alert"><spring:message code="diagnosis.closeDiagnosis.closed" /></div>
+
+                <div id="cantClose" class="alert alert-danger notification" role="alert"><spring:message code="diagnosis.closeDiagnosis.cantClose" /></div>
 
                 <div>
                     <h6><spring:message code="doctor.showDiagnosis.description"/></h6>
@@ -170,6 +176,10 @@
                     <p>${diagnosis.assigned.format(foramtter)}</p>
                     <h6><spring:message code="doctor.showDiagnosis.diagnosedBy"/></h6>
                     <p>${diagnosis.doctor.surname} ${diagnosis.doctor.name} ${diagnosis.doctor.patronymic}</p>
+                    <c:if test="${!empty diagnosis.cured}">
+                        <h6><spring:message code="doctor.showDiagnosis.cured"/></h6>
+                        <p>${diagnosis.cured.format(foramtter)}</p>
+                    </c:if>
                 </div>
 
                 <button id="showMedicine" role="button" class="btn btn-primary btn-lg btn-block show-button">
@@ -178,7 +188,7 @@
                 <div id="medicineContainer" class="medicine-container">
                     <div class="table-wrapper">
 
-                        <div id="medicineCreated" class="alert alert-info createNotification" role="alert">
+                        <div id="medicineCreated" class="alert alert-info notification" role="alert">
                             <spring:message code="doctor.showDiagnosis.medicineCreated"/></div>
                         <div id="medicineCreationError" class="alert alert-danger fieldError" role="alert"></div>
 
@@ -286,7 +296,7 @@
                     <div class="table-wrapper">
                         <div class="table-filter">
 
-                            <div id="procedureCreated" class="alert alert-info createNotification" role="alert">
+                            <div id="procedureCreated" class="alert alert-info notification" role="alert">
                                 <spring:message code="doctor.showDiagnosis.procedureCreated"/></div>
                             <div id="procedureCreationError" class="alert alert-danger fieldError" role="alert"></div>
 
@@ -401,7 +411,7 @@
                     <div class="table-wrapper">
 
 
-                        <div id="surgeryCreated" class="alert alert-info createNotification" role="alert">
+                        <div id="surgeryCreated" class="alert alert-info notification" role="alert">
                             <spring:message code="doctor.showDiagnosis.surgeryCreated"/></div>
                         <div id="surgeryCreationError" class="alert alert-danger fieldError" role="alert"></div>
 
@@ -594,7 +604,11 @@
             e.preventDefault();
             $(this).parent('div').remove();
             x--;
-        })
+        });
+
+        $("#closeDiagnosisButton").click(function () {
+            closeDiagnosis();
+        });
     });
 
     //Loading medicine
@@ -1188,6 +1202,40 @@
             }
         });
         return indexed_array;
+    }
+
+    function closeDiagnosis() {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        $.ajaxSetup({
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            }
+        });
+
+        $.ajax({
+            type: 'PATCH',
+            url: "/doctor/diagnosis${diagnosis.idDiagnosis}/closeDiagnosis",
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (data) {
+                console.log(data);
+                if (data.response === "closed") {
+                    $("#closed").show();
+                    $("#closeDiagnosisButton").hide();
+                    $("#cantClose").hide();
+                } else {
+                    $("#closed").hide();
+                    $("#cantClose").show();
+                }
+            },
+            error: function (data) {
+                console.log(data);
+                $("#closed").hide();
+                $("#cantClose").show();
+            }
+        });
     }
 </script>
 </body>
