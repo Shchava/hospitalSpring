@@ -48,9 +48,9 @@ public class DiagnosisServiceImpl implements DiagnosisService {
     }
 
     @Transactional
-    public Optional<Diagnosis> closeDiagnosis(long idDiagnosis){
+    public boolean closeDiagnosis(long idDiagnosis){
         logger.info("trying to close diagnosis with id: " + idDiagnosis);
-        return repository.closeDiagnosis(idDiagnosis, getCurrentTime());
+        return repository.closeDiagnosis(idDiagnosis, getCurrentTime()) == 1;
     }
 
     private LocalDateTime getCurrentTime() {
