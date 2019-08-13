@@ -29,7 +29,7 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
                 return "pageNotFound";
             }
         }
-        logger.debug("returning error.jsp page");
+        logger.debug("returning errorPage.jsp page");
         return getErrorPath();
     }
 
