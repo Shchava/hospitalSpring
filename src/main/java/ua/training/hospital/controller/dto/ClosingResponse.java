@@ -1,4 +1,4 @@
-package ua.training.hospital.controller;
+package ua.training.hospital.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
