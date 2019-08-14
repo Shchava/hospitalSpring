@@ -20,6 +20,11 @@
     <link rel="stylesheet" href="/css/showDiagnosis.css"/>
     <title>${diagnosis.name}</title>
 
+    <c:set var="dateFormat">
+        <spring:message code="dateFormat"/>
+    </c:set>
+    <c:set var="foramtter" value='${DateTimeFormatter.ofPattern(dateFormat)}'/>
+
     <c:set var="showMedicineAdditionalInfo">
         <spring:message code="doctor.showDiagnosis.showTherapy.openButton"/>
     </c:set>
@@ -95,7 +100,7 @@
             display: none;
         }
 
-        .createNotification {
+        .notification {
             display: none;
         }
 
@@ -152,18 +157,31 @@
                             <h2>${diagnosis.name}</h2>
                         </div>
                         <div class="col-sm-3">
-
+                            <sec:authorize access="hasRole('DOCTOR')">
+                                <c:if test="${empty diagnosis.cured}">
+                                    <button id="closeDiagnosisButton" class="btn btn-primary">
+                                    <span><spring:message code="doctor.closeDiagnosis"/></span></button>
+                                </c:if>
+                            </sec:authorize>
                         </div>
                     </div>
                 </div>
+
+                <div id="closed" class="alert alert-info notification" role="alert"><spring:message code="diagnosis.closeDiagnosis.closed" /></div>
+
+                <div id="cantClose" class="alert alert-danger notification" role="alert"><spring:message code="diagnosis.closeDiagnosis.cantClose" /></div>
 
                 <div>
                     <h6><spring:message code="doctor.showDiagnosis.description"/></h6>
                     <p>${diagnosis.description}</p>
                     <h6><spring:message code="doctor.showDiagnosis.diagnosed"/></h6>
-                    <p>${diagnosis.assigned}</p>
+                    <p>${diagnosis.assigned.format(foramtter)}</p>
                     <h6><spring:message code="doctor.showDiagnosis.diagnosedBy"/></h6>
                     <p>${diagnosis.doctor.surname} ${diagnosis.doctor.name} ${diagnosis.doctor.patronymic}</p>
+                    <c:if test="${!empty diagnosis.cured}">
+                        <h6><spring:message code="doctor.showDiagnosis.cured"/></h6>
+                        <p>${diagnosis.cured.format(foramtter)}</p>
+                    </c:if>
                 </div>
 
                 <button id="showMedicine" role="button" class="btn btn-primary btn-lg btn-block show-button">
@@ -172,7 +190,7 @@
                 <div id="medicineContainer" class="medicine-container">
                     <div class="table-wrapper">
 
-                        <div id="medicineCreated" class="alert alert-info createNotification" role="alert">
+                        <div id="medicineCreated" class="alert alert-info notification" role="alert">
                             <spring:message code="doctor.showDiagnosis.medicineCreated"/></div>
                         <div id="medicineCreationError" class="alert alert-danger fieldError" role="alert"></div>
 
@@ -202,12 +220,8 @@
 
 
                                 <div class="col-sm-9">
-                                    <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
                                     <div class="filter-group">
-                                        <label>Name</label>
-                                        <input type="text" class="form-control">
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -245,34 +259,36 @@
                             </ul>
                         </div>
                     </div>
-                    <div id="addMedicine" class="addNewMedicine">
-                        <form id="addMedicineForm" action="/doctor/diagnosis${diagnosis.idDiagnosis}/addMedicine"
-                              method="POST" enctype="utf8">
-                            <div class="form-group">
-                                <label><spring:message code="doctor.showDiagnosis.addTherapy.name"/></label>
-                                <div id="medicineNameFieldError" class="alert alert-danger fieldError" role="alert"
-                                     required="required"></div>
-                                <input type="text" name="name" class="form-control" value=""/>
-                            </div>
-                            <div class="form-group">
-                                <label><spring:message code="doctor.showDiagnosis.addTherapy.description"/></label>
-                                <textarea type="text" name="description" class="form-control  input-description"
-                                          value=""></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label><spring:message code="doctor.showDiagnosis.addMedicine.count"/></label>
-                                <div id="medicineCountFieldError" class="alert alert-danger fieldError"
-                                     role="alert"></div>
-                                <input type="number" class="form-control" name="count" value="" required="required"/>
-                            </div>
-                            <div class="form-group">
-                                <label><spring:message code="doctor.showDiagnosis.addMedicine.refill"/></label>
-                                <input type='date' class="form-control"/>
-                            </div>
-                        </form>
-                    </div>
-                    <button id="addMedicineBtn" role="button" class="btn btn-primary btn-lg btn-block show-button">
-                        <spring:message code="doctor.showDiagnosis.addMedicine.button"/></button>
+                    <sec:authorize access="hasAnyRole('DOCTOR','NURSE')">
+                        <div id="addMedicine" class="addNewMedicine">
+                            <form id="addMedicineForm" action="/doctor/diagnosis${diagnosis.idDiagnosis}/addMedicine"
+                                  method="POST" enctype="utf8">
+                                <div class="form-group">
+                                    <label><spring:message code="doctor.showDiagnosis.addTherapy.name"/></label>
+                                    <div id="medicineNameFieldError" class="alert alert-danger fieldError" role="alert"
+                                         required="required"></div>
+                                    <input type="text" name="name" class="form-control" value=""/>
+                                </div>
+                                <div class="form-group">
+                                    <label><spring:message code="doctor.showDiagnosis.addTherapy.description"/></label>
+                                    <textarea type="text" name="description" class="form-control  input-description"
+                                              value=""></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label><spring:message code="doctor.showDiagnosis.addMedicine.count"/></label>
+                                    <div id="medicineCountFieldError" class="alert alert-danger fieldError"
+                                         role="alert"></div>
+                                    <input type="number" class="form-control" name="count" value="" required="required"/>
+                                </div>
+                                <div class="form-group">
+                                    <label><spring:message code="doctor.showDiagnosis.addMedicine.refill"/></label>
+                                    <input type='date' name="refill" class="form-control"/>
+                                </div>
+                            </form>
+                        </div>
+                        <button id="addMedicineBtn" role="button" class="btn btn-primary btn-lg btn-block show-button">
+                            <spring:message code="doctor.showDiagnosis.addMedicine.button"/></button>
+                    </sec:authorize>
                 </div>
 
                 <button id="showProcedures" role="button" class="btn btn-primary btn-lg btn-block show-button">
@@ -284,7 +300,7 @@
                     <div class="table-wrapper">
                         <div class="table-filter">
 
-                            <div id="procedureCreated" class="alert alert-info createNotification" role="alert">
+                            <div id="procedureCreated" class="alert alert-info notification" role="alert">
                                 <spring:message code="doctor.showDiagnosis.procedureCreated"/></div>
                             <div id="procedureCreationError" class="alert alert-danger fieldError" role="alert"></div>
 
@@ -313,12 +329,9 @@
 
 
                                 <div class="col-sm-9">
-                                    <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
                                     <div class="filter-group">
-                                        <label>Name</label>
-                                        <input type="text" class="form-control">
-                                    </div>
 
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -359,41 +372,42 @@
                         </div>
                     </div>
 
+                    <sec:authorize access="hasAnyRole('DOCTOR','NURSE')">
+                        <div id="addProcedure" class="addNewProcedure">
+                            <form id="addProcedureForm" method="POST" enctype="utf8">
+                                <div class="form-group">
+                                    <label><spring:message code="doctor.showDiagnosis.addTherapy.name"/></label>
+                                    <div id="procedureNameFieldError" class="alert alert-danger fieldError" role="alert"
+                                         required="required"></div>
+                                    <input type="text" name="name" class="form-control" value=""/>
+                                </div>
+                                <div class="form-group">
+                                    <label><spring:message code="doctor.showDiagnosis.addTherapy.description"/></label>
+                                    <textarea type="text" name="description" class="form-control  input-description"
+                                              value=""></textarea>
+                                </div>
 
-                    <div id="addProcedure" class="addNewProcedure">
-                        <form id="addProcedureForm" method="POST" enctype="utf8">
-                            <div class="form-group">
-                                <label><spring:message code="doctor.showDiagnosis.addTherapy.name"/></label>
-                                <div id="procedureNameFieldError" class="alert alert-danger fieldError" role="alert"
-                                     required="required"></div>
-                                <input type="text" name="name" class="form-control" value=""/>
-                            </div>
-                            <div class="form-group">
-                                <label><spring:message code="doctor.showDiagnosis.addTherapy.description"/></label>
-                                <textarea type="text" name="description" class="form-control  input-description"
-                                          value=""></textarea>
-                            </div>
+                                <div class="form-group">
+                                    <label><spring:message code="doctor.showDiagnosis.addProcedure.room"/></label>
+                                    <div id="procedureRoomFieldError" class="alert alert-danger fieldError"
+                                         role="alert"></div>
+                                    <input type="number" class="form-control" name="room" value="" required="required"/>
+                                </div>
 
-                            <div class="form-group">
-                                <label><spring:message code="doctor.showDiagnosis.addProcedure.room"/></label>
-                                <div id="procedureRoomFieldError" class="alert alert-danger fieldError"
-                                     role="alert"></div>
-                                <input type="number" class="form-control" name="room" value="" required="required"/>
-                            </div>
+                                <div id="appointmentDatesDiv" class="form-group assignedDatesWrap">
+                                    <label><spring:message
+                                            code="doctor.showDiagnosis.addProcedure.apponitmentdates"/></label>
+                                    <button id="addAssignedDateBtn" class="add_field_button"><spring:message
+                                            code="doctor.showDiagnosis.addProcedure.addNewDate"/></button>
+                                </div>
 
-                            <div id="appointmentDatesDiv" class="form-group assignedDatesWrap">
-                                <label><spring:message
-                                        code="doctor.showDiagnosis.addProcedure.apponitmentdates"/></label>
-                                <button id="addAssignedDateBtn" class="add_field_button"><spring:message
-                                        code="doctor.showDiagnosis.addProcedure.addNewDate"/></button>
-                            </div>
+                            </form>
+                        </div>
 
-                        </form>
-                    </div>
+                        <button id="addProcedureBtn" role="button" class="btn btn-primary btn-lg btn-block show-button">
+                            <spring:message code="doctor.showDiagnosis.addProcedure.button"/></button>
 
-                    <button id="addProcedureBtn" role="button" class="btn btn-primary btn-lg btn-block show-button">
-                        <spring:message code="doctor.showDiagnosis.addProcedure.button"/></button>
-
+                    </sec:authorize>
                 </div>
                 <button id="showSurgeries" role="button" class="btn btn-primary btn-lg btn-block"><spring:message
                         code="doctor.showDiagnosis.showSurgeries"/></button>
@@ -402,8 +416,8 @@
                     <div class="table-wrapper">
 
 
-                        <div id="surgeryCreated" class="alert alert-info createNotification" role="alert">
-                            <spring:message code="doctor.showDiagnosis.procedureCreated"/></div>
+                        <div id="surgeryCreated" class="alert alert-info notification" role="alert">
+                            <spring:message code="doctor.showDiagnosis.surgeryCreated"/></div>
                         <div id="surgeryCreationError" class="alert alert-danger fieldError" role="alert"></div>
 
 
@@ -433,12 +447,8 @@
 
 
                                 <div class="col-sm-9">
-                                    <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
                                     <div class="filter-group">
-                                        <label>Name</label>
-                                        <input type="text" class="form-control">
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -530,14 +540,15 @@
                 loadMedicine(0, 10);
             }
         });
-
-        $("#addMedicineBtn").click(function () {
-            if ($("#addMedicine").is(":visible")) {
-                sendAddMedicine();
-            } else {
-                $("#addMedicine").show();
-            }
-        });
+        <sec:authorize access="hasAnyRole('DOCTOR','NURSE')">
+            $("#addMedicineBtn").click(function () {
+                if ($("#addMedicine").is(":visible")) {
+                    sendAddMedicine();
+                } else {
+                    $("#addMedicine").show();
+                }
+            });
+        </sec:authorize>
 
         $("#showProcedures").click(function () {
             if ($("#procedureContainer").is(":visible")) {
@@ -547,14 +558,15 @@
                 loadProcedures(0, 10);
             }
         });
-
-        $("#addProcedureBtn").click(function () {
-            if ($("#addProcedure").is(":visible")) {
-                sendAddProcedure();
-            } else {
-                $("#addProcedure").show();
-            }
-        });
+        <sec:authorize access="hasAnyRole('DOCTOR','NURSE')">
+            $("#addProcedureBtn").click(function () {
+                if ($("#addProcedure").is(":visible")) {
+                    sendAddProcedure();
+                } else {
+                    $("#addProcedure").show();
+                }
+            });
+        </sec:authorize>
 
         $("#showSurgeries").click(function () {
             if ($("#surgeryContainer").is(":visible")) {
@@ -579,6 +591,10 @@
         $("#surgeryDateField").val(new Date().toJSON().slice(0, 19));
         $("#surgeryDateField").attr("min", (new Date().toJSON().slice(0, 19)));
 
+        $("#closeDiagnosisButton").click(function () {
+            closeDiagnosis();
+        });
+
         </sec:authorize>
 
         var x;
@@ -599,7 +615,9 @@
             e.preventDefault();
             $(this).parent('div').remove();
             x--;
-        })
+        });
+
+
     });
 
     //Loading medicine
@@ -690,6 +708,15 @@
     }
 
     function addMedicineRow(dataEntry) {
+
+        var refillDate;
+        if(!dataEntry.refill || dataEntry.refill === null || dataEntry.refill === ""){
+            refillDate = " "
+        }else{
+            refillDate = "<h6>${medicineRefill}</h6>" +
+                "<p>" + new Date(dataEntry.refill).toLocaleString().slice(0, 10) + "</p>";
+        }
+
         var row =
             "<tr>" +
             "<th>" + dataEntry.idTherapy + "</th>" +
@@ -705,8 +732,7 @@
             "<p>" + dataEntry.description + "</p>" +
             "<h6>${therapyDoctorEmail}</h6>" +
             "<p>" + dataEntry.assignedBy.email + "</p>" +
-            "<h6>${medicineRefill}</h6>" +
-            "<p>" + new Date(dataEntry.refill).toLocaleString() + "</p>" +
+            refillDate +
             "</th>" +
             "</tr>";
 
@@ -969,7 +995,7 @@
     }
 
     //add new therapy functions
-
+    <sec:authorize access="hasAnyRole('DOCTOR','NURSE')">
     function sendAddMedicine() {
         $("#medicineCreated").hide();
 
@@ -1095,7 +1121,7 @@
         });
 
     }
-
+    </sec:authorize>
     <sec:authorize access="hasRole('DOCTOR')">
 
     function sendAddSurgery() {
@@ -1144,7 +1170,7 @@
                             errMessage.html(error.defaultMessage);
                             errMessage.show();
 
-                        } else if (error.field === "room") {
+                        } else if (error.field === "surgeryDate") {
                             var errMessage = $("#surgeryDateFieldError");
                             errMessage.html(error.defaultMessage);
                             errMessage.show();
@@ -1185,6 +1211,40 @@
             }
         });
         return indexed_array;
+    }
+
+    function closeDiagnosis() {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        $.ajaxSetup({
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            }
+        });
+
+        $.ajax({
+            type: 'PATCH',
+            url: "/doctor/diagnosis${diagnosis.idDiagnosis}/closeDiagnosis",
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (data) {
+                console.log(data);
+                if (data.response === "closed") {
+                    $("#closed").show();
+                    $("#closeDiagnosisButton").hide();
+                    $("#cantClose").hide();
+                } else {
+                    $("#closed").hide();
+                    $("#cantClose").show();
+                }
+            },
+            error: function (data) {
+                console.log(data);
+                $("#closed").hide();
+                $("#cantClose").show();
+            }
+        });
     }
 </script>
 </body>

@@ -1,5 +1,7 @@
 package ua.training.hospital.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.core.annotation.Order;
@@ -25,6 +27,8 @@ import java.util.Optional;
 @Controller
 @Order(SecurityProperties.DEFAULT_FILTER_ORDER)
 public class ShowPatientController {
+    private static final Logger logger = LogManager.getLogger(ShowPatientController.class);
+
     @Autowired
     UserService userService;
 
@@ -48,8 +52,10 @@ public class ShowPatientController {
                                      @PathVariable int pageNumber,
                                      @RequestParam(defaultValue = "10") int recordsPerPage,
                                      Model model) {
+        logger.debug("requested /patient/" + idPatient + "/" + pageNumber);
         getDiagnoses(model, pageNumber, recordsPerPage, idPatient);
         model.addAttribute("newDiagnosis", new DiagnosisDTO());
+        logger.debug("returning showPatient.jsp page");
         return "showPatient";
     }
 
@@ -62,15 +68,17 @@ public class ShowPatientController {
                                      BindingResult result,
                                      Principal principal,
                                      Model model) {
-
+        logger.debug("requested /doctor/patient/" + idPatient + "/addDiagnosis");
         if (diagnosisService.addDiagnosis(diagnosisDTO, idPatient, principal.getName())) {
             model.addAttribute("addedDiagnosis", true);
             diagnosisDTO = new DiagnosisDTO();
+            logger.debug("creation successful, page will contain plain DiagnosisDTO");
         } else {
             result.rejectValue("name", "diagnosis.creationError");
+            logger.debug("creation failed, page will contain old DiagnosisDTO with rejected value");
         }
-
         getDiagnoses(model, pageNumber, recordsPerPage, idPatient);
+        logger.debug("returning showPatient.jsp page");
         return new ModelAndView("showPatient", "newDiagnosis", diagnosisDTO);
     }
 
@@ -80,7 +88,7 @@ public class ShowPatientController {
 
         User patient = getPatient(idPatient);
         Page<Diagnosis> diagnoses = diagnosisService.findDiagnosesByPatientId(pageNumber, recordsPerPage, idPatient);
-
+        logger.debug("setting diagnoses page with size: " + diagnoses.getNumberOfElements() + " and user with id " + patient.getIdUser() + " to page model");
         model.addAttribute("patient", patient);
         model.addAttribute("page", diagnoses);
     }

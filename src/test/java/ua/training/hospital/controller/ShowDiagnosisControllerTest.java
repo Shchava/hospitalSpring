@@ -38,8 +38,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -112,16 +111,16 @@ public class ShowDiagnosisControllerTest {
         given(medicineService.createMedicine(any(),eq(22L),any())).willReturn(Optional.of(mockMedicine));
         given(procedureService.createProcedure(any(),eq(22L),any())).willReturn(Optional.of(mockProcedure));
         given(surgeryService.createSurgery(any(),eq(22L),any())).willReturn(Optional.of(mockSurgery));
-
+        given(diagnosisService.closeDiagnosis(eq(22L))).willReturn(true);
     }
 
     @Test
     @WithMockUser(roles = "DOCTOR")
     public void testGetShowDiagnosisPage() throws Exception {
-        mvc.perform(get("/doctor/patient11/diagnosis22"))
+        mvc.perform(get("/patient11/diagnosis22"))
                 .andExpect(model().attribute("diagnosis",mockDiagnosis))
                 .andExpect(status().isOk());
-
+        System.out.println("d");
         verify(diagnosisService,times(1)).getDiagnosis(22L);
     }
 
@@ -173,5 +172,28 @@ public class ShowDiagnosisControllerTest {
         verify(surgeryService,times(1)).createSurgery(surgeryDTOCaptor.capture(),eq(22L),any());
         assertEquals(surgeryDTO.getName(),surgeryDTOCaptor.getValue().getName());
         assertEquals(surgeryDTO.getSurgeryDate(),surgeryDTOCaptor.getValue().getSurgeryDate());
+    }
+
+    @Test
+    @WithMockUser(roles = "DOCTOR")
+    public void testCloseDiagnosis()throws Exception{
+        MvcResult result = mvc.perform(patch("/doctor/diagnosis22/closeDiagnosis")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertTrue(result.getResponse().getContentAsString().contains("\"response\":\"closed\""));
+        verify(diagnosisService,times(1)).closeDiagnosis(eq(22L));
+    }
+
+    @Test
+    @WithMockUser(roles = "DOCTOR")
+    public void testUnSuccessfulCloseDiagnosis()throws Exception{
+        MvcResult result = mvc.perform(patch("/doctor/diagnosis21/closeDiagnosis")
+                .with(csrf()))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        assertTrue(result.getResponse().getContentAsString().contains("\"response\":\"cantClose\""));
+        verify(diagnosisService,times(1)).closeDiagnosis(eq(21L));
     }
 }

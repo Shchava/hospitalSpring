@@ -61,6 +61,8 @@
                 <div class="form-group">
                     <input type="submit" class="form-control"  value="<spring:message code="login.login.button" />" />
                 </div>
+                <p class="text-center"><spring:message code="login.registrationInvitation"/>
+                    <a href="/registration"><spring:message code="login.registrationLink"/></a></p>
             </form>
         </div>
     </div>

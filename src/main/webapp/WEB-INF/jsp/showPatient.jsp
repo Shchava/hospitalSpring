@@ -111,11 +111,6 @@
                         <div class="col-sm-3"><h3 class="diagnosesTitle"><spring:message code="showPatient.diagnosesTable"/></h3></div>
 
                         <div class="col-sm-6">
-                            <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
-                            <div class="filter-group">
-                                <label>Name</label>
-                                <input type="text" class="form-control">
-                            </div>
 
                         </div>
                     </div>
@@ -140,7 +135,7 @@
                             <th><c:out value="${diagnosis.assigned.format(foramter)}"/></th>
                             <th><c:out value="${diagnosis.doctor.surname}"/> <c:out
                                     value="${diagnosis.doctor.name}"/></th>
-                            <th><c:out value="${diagnosis.cured}"/></th>
+                            <th><c:out value="${diagnosis.cured.format(foramter)}"/></th>
                             <th><a class="btn btn-primary" href="/patient${patient.idUser}/diagnosis${diagnosis.idDiagnosis}" role="button"><spring:message
                                     code="doctor.showPatient.diagnosesList.open"/></a>
                             </th>

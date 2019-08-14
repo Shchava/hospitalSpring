@@ -11,6 +11,7 @@ import ua.training.hospital.entity.Diagnosis;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public interface DiagnosisRepository extends JpaRepository<Diagnosis, Long> {
     Page<Diagnosis> findDiagnosesByPatient_IdUser(Pageable page, Long patientId);
@@ -27,4 +28,13 @@ public interface DiagnosisRepository extends JpaRepository<Diagnosis, Long> {
             @Param("assigned") LocalDateTime assigned,
             @Param("patientId") long patientId,
             @Param("doctorEmail") String doctorEmail);
+
+    @Modifying
+    @Query("UPDATE Diagnosis diag " +
+            "SET diag.cured =:curedDate " +
+            "WHERE diag.idDiagnosis = :diagnosisId " +
+            "AND diag.cured = null")
+    int closeDiagnosis(
+            @Param("diagnosisId")long diagnosisId,
+            @Param("curedDate") LocalDateTime cured);
 }

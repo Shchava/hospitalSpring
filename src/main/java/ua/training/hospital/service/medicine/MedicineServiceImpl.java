@@ -1,5 +1,7 @@
 package ua.training.hospital.service.medicine;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +19,8 @@ import java.util.Optional;
 
 @Service
 public class MedicineServiceImpl implements MedicineService{
+    private static final Logger logger = LogManager.getLogger(MedicineServiceImpl.class);
+
     @Autowired
     MedicineRepository repository;
 
@@ -28,12 +32,15 @@ public class MedicineServiceImpl implements MedicineService{
 
     @Override
     public Page<Medicine> findMedicineByDiagnosisId(int pageNumber, int MedicinePerPage, long diagnosisId) {
+        logger.debug("searching for medicines with diagnosis id " + diagnosisId + " on page " + pageNumber + " with "
+                + MedicinePerPage + "entries on page");
         return repository.findMedicineByDiagnosisId(PageRequest.of(pageNumber, MedicinePerPage), diagnosisId);
     }
 
     @Override
     @Transactional
     public Optional<Medicine> createMedicine(MedicineDTO dto, long diagnosisId, String doctorEmail) {
+        logger.info("trying to create medicine with name" + dto.getName() + "for diagnosis with id " + diagnosisId);
         Medicine toCreate = new Medicine();
         toCreate.setName(dto.getName());
         toCreate.setDescription(dto.getDescription());
@@ -42,7 +49,6 @@ public class MedicineServiceImpl implements MedicineService{
         toCreate.setAssigned(getAssignedTime());
         toCreate.setDiagnosis(diagnosisRepository.getOne(diagnosisId));
         toCreate.setAssignedBy(userRepository.findByEmail(doctorEmail));
-
 
         return Optional.ofNullable(repository.save(toCreate));
     }

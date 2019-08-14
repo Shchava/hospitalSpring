@@ -8,7 +8,8 @@ import ua.training.hospital.controller.utils.UtilsTestSuite;
 @Suite.SuiteClasses({
         UtilsTestSuite.class,
         RegisterControllerTest.class,
-        ShowPatientControllerTest.class
+        ShowPatientControllerTest.class,
+        ShowDiagnosisControllerTest.class
 
 })
 public class ControllerTestSuite {

@@ -49,6 +49,7 @@ public class DiagnosisServiceImplTest {
         initMocks(this);
         given(repository.findDiagnosesByPatient_IdUser(any(), any())).willReturn(diagnoses);
         given(repository.addDiagnosis(anyString(), anyString(), any(), anyLong(), eq(doctorEmail))).willReturn(1);
+        given(repository.closeDiagnosis(anyLong(),any())).willReturn(1);
     }
 
     @Test
@@ -95,5 +96,16 @@ public class DiagnosisServiceImplTest {
         assertTimeIsBetween(timeCaptor.getValue(), before, after);
     }
 
+    @Test
+    public void closeDiagnosis(){
+
+        LocalDateTime before = LocalDateTime.now();
+        assertTrue(service.closeDiagnosis(12L));
+        LocalDateTime after = LocalDateTime.now();
+
+        verify(repository, times(1)).closeDiagnosis(eq(12L),timeCaptor.capture());
+
+        assertTimeIsBetween(timeCaptor.getValue(), before, after);
+    }
 
 }

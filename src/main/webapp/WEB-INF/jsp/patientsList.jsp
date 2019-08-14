@@ -96,22 +96,7 @@
                             </div>
                         </div>
                         <div class="col-sm-9">
-                            <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
-                            <div class="filter-group">
-                                <label>Name</label>
-                                <input type="text" class="form-control">
-                            </div>
 
-                            <div class="filter-group">
-                                <label>Status</label>
-                                <select class="form-control">
-                                    <option>Any</option>
-                                    <option>Delivered</option>
-                                    <option>Shipped</option>
-                                    <option>Pending</option>
-                                    <option>Cancelled</option>
-                                </select>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -190,7 +175,6 @@
 </div>
 
 <footer class="container-fluid text-center">
-    <p>Footer Text</p>
 </footer>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

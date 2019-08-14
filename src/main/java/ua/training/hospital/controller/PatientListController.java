@@ -1,5 +1,7 @@
 package ua.training.hospital.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -15,6 +17,8 @@ import ua.training.hospital.service.user.UserService;
 
 @Controller
 public class PatientListController {
+    private static final Logger logger = LogManager.getLogger(PatientListController.class);
+
     @Autowired
     UserService userService;
 
@@ -28,12 +32,14 @@ public class PatientListController {
 
     @RequestMapping(value = "/patientsList/{pageNumber}", method = RequestMethod.GET)
     public String getDoctorPage(@PathVariable(required = false) int pageNumber, @RequestParam(defaultValue = "10") int recordsPerPage, Model model) {
+        logger.debug("Requested /patientsList/" + pageNumber);
         pageNumber = paginationUtils.checkPageNumber(pageNumber);
         recordsPerPage = paginationUtils.checkRecordsPerPage(recordsPerPage);
 
         Page<ShowUserToDoctorDTO> page = userService.findPatientsToShow(pageNumber,recordsPerPage);
         model.addAttribute("page", page);
 
+        logger.debug("Returning patientsList.jsp page to user");
         return "patientsList";
     }
 }
