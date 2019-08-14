@@ -51,7 +51,7 @@ public class HospitalAuthenticationSuccessHandler implements AuthenticationSucce
         logger.debug("Login success, redirecting to: " + targetUrl);
     }
 
-    private String determineTargetUrl(Authentication authentication) {
+    public static String determineTargetUrl(Authentication authentication) {
         UserAuthentication authData = (UserAuthentication)authentication.getPrincipal();
         boolean isPersonal = false;
         boolean isPatient = false;
