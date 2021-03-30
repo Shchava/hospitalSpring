@@ -151,7 +151,7 @@
                                 </c:when>
                                 <c:otherwise>
                                     <li class="page-item"><a class="page-link"
-                                                             href="/patientsList/${i}?recordsPerPage=${page.size}">${i}</a>
+                                                             href="/patientsList/${i-1}?recordsPerPage=${page.size}">${i}</a>
                                     </li>
                                 </c:otherwise>
                             </c:choose>

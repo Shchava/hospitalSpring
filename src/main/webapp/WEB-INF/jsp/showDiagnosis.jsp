@@ -230,7 +230,7 @@
                             <thead>
                             <tr>
                                 <th><spring:message code="doctor.showDiagnosis.showTherapy.id"/></th>
-                                <th><spring:message code="doctor.showDiagnosis.showTherapy.name"/></th>
+                                <th><spring:message code="doctor.showDiagnosis.showMedicine.name"/></th>
                                 <th><spring:message code="doctor.showDiagnosis.showTherapy.assigned"/></th>
                                 <th><spring:message code="doctor.showDiagnosis.showTherapy.assignedBy"/></th>
                                 <th><spring:message code="doctor.showDiagnosis.showMedicine.count"/></th>
@@ -397,7 +397,7 @@
                                 <div id="appointmentDatesDiv" class="form-group assignedDatesWrap">
                                     <label><spring:message
                                             code="doctor.showDiagnosis.addProcedure.apponitmentdates"/></label>
-                                    <button id="addAssignedDateBtn" class="add_field_button"><spring:message
+                                    <button id="addAssignedDateBtn" class="btn btn-primary  add_field_button"><spring:message
                                             code="doctor.showDiagnosis.addProcedure.addNewDate"/></button>
                                 </div>
 
@@ -457,7 +457,7 @@
                             <thead>
                             <tr>
                                 <th><spring:message code="doctor.showDiagnosis.showTherapy.id"/></th>
-                                <th><spring:message code="doctor.showDiagnosis.showTherapy.name"/></th>
+                                <th><spring:message code="doctor.showDiagnosis.showSurgery.name"/></th>
                                 <th><spring:message code="doctor.showDiagnosis.showTherapy.assigned"/></th>
                                 <th><spring:message code="doctor.showDiagnosis.showTherapy.assignedBy"/></th>
                                 <th><spring:message code="doctor.showDiagnosis.showSurgery.date"/></th>
@@ -515,7 +515,7 @@
                     </sec:authorize>
                 </div>
             </div>
-            <div><h1>.</h1></div>
+            <div><h1 id="ankor">.</h1></div>
         </div>
         <div class="col-sm-2 sidenav">
 
@@ -617,7 +617,7 @@
             x--;
         });
 
-
+        $("#ankor").hide();
     });
 
     //Loading medicine
