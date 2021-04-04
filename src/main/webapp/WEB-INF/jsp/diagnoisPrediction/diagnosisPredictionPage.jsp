@@ -8,12 +8,15 @@
 <head>
     <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
     <link rel="stylesheet" href="/css/doctorPageMarkUp.css"/>
     <link rel="stylesheet" href="/css/listOfEntries.css"/>
     <link rel="stylesheet" href="/css/doctorPage.css">
     <link rel="stylesheet" href="/css/pagination.css">
+    <link rel="stylesheet" href="/css/predictDiagnosisPageMarkup.css">
 
 
     <title><spring:message code="patientList.title"/></title>
@@ -29,7 +32,8 @@
                     <label class="navbar-brand">${sessionScope.LoggedUser.name}</label>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="/"><spring:message code="header.message"/><span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/"><spring:message code="header.message"/><span
+                            class="sr-only">(current)</span></a>
                 </li>
             </ul>
             <ul class="navbar-nav ">
@@ -72,7 +76,19 @@
 
                 </div>
 
-<%--                todo: add fiedld--%>
+                <div>
+                    <select class="select-symptom" data-live-search="true" id="selectSymptomBox">
+                    </select>
+
+                </div>
+                <div>
+                    <div class="alert alert-info alert-dismissible fade show show-symptom" role="alert">
+                        Symptom Name
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+
+                <%--                todo: add fiedld--%>
 
 
             </div>
@@ -87,14 +103,40 @@
 <footer class="container-fluid text-center">
 </footer>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
+<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
+crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
+crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 </body>
+
+<script>
+    $(document).ready(function () {
+        // $('select').selectpicker();
+        $.ajax({
+            type: 'GET',
+            url: "/diagnosis-prediction/symptoms-list",
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (data) {
+                data.items.forEach(item => {
+                    console.log(item);
+
+                    let option = document.createElement("option");
+                    option.innerHTML = item.name;
+                    option.setAttribute("data-tokens", item.synonyms);
+                    $("#selectSymptomBox")[0].appendChild(option);
+                })
+                $('select').selectpicker();
+            },
+            error: function (data) {
+                //todo: retry
+                console.log(data);
+            }
+        });
+    });
+</script>
 </html>
