@@ -22,6 +22,9 @@
     <title><spring:message code="patientList.title"/></title>
 
 
+    <style>
+
+    </style>
 </head>
 <body>
 <div>
@@ -72,17 +75,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="table-filter">
-
-                </div>
-
-                <div>
-                    <select class="select-symptom" data-live-search="true" id="selectSymptomBox">
+                <div class="select-symptom-box">
+                    <select  data-live-search="true" id="selectSymptomBox" class="symptom-select ">
                     </select>
-
                 </div>
-                <div>
-                    <div class="alert alert-info alert-dismissible fade show show-symptom" role="alert">
+                <div id="selectedSymptoms">
+                    <div class="alert alert-info alert-dismissible fade show show-symptom symptom-select-button" role="alert">
                         Symptom Name
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
@@ -115,7 +113,24 @@ crossorigin="anonymous"></script>
 
 <script>
     $(document).ready(function () {
-        // $('select').selectpicker();
+        let selectSymptomBox = $('#selectSymptomBox');
+
+        selectSymptomBox.on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+            console.log(e);
+            console.log(clickedIndex);
+            console.log(isSelected);
+            console.log(previousValue);
+            e.preventDefault();
+
+
+        });
+
+        selectSymptomBox.on('rendered.bs.select', ()=> {
+            console.log("ssss")
+            $('.filter-option-inner-inner')[0].innerText = "Виберіть потрібні симптоми";
+        })
+
+
         $.ajax({
             type: 'GET',
             url: "/diagnosis-prediction/symptoms-list",
@@ -123,17 +138,19 @@ crossorigin="anonymous"></script>
             contentType: 'application/json',
             success: function (data) {
                 data.items.forEach(item => {
-                    console.log(item);
 
                     let option = document.createElement("option");
                     option.innerHTML = item.name;
                     option.setAttribute("data-tokens", item.synonyms);
                     $("#selectSymptomBox")[0].appendChild(option);
                 })
-                $('select').selectpicker();
+                $('select').selectpicker({
+                    style: "symptom-select-button"
+                });
             },
             error: function (data) {
                 //todo: retry
+
                 console.log(data);
             }
         });
