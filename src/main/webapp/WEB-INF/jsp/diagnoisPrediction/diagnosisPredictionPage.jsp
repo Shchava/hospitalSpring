@@ -82,7 +82,7 @@
                 <div id="selectedSymptoms">
                     <div class="alert alert-info alert-dismissible fade show show-symptom symptom-select-button" role="alert">
                         Symptom Name
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </div>
 
@@ -120,13 +120,35 @@ crossorigin="anonymous"></script>
             console.log(clickedIndex);
             console.log(isSelected);
             console.log(previousValue);
-            e.preventDefault();
+
+            let selectedOption = $("#selectSymptomBox > option")[clickedIndex];//.children()[clickedIndex];
+            console.log(selectedOption);
+
+            let symptom = document.createElement("div");
+            let symptomClasses = symptom.classList;
+            symptomClasses.add("alert");
+            symptomClasses.add("alert-info");
+            symptomClasses.add("alert-dismissible");
+            symptomClasses.add("fade");
+            symptomClasses.add("show");
+            symptomClasses.add("show-symptom");
+
+            let symptomDismissButton = document.createElement("button");
+            symptomDismissButton.classList.add("btn-close")
+            symptomDismissButton.setAttribute("data-dismiss", "alert");
+            symptomDismissButton.setAttribute("aria-label", "Close");
+
+            symptom.setAttribute("symptom-id", selectedOption.getAttribute("symptom-id"));
+            symptom.innerText = selectedOption.innerText;
+            symptom.appendChild(symptomDismissButton);
+
+
+            $('#selectedSymptoms')[0].appendChild(symptom);
 
 
         });
 
         selectSymptomBox.on('rendered.bs.select', ()=> {
-            console.log("ssss")
             $('.filter-option-inner-inner')[0].innerText = "Виберіть потрібні симптоми";
         })
 
@@ -142,6 +164,7 @@ crossorigin="anonymous"></script>
                     let option = document.createElement("option");
                     option.innerHTML = item.name;
                     option.setAttribute("data-tokens", item.synonyms);
+                    option.setAttribute("symptom-id", item.symptomIdentifier);
                     $("#selectSymptomBox")[0].appendChild(option);
                 })
                 $('select').selectpicker({
