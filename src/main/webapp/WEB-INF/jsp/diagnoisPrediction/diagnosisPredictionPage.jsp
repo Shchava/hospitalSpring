@@ -2,21 +2,25 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="springForm" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page isELIgnored="false" %>
 
 <html>
 <head>
     <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <sec:csrfMetaTags/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
     <link rel="stylesheet" href="/css/doctorPageMarkUp.css"/>
     <link rel="stylesheet" href="/css/listOfEntries.css"/>
     <link rel="stylesheet" href="/css/doctorPage.css">
     <link rel="stylesheet" href="/css/pagination.css">
     <link rel="stylesheet" href="/css/predictDiagnosisPageMarkup.css">
+
 
 
     <title><spring:message code="patientList.title"/></title>
@@ -76,18 +80,19 @@
                     </div>
                 </div>
                 <div class="select-symptom-box">
-                    <select  data-live-search="true" id="selectSymptomBox" class="symptom-select ">
+                    <select data-live-search="true" id="selectSymptomBox" class="symptom-select ">
                     </select>
                 </div>
                 <div id="selectedSymptoms">
-                    <div class="alert alert-info alert-dismissible fade show show-symptom symptom-select-button" role="alert">
-                        Symptom Name
-                        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
-                    </div>
+
+                </div>
+                <div class="select-symptom-box" id="submit-request">
+                    <button type="button" class="btn btn-primary btn-lg btn-block symptom-select">submit</button>
                 </div>
 
-                <%--                todo: add fiedld--%>
-
+                <form id="submitForm" method="post" action="/diagnosis-prediction/predict" target="_self">
+                    <input type="hidden" id="symptomsField" name="symptoms"/>
+                </form>
 
             </div>
         </div>
@@ -104,10 +109,10 @@
 <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 </body>
 
@@ -133,12 +138,20 @@ crossorigin="anonymous"></script>
             symptomClasses.add("show");
             symptomClasses.add("show-symptom");
 
+            let selectedId = selectedOption.getAttribute("symptom-id");
+
+            for (let symptomAlert of $("#selectedSymptoms > div")) {
+                if(symptomAlert.getAttribute("symptom-id") === selectedId) {
+                    return;
+                }
+            }
+
             let symptomDismissButton = document.createElement("button");
             symptomDismissButton.classList.add("btn-close")
             symptomDismissButton.setAttribute("data-dismiss", "alert");
             symptomDismissButton.setAttribute("aria-label", "Close");
 
-            symptom.setAttribute("symptom-id", selectedOption.getAttribute("symptom-id"));
+            symptom.setAttribute("symptom-id", selectedId);
             symptom.innerText = selectedOption.innerText;
             symptom.appendChild(symptomDismissButton);
 
@@ -148,7 +161,7 @@ crossorigin="anonymous"></script>
 
         });
 
-        selectSymptomBox.on('rendered.bs.select', ()=> {
+        selectSymptomBox.on('rendered.bs.select', () => {
             $('.filter-option-inner-inner')[0].innerText = "Виберіть потрібні симптоми";
         })
 
@@ -168,7 +181,8 @@ crossorigin="anonymous"></script>
                     $("#selectSymptomBox")[0].appendChild(option);
                 })
                 $('select').selectpicker({
-                    style: "symptom-select-button"
+                    style: "symptom-select-button",
+                    title: "виберіть потрібні симптоми"
                 });
             },
             error: function (data) {
@@ -177,6 +191,48 @@ crossorigin="anonymous"></script>
                 console.log(data);
             }
         });
+
+
+        $("#submit-request").on('click', ()=> {
+            let data = {};
+            data.symptoms = [];
+
+            for (let symptomAlert of $("#selectedSymptoms > div")) {
+                data.symptoms.push(symptomAlert.getAttribute("symptom-id"))
+            }
+
+            let token = $("meta[name='_csrf']").attr("content");
+            let header = $("meta[name='_csrf_header']").attr("content");
+
+
+
+            let form = $("#submitForm");
+            $("#symptomsField").val(JSON.stringify(data));
+            // $("#symptomsField").value = JSON.stringify(data);
+
+            console.log($("#symptomsField").value)
+            form.submit();
+
+            // $.ajax({
+            //     type: 'POST',
+            //     url: "/diagnosis-prediction/predict",
+            //     data: JSON.stringify(data),
+            //     dataType: 'json',
+            //     contentType: 'application/json',
+            //     success: function (data) {
+            //         document.open();
+            //         document.write(data.responseText);
+            //         document.close();
+            //
+            //         console.log(data)
+            //     },
+            //     error: function (data) {
+            //         //todo: retry
+            //
+            //         console.log(data);
+            //     }
+            // });
+        })
     });
 </script>
 </html>

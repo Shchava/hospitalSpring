@@ -2,18 +2,19 @@ package ua.training.hospital.controller.diagnosisPrediction;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jdk.nashorn.internal.ir.RuntimeNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import ua.training.hospital.controller.diagnosisPrediction.models.SymptomListAWSResponseModel;
+import org.springframework.web.bind.annotation.*;
+import ua.training.hospital.controller.diagnosisPrediction.models.SymptomDTO;
 import ua.training.hospital.service.user.UserService;
 
 import java.io.BufferedReader;
@@ -23,6 +24,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Controller
 @Order(SecurityProperties.DEFAULT_FILTER_ORDER)
@@ -87,5 +89,28 @@ public class DignosisPredictionController {
         }
 
         return new ResponseEntity<>(jsonNode, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/diagnosis-prediction/predict", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String predictDiagnosis(@RequestParam String symptoms) {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+
+        try {
+            SymptomDTO dto = objectMapper.readValue(symptoms, SymptomDTO.class);
+            System.out.println(dto);
+        } catch (Exception ex) {
+
+        }
+
+
+
+
+
+        logger.debug("requested /diagnosis-prediction");
+
+        logger.debug("returning dignosisPrediction/diagnosisPredictionPage.jsp page");
+        return "showPatient";
     }
 }
