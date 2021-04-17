@@ -21,14 +21,7 @@
     <link rel="stylesheet" href="/css/pagination.css">
     <link rel="stylesheet" href="/css/predictDiagnosisPageMarkup.css">
 
-
-
-    <title><spring:message code="patientList.title"/></title>
-
-
-    <style>
-
-    </style>
+    <title><spring:message code="diagnosisPrediction.prediction.title"/></title>
 </head>
 <body>
 <div>
@@ -201,37 +194,11 @@
                 data.symptoms.push(symptomAlert.getAttribute("symptom-id"))
             }
 
-            let token = $("meta[name='_csrf']").attr("content");
-            let header = $("meta[name='_csrf_header']").attr("content");
-
-
-
             let form = $("#submitForm");
             $("#symptomsField").val(JSON.stringify(data));
-            // $("#symptomsField").value = JSON.stringify(data);
 
             console.log($("#symptomsField").value)
             form.submit();
-
-            // $.ajax({
-            //     type: 'POST',
-            //     url: "/diagnosis-prediction/predict",
-            //     data: JSON.stringify(data),
-            //     dataType: 'json',
-            //     contentType: 'application/json',
-            //     success: function (data) {
-            //         document.open();
-            //         document.write(data.responseText);
-            //         document.close();
-            //
-            //         console.log(data)
-            //     },
-            //     error: function (data) {
-            //         //todo: retry
-            //
-            //         console.log(data);
-            //     }
-            // });
         })
     });
 </script>

@@ -3,6 +3,7 @@ package ua.training.hospital.controller.diagnosisPrediction;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jdk.nashorn.internal.ir.RuntimeNode;
+import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ua.training.hospital.controller.diagnosisPrediction.models.PredictionResult;
 import ua.training.hospital.controller.diagnosisPrediction.models.SymptomDTO;
+import ua.training.hospital.service.aws.AWSCaller;
 import ua.training.hospital.service.user.UserService;
 
 import java.io.BufferedReader;
@@ -25,19 +28,19 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @Order(SecurityProperties.DEFAULT_FILTER_ORDER)
+@AllArgsConstructor
 public class DignosisPredictionController {
     private static final Logger logger = LogManager.getLogger(DignosisPredictionController.class);
-    public static final String SYMPTOMS_LIST_API_URL = "https://3ncxlmxrbd.execute-api.us-east-1.amazonaws.com/prod2/get-symptoms-list";
-    public static final int AWS_REQUEST_TIMEOUT = 3000;
 
-    @Autowired
     UserService userService;
 
-    @Autowired
     ObjectMapper objectMapper;
+
+    AWSCaller awsCaller;
 
 
     @RequestMapping(value = "/diagnosis-prediction", method = RequestMethod.GET)
@@ -54,63 +57,37 @@ public class DignosisPredictionController {
 
         logger.debug("requested /symptoms-list");
 
-        JsonNode jsonNode = null;
-        try {
-            URL url = new URL(SYMPTOMS_LIST_API_URL);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("POST");
-            con.setRequestProperty("charset", "utf-8");
-            con.setDoOutput(true);
-            con.setConnectTimeout(AWS_REQUEST_TIMEOUT);
+        Optional<JsonNode> jsonNode = awsCaller.getSymptomList("ua");
 
-            OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
-            writer.write("{\n" +
-                    "\"lang\": \"ua\"\n" +
-                    "}");
-            writer.close();
-
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
-            String inputLine;
-
-            StringBuilder content = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
-            }
-            in.close();
-
-            jsonNode = objectMapper.readTree(content.toString());
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
-            return new ResponseEntity<>(jsonNode, HttpStatus.INTERNAL_SERVER_ERROR);
+        if (jsonNode.isPresent()) {
+            return new ResponseEntity<>(jsonNode.get(), HttpStatus.OK);
+        } else {
+            logger.error("AWS service call failed");
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<>(jsonNode, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/diagnosis-prediction/predict", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String predictDiagnosis(@RequestParam String symptoms) {
+    public String predictDiagnosis(@RequestParam String symptoms, Model model) {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
+        Optional<PredictionResult> response;
 
         try {
             SymptomDTO dto = objectMapper.readValue(symptoms, SymptomDTO.class);
-            System.out.println(dto);
+            response = awsCaller.predictDiagnosisList(dto, "ua");
+            response.ifPresent(
+                    predictionResult -> model.addAttribute("prediction", predictionResult)
+            );
+
         } catch (Exception ex) {
 
         }
 
-
-
-
-
         logger.debug("requested /diagnosis-prediction");
 
         logger.debug("returning dignosisPrediction/diagnosisPredictionPage.jsp page");
-        return "showPatient";
+        return "diagnoisPrediction/diagnosisPredictionResultPage";
     }
 }
