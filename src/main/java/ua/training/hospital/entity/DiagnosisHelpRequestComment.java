@@ -10,8 +10,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@Builder
 @Entity
-public class DiagnosisHelpMessage {
+public class DiagnosisHelpRequestComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idDiagnosis;
@@ -24,4 +25,7 @@ public class DiagnosisHelpMessage {
 
     @Column
     private LocalDateTime date;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private DiagnosisHelpRequest target;
 }

@@ -89,8 +89,16 @@
             console.log(isSelected);
             console.log(previousValue);
 
-            let selectedOption = $("#selectSymptomBox > option")[clickedIndex];//.children()[clickedIndex];
+            let selectedOption = $("#selectSymptomBox > option")[clickedIndex];
             console.log(selectedOption);
+
+            let selectedId = selectedOption.getAttribute("symptom-id");
+
+            for (let symptomAlert of $("#selectedSymptoms > div")) {
+                if(symptomAlert.getAttribute("symptom-id") === selectedId) {
+                    return;
+                }
+            }
 
             let symptom = document.createElement("div");
             let symptomClasses = symptom.classList;
@@ -100,14 +108,6 @@
             symptomClasses.add("fade");
             symptomClasses.add("show");
             symptomClasses.add("show-symptom");
-
-            let selectedId = selectedOption.getAttribute("symptom-id");
-
-            for (let symptomAlert of $("#selectedSymptoms > div")) {
-                if(symptomAlert.getAttribute("symptom-id") === selectedId) {
-                    return;
-                }
-            }
 
             let symptomDismissButton = document.createElement("button");
             symptomDismissButton.classList.add("btn-close")

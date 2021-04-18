@@ -31,8 +31,8 @@ public class DiagnosisHelpRequest {
     private String comments;
 
     @Column
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<DiagnosisHelpMessage> messages;
+    @OneToMany(mappedBy = "target", fetch = FetchType.EAGER)
+    private List<DiagnosisHelpRequestComment> messages;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private User patient;
