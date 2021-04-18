@@ -29,7 +29,7 @@
                     <label class="navbar-brand">${sessionScope.LoggedUser.name}</label>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="/index.jsp"><spring:message code="header.message"/><span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/"><spring:message code="header.message"/><span class="sr-only">(current)</span></a>
                 </li>
             </ul>
             <ul class="navbar-nav ">
@@ -151,7 +151,7 @@
                                 </c:when>
                                 <c:otherwise>
                                     <li class="page-item"><a class="page-link"
-                                                             href="/patientsList/${i}?recordsPerPage=${page.size}">${i}</a>
+                                                             href="/patientsList/${i-1}?recordsPerPage=${page.size}">${i}</a>
                                     </li>
                                 </c:otherwise>
                             </c:choose>

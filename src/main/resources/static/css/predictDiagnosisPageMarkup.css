@@ -1,0 +1,27 @@
+.symptom-select-button {
+    border: 1px solid black !important;
+    margin-left: 10px;
+    width: 100%;
+}
+.symptom-select {
+    font-size: 1rem;
+    line-height: 1.5;
+    width: 100% !important;
+    height: available;
+    padding: .375rem .75rem;
+}
+
+.select-symptom-box {
+    font-weight: 400;
+    line-height: 1.5;
+
+    margin: 1em auto;
+    width: 98% !important;
+    color: #003300;
+}
+
+.show-symptom {
+    width: 95% !important;
+    margin: 1em auto;
+    border: 1px solid black
+}

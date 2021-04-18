@@ -34,7 +34,7 @@ public class HospitalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST,message,error));
     }
 
-    @ExceptionHandler(value = { MethodArgumentTypeMismatchException.class})
+//    @ExceptionHandler(value = { MethodArgumentTypeMismatchException.class}) todo: uncomment
     protected ModelAndView handleTypeMismatchException(
             MethodArgumentTypeMismatchException ex, WebRequest request) {
         ModelAndView returning = new ModelAndView("/error");
