@@ -17,17 +17,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.training.hospital.controller.diagnosisPrediction.models.PredictionResult;
 import ua.training.hospital.controller.diagnosisPrediction.models.SymptomDTO;
+import ua.training.hospital.controller.dto.DiagnosisDTO;
 import ua.training.hospital.service.aws.AWSCaller;
 import ua.training.hospital.service.user.UserService;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -70,15 +63,17 @@ public class DignosisPredictionController {
     @RequestMapping(value = "/diagnosis-prediction/predict", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String predictDiagnosis(@RequestParam String symptoms, Model model) {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-
         Optional<PredictionResult> response;
 
         try {
-            SymptomDTO dto = objectMapper.readValue(symptoms, SymptomDTO.class);
-            response = awsCaller.predictDiagnosisList(dto, "ua");
+            SymptomDTO symptomDTO = objectMapper.readValue(symptoms, SymptomDTO.class);
+            response = awsCaller.predictDiagnosisList(symptomDTO, "ua");
+            model.addAttribute("newDiagnosis", new PredictionResult());
             response.ifPresent(
-                    predictionResult -> model.addAttribute("prediction", predictionResult)
+                    predictionResult -> {
+                        predictionResult.setSymptoms(symptomDTO.getSymptoms());
+                        model.addAttribute("prediction", predictionResult);
+                    }
             );
 
         } catch (Exception ex) {

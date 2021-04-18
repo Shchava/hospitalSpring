@@ -20,7 +20,40 @@
 
     <title><spring:message code="diagnosisPrediction.predictionResultPage.title"/></title>
     <style>
+        .action-button-container {
+            display: flex;
+            width: 100%;
+        }
+        .action-button {
+            display: inline-block;
+            width: 100%;
+        }
 
+        .hidden-form {
+            /*display: none;*/
+            display: block;
+            padding: 1em;
+            width: available;
+            margin: auto;
+        }
+
+        .row.content {
+            height: available;
+        }
+
+        .text-field-label {
+            float: left;
+            margin: 1em;
+        }
+
+        .text-field {
+            /*margin: 1em;*/
+            margin: auto;
+        }
+
+        .table-wrapper {
+            box-shadow: none;
+        }
     </style>
 </head>
 <body>
@@ -78,9 +111,25 @@
                 <div id="selectedSymptoms">
 
                 </div>
-                <div class="select-symptom-box" id="submit-request">
-                    <button type="button" class="btn btn-primary btn-lg btn-block symptom-select">submit</button>
+                <div class="action-button-container">
+                    <button type="button" class="btn btn-primary btn-lg action-button"><spring:message code="diagnosisPrediction.predictResultPage.askHelp"/></button>
+                    <button type="button" class="btn btn-primary btn-lg action-button"><spring:message code="diagnosisPrediction.predictResultPage.predictDifferentDiagnosis"/></button>
                 </div>
+
+                <div id="addDiagnosis" class="hidden-form">
+                    <springForm:form method="POST" modelAttribute="prediction" action="/diagnosis-prediction/askHelp">
+<%--                        <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">--%>
+                        <springForm:input type="hidden" path="name"/>
+                        <springForm:input type="hidden" path="accuracy"/>
+                        <springForm:input type="hidden" path="symptoms"/>
+                        <div class="form-group">
+                            <label class="text-field-label"><spring:message code="diagnosisPrediction.predictResultPage.addMoreInfo"/></label>
+                            <springForm:textarea path="comments" type="text" class="form-control input-description text-field"/>
+                        </div>
+                        <button role="button" class="btn btn-primary btn-lg action-button"><spring:message code="diagnosisPrediction.predictResultPage.createRequestForHelp"/></button>
+                    </springForm:form>
+                </div>
+
             </div>
         </div>
         <div class="col-sm-2 sidenav">

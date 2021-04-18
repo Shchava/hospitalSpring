@@ -64,25 +64,25 @@ public class AWSCallerImpl implements AWSCaller {
     public Optional<PredictionResult>  predictDiagnosisList(SymptomDTO symptoms, String lang) {
         try {
             URL url = new URL(DIAGNOSIS_PREDICT_API_URL);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("POST");
-            con.setRequestProperty("charset", "utf-8");
-            con.setDoOutput(true);
-            con.setConnectTimeout(AWS_REQUEST_TIMEOUT);
-
-            OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
-            writer.write(objectMapper.writeValueAsString(symptoms));
-            writer.close();
-
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
-            String inputLine;
-
-            StringBuilder content = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
-            }
-            in.close();
+//            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+//            con.setRequestMethod("POST");
+//            con.setRequestProperty("charset", "utf-8");
+//            con.setDoOutput(true);
+//            con.setConnectTimeout(AWS_REQUEST_TIMEOUT);
+//
+//            OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+//            writer.write(objectMapper.writeValueAsString(symptoms));
+//            writer.close();
+//
+//            BufferedReader in = new BufferedReader(
+//                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+//            String inputLine;
+//
+//            StringBuilder content = new StringBuilder();
+//            while ((inputLine = in.readLine()) != null) {
+//                content.append(inputLine);
+//            }
+//            in.close();
 
             //todo: replace with actual logic
             return Optional.of(new PredictionResult("testDisiease", 0.1));

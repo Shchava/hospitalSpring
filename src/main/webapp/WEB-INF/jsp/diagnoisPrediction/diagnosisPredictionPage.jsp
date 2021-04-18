@@ -84,6 +84,7 @@
                 </div>
 
                 <form id="submitForm" method="post" action="/diagnosis-prediction/predict" target="_self">
+                    <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
                     <input type="hidden" id="symptomsField" name="symptoms"/>
                 </form>
 
