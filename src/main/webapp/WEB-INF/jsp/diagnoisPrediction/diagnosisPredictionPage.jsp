@@ -84,10 +84,6 @@
         let selectSymptomBox = $('#selectSymptomBox');
 
         selectSymptomBox.on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-            console.log(e);
-            console.log(clickedIndex);
-            console.log(isSelected);
-            console.log(previousValue);
 
             let selectedOption = $("#selectSymptomBox > option")[clickedIndex];
             console.log(selectedOption);

@@ -1,9 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="springForm" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ page isELIgnored="false" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 
 <html>
 <head>
@@ -19,6 +21,14 @@
     <link rel="stylesheet" href="/css/pagination.css">
 
     <title><spring:message code="diagnosisPrediction.predictionResultPage.title"/></title>
+
+    <c:set var="dateFormat">
+        <spring:message code="dateFormat"/>
+    </c:set>
+    <c:set var="foramter" value='${DateTimeFormatter.ofPattern(dateFormat)}'/>
+    <sec:authentication var="username" property="principal.username"/>
+
+
     <style>
         .symptom-list {
             display: flex;
@@ -39,6 +49,67 @@
         .action-button-container {
             display: flex;
             width: 100%;
+        }
+
+        .action-button {
+            display: inline-block;
+            width: 100%;
+        }
+
+        .comments {
+            background-color: #eaeaea;
+            padding: 0.2em 0.5em;
+            border-radius: 0.5em;
+        }
+
+        .comment-own {
+            margin-left: auto;
+        }
+        .comment-others {
+            margin-right: auto;
+        }
+
+        .comment {
+            width: 70%;
+            background-color: #cde9e6;
+            border: 1px solid #031327;
+            border-radius: 0.5em;
+            margin-bottom: 1em;
+        }
+
+        .comment-header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin: 0.5em;
+            height: fit-content;
+        }
+        .comment-author {
+            color: black;
+            height: fit-content;
+            margin: 0;
+        }
+
+        .comment-time {
+            color: black;
+            height: fit-content;
+            margin: 0;
+        }
+
+        .comment-content {
+            color: black;
+            text-align: start;
+            margin: 0.5em;
+
+        }
+
+        .comment-field-label {
+            float: left;
+            color: black;
+            text-align: start;
+            margin-left: 0.5em;
+            margin-top: 1em;
+            margin-bottom: 0.2em;
         }
     </style>
 </head>
@@ -77,11 +148,32 @@
                     </c:forEach>
 
                 </div>
+                <div class="comments">
+                    <h5>comments</h5>
+                    <c:forEach items="${helpRequest.messages}" var="comment">
+                        <c:set value="${comment.author.email eq username}" var="isOwner"/>
+                        <div class="comment <c:out value="${isOwner ? 'comment-own': 'comment-others'}"/>">
+                            <div class="comment-header">
+                                <h6 class="comment-author"><b><c:out value="${comment.author.name}"/> <c:out value="${comment.author.surname}"/></b></h6>
+                                <p class="comment-time"><c:out value="${comment.date.format(foramter)}"/></p>
+                            </div>
 
+                            <p class="comment-content"><c:out value="${comment.content}"/></p>
+                        </div>
+                    </c:forEach>
+
+                    <div class="comment comment-others">
+                        <div class="comment-header">
+                            <h6 class="comment-author"><b>Name Surname</b></h6>
+                            <p class="comment-time">2021/4/19 2:23</p>
+                        </div>
+                        <p class="comment-content">example comment</p>
+                    </div>
+                </div>
 
                 <form id="addCommentForm" method="POST" enctype="utf8">
                     <div class="form-group">
-                        <label><spring:message code="diagnosisPrediction.predictResultPage.commentLabel"/></label>
+                        <label class="comment-field-label"><spring:message code="diagnosisPrediction.predictResultPage.commentLabel"/></label>
                         <textarea id="commentField" type="text" name="comment" class="form-control  input-description"
                                   value=""></textarea>
                     </div>
@@ -141,6 +233,12 @@
             });
         });
     })
+
+    function addComment() {
+
+
+        console.log("comment");
+    }
 
     function setupAjax() {
         let token = $("meta[name='_csrf']").attr("content");
