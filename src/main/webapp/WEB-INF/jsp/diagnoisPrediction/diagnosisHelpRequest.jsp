@@ -111,6 +111,10 @@
             margin-top: 1em;
             margin-bottom: 0.2em;
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -148,7 +152,9 @@
                     </c:forEach>
 
                 </div>
-                <div class="comments" id="commentSection">
+                <c:set value="${helpRequest.messages.isEmpty()}" var="hasEmptyComments"/>
+                <div class="comments <c:if test="${hasEmptyComments}">hidden</c:if>" id="commentSection">
+<%--                <div class="comments" id="commentSection">--%>
                     <h5>comments</h5>
                     <c:forEach items="${helpRequest.messages}" var="comment">
                         <c:set value="${comment.author.email eq username}" var="isOwner"/>
@@ -202,16 +208,18 @@
     const dateFormatting = "yyyy.mm.dd hh:MM";
     const refreshInterval = 1500;
     const jspLastCommentDate = "${lastCommentTime}";
+    let emptyComments = "${hasEmptyComments}"
 
     let refreshIntervalFunc;
     let lastCommentDate = new Date(jspLastCommentDate);
+    let lasCommentId;
 
     if(!jspLastCommentDate) {
         lastCommentDate = new Date(-8640000000000000);
     }
 
     $(document).ready(function () {
-        // refreshIntervalFunc = window.setInterval(()=>updateComments(), refreshInterval);
+        refreshIntervalFunc = window.setInterval(()=>updateComments(), refreshInterval);
 
         // setupAjax(); todo: uncoment when csrf turned on
 
@@ -234,8 +242,9 @@
                     console.log("comment added")
                     clearInterval(refreshIntervalFunc);
 
-                    addComment(data);
                     lastCommentDate = new Date(data.date);
+                    lasCommentId = data.commentId;
+                    addComment(data);
                     commentField.val("");
                     refreshIntervalFunc = window.setInterval(()=>updateComments(), refreshInterval);
                 },
@@ -259,7 +268,7 @@
 
                 comments.forEach(comment => {
                     const commentDate = new Date(comment.date);
-                    if (commentDate > lastCommentDate) {
+                    if (comment.commentId !== lasCommentId && commentDate > lastCommentDate) {
                         addComment(comment);
                         lastCommentDate = commentDate;
                     }
@@ -274,6 +283,17 @@
     }
 
     function addComment(comment) {
+        console.log("lastComment id : " + lasCommentId);
+        console.log("lastComment : " + lastCommentDate);
+        console.log("new Comment : " + new Date(comment.date));
+
+        const commentSection = $('#commentSection')[0];
+
+        if(emptyComments) {
+            commentSection.className = "comments";
+            emptyComments = false;
+        }
+
         let commentDiv = document.createElement("div");
         let commentDivClasses = commentDiv.classList;
         commentDivClasses.add("comment");
@@ -306,7 +326,7 @@
         commentDiv.appendChild(commentHeader);
         commentDiv.appendChild(commentContent);
 
-        $('#commentSection')[0].appendChild(commentDiv);
+        commentSection.appendChild(commentDiv);
     }
 
     function setupAjax() {

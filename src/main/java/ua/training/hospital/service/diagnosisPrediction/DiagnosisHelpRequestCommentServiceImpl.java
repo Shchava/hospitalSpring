@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static ua.training.hospital.entity.DiagnosisHelpRequestComment.MAX_COMMENT_SIZE;
+
 @AllArgsConstructor
 @Service
 public class DiagnosisHelpRequestCommentServiceImpl implements DiagnosisHelpRequestCommentService{
@@ -40,6 +42,9 @@ public class DiagnosisHelpRequestCommentServiceImpl implements DiagnosisHelpRequ
             return Optional.empty();
         }
 
+        if(comment.length() > MAX_COMMENT_SIZE) {
+            comment = comment.substring(0, MAX_COMMENT_SIZE - 1);
+        }
 
         DiagnosisHelpRequestComment toSave = DiagnosisHelpRequestComment.builder()
                 .author(author)

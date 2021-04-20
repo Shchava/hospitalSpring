@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,11 +15,14 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 public class DiagnosisHelpRequestComment {
+    public static final int MAX_COMMENT_SIZE = 2500;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idDiagnosis;
+    private long commentId;
 
     @Column
+    @Size(max = MAX_COMMENT_SIZE)
     private String content;
 
     @ManyToOne(fetch = FetchType.EAGER)
