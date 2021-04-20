@@ -13,6 +13,7 @@ import ua.training.hospital.repository.UserRepository;
 import ua.training.hospital.service.diagnosis.DiagnosisServiceImpl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -48,5 +49,10 @@ public class DiagnosisHelpRequestCommentServiceImpl implements DiagnosisHelpRequ
                 .build();
 
         return Optional.of(commentRepository.save(toSave));
+    }
+
+    @Override
+    public List<DiagnosisHelpRequestComment> getComments(Long helpRequestId) {
+        return commentRepository.findAllByTargetIdPrediction(helpRequestId);
     }
 }

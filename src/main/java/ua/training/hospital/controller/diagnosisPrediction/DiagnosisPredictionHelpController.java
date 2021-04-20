@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,8 @@ import ua.training.hospital.service.diagnosisPrediction.DiagnosisHelpRequestServ
 
 import java.security.Principal;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -54,7 +57,7 @@ public class DiagnosisPredictionHelpController {
         return "diagnoisPrediction/diagnosisHelpRequest";
     }
 
-    @RequestMapping(value = "/diagnosis-prediction/help{idRequest}/addComment", method = RequestMethod.POST)
+    @RequestMapping(value = "/diagnosis-prediction/help{idRequest}/addComment", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DiagnosisHelpRequestComment> addComment(@PathVariable long idRequest,
                                                                   @RequestBody String comment,
                                                                   Principal principal,
@@ -68,5 +71,18 @@ public class DiagnosisPredictionHelpController {
         }
 
         return new ResponseEntity<>(createdComment.get(), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/diagnosis-prediction/help{idRequest}/getComments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<DiagnosisHelpRequestComment>> getComments(@PathVariable long idRequest,
+                                                                         Model model) {
+
+        logger.debug("requested /diagnosis-prediction/help{idRequest}/getComments");
+
+        List<DiagnosisHelpRequestComment> createdComment = helpRequestCommentService.getComments(idRequest);
+        if(Objects.isNull(createdComment)) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(createdComment, HttpStatus.OK);
     }
 }

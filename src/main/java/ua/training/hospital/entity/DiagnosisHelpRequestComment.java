@@ -1,5 +1,6 @@
 package ua.training.hospital.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,6 +27,7 @@ public class DiagnosisHelpRequestComment {
     @Column
     private LocalDateTime date;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private DiagnosisHelpRequest target;
 }

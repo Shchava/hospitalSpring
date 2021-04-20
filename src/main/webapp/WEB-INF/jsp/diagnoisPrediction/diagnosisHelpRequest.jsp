@@ -148,7 +148,7 @@
                     </c:forEach>
 
                 </div>
-                <div class="comments">
+                <div class="comments" id="commentSection">
                     <h5>comments</h5>
                     <c:forEach items="${helpRequest.messages}" var="comment">
                         <c:set value="${comment.author.email eq username}" var="isOwner"/>
@@ -160,15 +160,8 @@
 
                             <p class="comment-content"><c:out value="${comment.content}"/></p>
                         </div>
+                        <c:set var="lastCommentTime" value='${comment.date}'/>
                     </c:forEach>
-
-                    <div class="comment comment-others">
-                        <div class="comment-header">
-                            <h6 class="comment-author"><b>Name Surname</b></h6>
-                            <p class="comment-time">2021/4/19 2:23</p>
-                        </div>
-                        <p class="comment-content">example comment</p>
-                    </div>
                 </div>
 
                 <form id="addCommentForm" method="POST" enctype="utf8">
@@ -200,33 +193,54 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+<script src="https://stevenlevithan.com/assets/misc/date.format.js"></script>
 </body>
 
 <script>
+    const userEmail = "${username}";
+    <%--const dateFormatting = "${dateFormat}";--%>
+    const dateFormatting = "yyyy.mm.dd hh:MM";
+    const refreshInterval = 1500;
+    const jspLastCommentDate = "${lastCommentTime}";
+
+    let refreshIntervalFunc;
+    let lastCommentDate = new Date(jspLastCommentDate);
+
+    if(!jspLastCommentDate) {
+        lastCommentDate = new Date(-8640000000000000);
+    }
+
     $(document).ready(function () {
+        // refreshIntervalFunc = window.setInterval(()=>updateComments(), refreshInterval);
+
+        // setupAjax(); todo: uncoment when csrf turned on
+
         $("#addCommentButton").click(function () {
+            let commentField = $("#commentField")
 
-            let comment = $("#commentField").val();
+            let comment =commentField.val();
 
-            if(comment === "") {
+            if(!comment.trim()) {
                 return;
             }
-
-            console.log(comment)
-            // setupAjax(); todo: uncoment when csrf turned on
 
             $.ajax({
                 type: 'POST',
                 url: "/diagnosis-prediction/help${helpRequest.idPrediction}/addComment",
-                dataType: 'json',
                 contentType: 'application/json',
+                dataType: 'json',
                 data: comment,
                 success: function (data) {
-                    console.log(data);
+                    console.log("comment added")
+                    clearInterval(refreshIntervalFunc);
 
-
+                    addComment(data);
+                    lastCommentDate = new Date(data.date);
+                    commentField.val("");
+                    refreshIntervalFunc = window.setInterval(()=>updateComments(), refreshInterval);
                 },
                 error: function (data) {
+                    console.log("error")
                     console.log(data);
                 //    todo: implement
                 }
@@ -234,10 +248,65 @@
         });
     })
 
-    function addComment() {
+    function updateComments() {
+        $.ajax({
+            type: 'GET',
+            url: "/diagnosis-prediction/help${helpRequest.idPrediction}/getComments",
+            contentType: 'text',
+            dataType: 'text',
+            success: function (data) {
+                let comments = JSON.parse(data);
 
+                comments.forEach(comment => {
+                    const commentDate = new Date(comment.date);
+                    if (commentDate > lastCommentDate) {
+                        addComment(comment);
+                        lastCommentDate = commentDate;
+                    }
+                })
+            },
+            error: function (data) {
+                console.log("error")
+                console.log(data);
+                //    todo: implement
+            }
+        });
+    }
 
-        console.log("comment");
+    function addComment(comment) {
+        let commentDiv = document.createElement("div");
+        let commentDivClasses = commentDiv.classList;
+        commentDivClasses.add("comment");
+        if(comment.author.email === userEmail) {
+            commentDivClasses.add("comment-own");
+        } else {
+            commentDivClasses.add("comment-others");
+        }
+
+        let commentHeader = document.createElement("div");
+        commentHeader.className = "comment-header";
+
+        let authorName = document.createElement("h6");
+        authorName.className = "comment-author";
+        let authorNameBold = document.createElement("b");
+
+        let commentTime = document.createElement("p");
+        commentTime.className = "comment-time";
+
+        let commentContent = document.createElement("p");
+        commentContent.className = "comment-content";
+
+        authorNameBold.innerText = comment.author.name + " " + comment.author.surname;
+        commentTime.innerHTML =  new Date(comment.date).format(dateFormatting);
+        commentContent.innerHTML = comment.content;
+
+        authorName.appendChild(authorNameBold);
+        commentHeader.appendChild(authorName);
+        commentHeader.appendChild(commentTime)
+        commentDiv.appendChild(commentHeader);
+        commentDiv.appendChild(commentContent);
+
+        $('#commentSection')[0].appendChild(commentDiv);
     }
 
     function setupAjax() {
