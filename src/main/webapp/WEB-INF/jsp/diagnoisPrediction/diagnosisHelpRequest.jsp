@@ -154,7 +154,6 @@
                 </div>
                 <c:set value="${helpRequest.messages.isEmpty()}" var="hasEmptyComments"/>
                 <div class="comments <c:if test="${hasEmptyComments}">hidden</c:if>" id="commentSection">
-<%--                <div class="comments" id="commentSection">--%>
                     <h5>comments</h5>
                     <c:forEach items="${helpRequest.messages}" var="comment">
                         <c:set value="${comment.author.email eq username}" var="isOwner"/>

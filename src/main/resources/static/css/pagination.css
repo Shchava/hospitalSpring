@@ -1,3 +1,7 @@
+.show-entries {
+    width: auto;
+}
+
 .show-entries .dropdown{
     display: inline;
     margin: 0;

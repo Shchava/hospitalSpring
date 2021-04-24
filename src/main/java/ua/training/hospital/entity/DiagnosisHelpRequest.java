@@ -3,6 +3,7 @@ package ua.training.hospital.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -29,6 +30,9 @@ public class DiagnosisHelpRequest {
 
     @Column
     private String comments;
+
+    @Column
+    private LocalDateTime created;
 
     @Column
     @OneToMany(mappedBy = "target", fetch = FetchType.EAGER)

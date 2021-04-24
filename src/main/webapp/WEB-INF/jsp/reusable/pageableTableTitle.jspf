@@ -1,0 +1,14 @@
+<div class="table-title">
+    <div class="row">
+        <div class="col-sm-4">
+            <h2><c:out value="${tableName}"/></h2>
+        </div>
+        <div class="col-sm-8">
+            <c:set var = "refWithPage" value = "${fn:replace(refreshLink, '{page}', page.number)}"/>
+            <c:set var ="fullSelfLink" value = "${fn:replace(refWithPage, '{records}', page.size)}"/>
+            <a href="<c:out value="${fullSelfLink}"/>"
+               class="btn btn-primary"><i class="material-icons">&#xE863;</i>
+                <span><spring:message code="listTable.refresh"/></span></a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="clearfix">
+    <div class="hint-text"><spring:message code="pagination.label.showing"/>
+        <b><c:out value="${page.numberOfElements}"/></b>
+        <spring:message code="pagination.label.outOf"/>
+        <b>${page.totalElements}</b>
+        <spring:message code="pagination.label.entries"/>
+    </div>
+
+    <c:set var ="refWithSize" value = "${fn:replace(refreshLink, '{records}', page.size)}"/>
+
+    <ul class="pagination">
+        <c:if test="${!page.first}">
+            <li class="page-item">
+                <a class="page-link" href="<c:out value="${fn:replace(refWithSize, '{page}', page.number - 1)}"/>">
+                    <spring:message code="pagination.previous"/></a>
+            </li>
+        </c:if>
+
+        <c:forEach begin="1" end="${page.totalPages}" var="i">
+            <c:choose>
+                <c:when test="${page.number + 1 eq i}">
+                    <li class="page-item active"><a class="page-link">
+                            ${i} <span class="sr-only"><spring:message code="pagination.current"/></span></a>
+                    </li>
+                </c:when>
+                <c:otherwise>
+                    <li class="page-item"><a class="page-link"
+                                             href="<c:out value="${fn:replace(refWithSize, '{page}', i - 1)}"/>">${i}</a>
+                    </li>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
+
+        <c:if test="${!page.last}">
+            <li class="page-item"><a class="page-link"
+                                     href="<c:out value="${fn:replace(refWithSize, '{page}', page.number + 1)}"/>">
+                <spring:message code="pagination.next"/></a>
+            </li>
+        </c:if>
+    </ul>
+</div>

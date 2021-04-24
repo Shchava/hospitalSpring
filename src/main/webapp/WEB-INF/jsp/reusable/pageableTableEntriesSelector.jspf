@@ -1,0 +1,36 @@
+<c:set var = "refWithPage" value = "${fn:replace(refreshLink, '{page}', page.number)}"/>
+<c:set var ="fullSelfLink" value = "${fn:replace(refWithPage, '{records}', page.size)}"/>
+
+<div class="table-filter">
+    <div class="row">
+<%--        <div class="col-sm-3">--%>
+            <div class="col-sm-3 show-entries">
+                <span><spring:message code="pagination.show"/></span>
+                <div class="dropdown">
+                    <button class="btn btn-primary  float-none dropdown-toggle paginationDropdown"
+                            type="button" data-toggle="dropdown">${page.size}</button>
+                    <ul class="dropdown-menu ">
+                        <c:set var = "refWithPage" value = "${fn:replace(refreshLink, '{page}', page.number)}"/>
+
+                        <li><a class="dropdown-item"
+                               href="<c:out value="${fn:replace(refWithPage, '{records}', '5')}"/>">5</a>
+                        </li>
+                        <li><a class="dropdown-item"
+                               href="<c:out value="${fn:replace(refWithPage, '{records}', '10')}"/>">10</a>
+                        </li>
+                        <li><a class="dropdown-item"
+                               href="<c:out value="${fn:replace(refWithPage, '{records}', '15')}"/>">15</a>
+                        </li>
+                        <li><a class="dropdown-item"
+                               href="<c:out value="${fn:replace(refWithPage, '{records}', '20')}"/>">20</a>
+                        </li>
+                    </ul>
+                </div>
+                <span> <spring:message code="pagination.entries"/></span>
+            </div>
+<%--        </div>--%>
+        <div class="col-sm-9">
+
+        </div>
+    </div>
+</div>
