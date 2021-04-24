@@ -3,6 +3,7 @@ package ua.training.hospital.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ua.training.hospital.entity.enums.UserRole;
+import ua.training.hospital.entity.shop.Cart;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -49,6 +50,9 @@ public class User {
 
     @Column
     String info;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    Cart cart;
 
     @JsonIgnore
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
