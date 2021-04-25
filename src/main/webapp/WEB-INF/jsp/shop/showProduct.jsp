@@ -41,11 +41,6 @@
 
             text-align: left;
             padding: 1em;
-            /*justify-content: space-between*/
-        }
-
-        .buy-button {
-            margin-top: auto;
         }
 
         .product-description {
@@ -74,6 +69,105 @@
             padding-top: 1em;
             padding-bottom: 1em;
         }
+
+        .buy-button {
+            flex-grow: 8;
+        }
+
+        .add-to-cart-button {
+            margin-top: 0.5em;
+            width: available;
+        }
+
+        .buy-controls {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .count-and-add-buy-section {
+            display: flex;
+            flex-direction: row;
+        }
+
+        /*    counter*/
+        .qty {
+            display: flex;
+            width: min-content;
+        }
+
+        .qty .count {
+            color: #000;
+            display: inline-block;
+            vertical-align: top;
+            font-size: 25px;
+            font-weight: 700;
+            line-height: 30px;
+            padding: 0 2px;
+            min-width: 35px;
+            text-align: center;
+        }
+
+        .qty .plus {
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: top;
+            color: white;
+            width: 30px;
+            height: 30px;
+            font: 30px/1 Arial, sans-serif;
+            text-align: center;
+            border-radius: 50%;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .qty .minus {
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: top;
+            color: white;
+            width: 30px;
+            height: 30px;
+            font: 30px/1 Arial, sans-serif;
+            text-align: center;
+            border-radius: 50%;
+            background-clip: padding-box;
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-left: 0.5em;
+        }
+
+        .minus:hover {
+            background-color: #717fe0 !important;
+        }
+
+        .plus:hover {
+            background-color: #717fe0 !important;
+        }
+
+        /*Prevent text selection*/
+        span {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        input {
+            border: 0;
+            width: 2%;
+        }
+
+        nput::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input:disabled {
+            background-color: white;
+        }
+
     </style>
 </head>
 <body>
@@ -101,10 +195,25 @@
                         <h6><spring:message
                                 code="diagnosisPrediction.shop.priceLabel"/></h6>
                         <p><fmt:formatNumber type="number" maxFractionDigits="0" value="${product.price/100}"/>.<c:out
-                                value="${product.price%100}"/><spring:message
+                                value="${product.price%100}"/> <spring:message
                                 code="diagnosisPrediction.shop.priceHrivna"/></p>
-                        <button type="button" class="btn btn-primary btn-lg btn-block buy-button"><spring:message
-                                code="diagnosisPrediction.shop.buyButton"/></button>
+
+
+                        <div class="buy-controls">
+                            <div class="count-and-add-buy-section">
+                                <div class="qty">
+                                    <span class="minus bg-dark">-</span>
+                                    <input type="number" class="count" name="qty" value="1">
+                                    <span class="plus bg-dark">+</span>
+                                </div>
+                                <button type="button" class="btn btn-primary btn-lg btn-block buy-button">
+                                    <spring:message
+                                            code="diagnosisPrediction.shop.buyButton"/></button>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-lg btn-block add-to-cart-button">
+                                <spring:message
+                                        code="diagnosisPrediction.shop.addToCart"/></button>
+                        </div>
                     </div>
                 </div>
 
@@ -113,11 +222,6 @@
                 <p class="product-instruction">
                     ${product.instruction}
                 </p>
-
-                <div class="select-symptom-box" id="submit-request">
-                    <%--                    <button type="button" class="btn btn-primary btn-lg btn-block symptom-select"><spring:message--%>
-                    <%--                            code="diagnosisPrediction.shop.buyButton"/></button>--%>
-                </div>
             </div>
         </div>
         <div class="col-sm-2 sidenav"></div>
@@ -137,4 +241,19 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 </body>
+
+<script>
+    $(document).ready(function () {
+        $('.count').prop('disabled', true);
+        $(document).on('click', '.plus', function () {
+            $('.count').val(parseInt($('.count').val()) + 1);
+        });
+        $(document).on('click', '.minus', function () {
+            $('.count').val(parseInt($('.count').val()) - 1);
+            if ($('.count').val() == 0) {
+                $('.count').val(1);
+            }
+        });
+    });
+</script>
 </html>
