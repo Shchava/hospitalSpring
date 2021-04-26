@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
-import ua.training.hospital.controller.dto.UserDTO;
-import ua.training.hospital.entity.User;
-import ua.training.hospital.entity.exceptions.EmailExistsException;
 import ua.training.hospital.entity.shop.BuyOrder;
 import ua.training.hospital.entity.shop.ProductOrder;
 import ua.training.hospital.service.shop.BuyOrderService;
@@ -36,9 +33,17 @@ public class ShopBuyPageController {
     private ProductsService productsService;
     private BuyOrderService buyOrderService;
 
+    @RequestMapping(value = "/shop/buySingle", method = RequestMethod.POST)
+    public String buySingleItem (Model model,
+                                 @ModelAttribute("order") ProductOrder order) {
+
+        List<ProductOrder> orders = new ArrayList<>();
+        orders.add(order);
+        return getBuyPage(model, orders);
+    }
+
     @RequestMapping(value = "/shop/buy", method = RequestMethod.GET)
-    public String getBuyPage(Model model,
-                             Principal principal) {
+    public String getBuyPage(Model model) {
         List<ProductOrder> requestedItems = new ArrayList<>();
         requestedItems.add(
                 ProductOrder.builder()
@@ -53,20 +58,24 @@ public class ShopBuyPageController {
                         .count(4)
                         .build());
 
-        int totalPrice = requestedItems.stream()
+        return getBuyPage(model, requestedItems);
+    }
+
+    private String getBuyPage (Model model, List<ProductOrder> orders) {
+        int totalPrice = orders.stream()
                 .mapToInt(request -> request.getCount() * request.getProduct().getPrice())
                 .sum();
 
-//        model.addAttribute("requestedItems", requestedItems);
         model.addAttribute("totalPrice", totalPrice);
 
         BuyOrder order = new BuyOrder();
-        order.setProducts(requestedItems);
+        order.setProducts(orders);
 
         order.setName("test");
         model.addAttribute("order", order);
         return "shop/shopBuyPage";
     }
+
 
     @ResponseBody
     @RequestMapping(value = "/shop/buy", method = RequestMethod.POST)

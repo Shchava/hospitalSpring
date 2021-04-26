@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="/css/doctorPage.css">
     <link rel="stylesheet" href="/css/pagination.css"/>
     <link rel="stylesheet" href="/css/predictDiagnosisPageMarkup.css">
+    <link rel="stylesheet" href="/css/forms.css">
 
     <title><spring:message code="diagnosisPrediction.prediction.title"/></title>
     <spring:message var="dateFormat" code="dateFormat"/>
@@ -79,6 +80,12 @@
             width: available;
         }
 
+        .log-alert {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+            height: auto;
+        }
+
         .buy-controls {
             margin-top: auto;
             display: flex;
@@ -89,8 +96,8 @@
             display: flex;
             flex-direction: row;
         }
-
         /*    counter*/
+
         .qty {
             display: flex;
             width: min-content;
@@ -145,7 +152,6 @@
         .plus:hover {
             background-color: #717fe0 !important;
         }
-
         /*Prevent text selection*/
         span {
             -webkit-user-select: none;
@@ -203,16 +209,22 @@
                             <div class="count-and-add-buy-section">
                                 <div class="qty">
                                     <span class="minus bg-dark">-</span>
-                                    <input type="number" class="count" name="qty" value="1">
+                                    <input type="number" class="count" name="qty" value="1" id="counter">
                                     <span class="plus bg-dark">+</span>
                                 </div>
-                                <button type="button" class="btn btn-primary btn-lg btn-block buy-button">
+                                <button type="button" class="btn btn-primary btn-lg btn-block buy-button" id="buyButton">
                                     <spring:message
                                             code="diagnosisPrediction.shop.buyButton"/></button>
                             </div>
+                            <sec:authorize access="isAuthenticated()">
                             <button type="button" class="btn btn-primary btn-lg btn-block add-to-cart-button">
                                 <spring:message
                                         code="diagnosisPrediction.shop.addToCart"/></button>
+                            </sec:authorize>
+                            <sec:authorize access="!isAuthenticated()">
+                                <div class="alert alert-info log-alert" role="alert">
+                                    <spring:message code="diagnosisPrediction.shop.please" /> <a href="/login"><spring:message code="diagnosisPrediction.shop.login" /></a> <spring:message code="diagnosisPrediction.shop.addToCartAvailiability"/></div>
+                            </sec:authorize>
                         </div>
                     </div>
                 </div>
@@ -222,6 +234,12 @@
                 <p class="product-instruction">
                     ${product.instruction}
                 </p>
+
+                <springForm:form method="POST" modelAttribute="order" id="buyForm" action="/shop/buySingle">
+                    <springForm:input path="product" type="hidden"/>
+                    <springForm:input path="count" type="hidden" id="buyFormCount"/>
+                </springForm:form>
+
             </div>
         </div>
         <div class="col-sm-2 sidenav"></div>
@@ -254,6 +272,14 @@
                 $('.count').val(1);
             }
         });
+
+        $("#buyButton").click(()=>{
+            console.log("test");
+            let buyForm = $("#buyForm");
+            $("#buyFormCount").val($("#counter").val());
+            // console.log()
+            buyForm.submit();
+        })
     });
 </script>
 </html>

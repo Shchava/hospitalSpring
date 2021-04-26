@@ -15,6 +15,7 @@ import ua.training.hospital.entity.DiagnosisHelpRequest;
 import ua.training.hospital.entity.DiagnosisHelpRequestComment;
 import ua.training.hospital.entity.exceptions.ResourceNotFoundException;
 import ua.training.hospital.entity.shop.Product;
+import ua.training.hospital.entity.shop.ProductOrder;
 import ua.training.hospital.service.shop.ProductsService;
 
 import java.util.Comparator;
@@ -40,6 +41,7 @@ public class ShopProductPageController {
             Product product = helpRequest.get();
             product.setInstruction(product.getInstruction().replace("\n","<br>"));
             model.addAttribute("product", product);
+            model.addAttribute("order", ProductOrder.builder().product(product).build());
         } else {
             logger.debug("can't find product with such id");
             throw new ResourceNotFoundException();
