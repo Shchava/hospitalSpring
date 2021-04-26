@@ -6,9 +6,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import ua.training.hospital.entity.DiagnosisHelpRequest;
 import ua.training.hospital.entity.shop.Product;
-import ua.training.hospital.repository.ProductsRepository;
+import ua.training.hospital.repository.shop.ProductsRepository;
 import ua.training.hospital.service.diagnosis.DiagnosisServiceImpl;
 
 import java.util.Optional;

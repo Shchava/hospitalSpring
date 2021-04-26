@@ -58,7 +58,8 @@
                             <th><c:out value="${product.productId}"/></th>
                             <th><c:out value="${product.name}"/></th>
                             <th><c:out value="${product.description}"/></th>
-                            <th><fmt:formatNumber type = "number" maxFractionDigits = "0" value = "${product.price/100}"/>.<c:out value="${product.price%100}"/></th>
+                            <th><fmt:formatNumber type = "number" maxFractionDigits = "0" value = "${product.price/100}"/>.<c:out value="${product.price%100}"/> <spring:message
+                                    code="diagnosisPrediction.shop.priceHrivna"/></th>
                             <th><a class="btn btn-primary" href="/shop/product/${product.productId}" role="button">
                                 <spring:message code="doctor.page.patientsList.open"/></a>
                             </th>
