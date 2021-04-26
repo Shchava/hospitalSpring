@@ -18,12 +18,14 @@ import ua.training.hospital.entity.User;
 import ua.training.hospital.entity.exceptions.EmailExistsException;
 import ua.training.hospital.entity.shop.BuyOrder;
 import ua.training.hospital.entity.shop.ProductOrder;
+import ua.training.hospital.service.shop.BuyOrderService;
 import ua.training.hospital.service.shop.ProductsService;
 
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -32,10 +34,11 @@ import java.util.Optional;
 public class ShopBuyPageController {
 
     private ProductsService productsService;
+    private BuyOrderService buyOrderService;
 
     @RequestMapping(value = "/shop/buy", method = RequestMethod.GET)
-    public String getBuyPage (Model model,
-                              Principal principal){
+    public String getBuyPage(Model model,
+                             Principal principal) {
         List<ProductOrder> requestedItems = new ArrayList<>();
         requestedItems.add(
                 ProductOrder.builder()
@@ -51,7 +54,7 @@ public class ShopBuyPageController {
                         .build());
 
         int totalPrice = requestedItems.stream()
-                .mapToInt(request-> request.getCount() * request.getProduct().getPrice())
+                .mapToInt(request -> request.getCount() * request.getProduct().getPrice())
                 .sum();
 
 //        model.addAttribute("requestedItems", requestedItems);
@@ -71,21 +74,24 @@ public class ShopBuyPageController {
             @ModelAttribute("order") @Valid BuyOrder order,
             BindingResult result,
             WebRequest request,
+            Principal principal,
             Errors errors
     ) {
-        Optional<BuyOrder> created = Optional.empty();
         if (!result.hasErrors()) {
-                created = Optional.empty();//userService.registerUser(user);
+            Optional<BuyOrder> created;
+            if (Objects.nonNull(principal)) {
+                created = buyOrderService.createBuyOrder(order, principal.getName());
+            } else {
+                created = buyOrderService.createBuyOrder(order);
+            }
 
-                if (created.isPresent()) {
-                    ModelAndView success = new ModelAndView("login");
-                    success.addObject("registered", true);
-//                    logger.debug("registration succes, returning login.jsp page");
-                    return success;
-                } else {
-                    result.rejectValue("name", "registration.error");
-                }
+            if (created.isPresent()) {
+                ModelAndView success = new ModelAndView("shop/shopPage");
+                return success;
+            } else {
+                result.rejectValue("order", "registration.error");
+            }
         }
-        return new ModelAndView("register", "order", order);
+        return new ModelAndView("shop/shopBuyPage", "order", order);
     }
 }

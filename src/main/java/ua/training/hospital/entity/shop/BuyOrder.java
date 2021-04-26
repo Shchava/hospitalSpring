@@ -28,10 +28,10 @@ public class BuyOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long orderId;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     private User owner;
 
-    @OneToMany(cascade = { CascadeType.ALL})
+    @ManyToMany(cascade = { CascadeType.ALL})
     private List<ProductOrder> products;
 
     @Column
@@ -52,7 +52,7 @@ public class BuyOrder {
     private String phoneNumber;
 
     @Column
-    @EmailValidation
+//    @EmailValidation
     @NotEmpty(message = "{field.empty}")
     @Size(max = 60)
     private String email;
