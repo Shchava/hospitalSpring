@@ -3,10 +3,32 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item passive">
-                    <label class="navbar-brand">${sessionScope.LoggedUser.name}</label>
+                    <%--                    <label class="nav-link"><sec:authentication property="principal.username"/></label>--%>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="/"><spring:message code="header.message"/><span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li>
+                    <a class="nav-link" href="/shop/0"><spring:message code="header.shop"/><span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li>
+                    <a class="nav-link" href="/shop/cart"><spring:message code="header.cart"/><span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <sec:authorize access="isAuthenticated()">
+                    <li>
+                        <a class="nav-link" href="/shop/orders"><spring:message code="header.orders"/><span
+                                class="sr-only">(current)</span></a>
+                    </li>
+                </sec:authorize>
+                <li>
+                    <a class="nav-link" href="/shop/about"><spring:message code="header.aboutUs"/><span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li>
+                    <a class="nav-link" href="/shop/cart"><spring:message code="header.feedBackForm"/><span
                             class="sr-only">(current)</span></a>
                 </li>
             </ul>
@@ -24,7 +46,9 @@
                     </div>
                 </li>
                 <li>
-                    <a class="nav-link" href="/logout"><spring:message code="header.logout"/><span class="sr-only">(current)</span></a>
+                    <sec:authorize access="isAuthenticated()">
+                        <a class="nav-link" href="/logout"><spring:message code="header.logout"/><span class="sr-only">(current)</span></a>
+                    </sec:authorize>
                 </li>
             </ul>
         </div>

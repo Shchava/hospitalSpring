@@ -39,3 +39,11 @@ footer {
     padding: 0;
     font-size: 13px;
 }
+
+.btn.btn-primary {
+    color: #fff;
+    background: #03A9F4;
+}
+.btn.btn-primary:hover {
+    background: #03a3e7;
+}

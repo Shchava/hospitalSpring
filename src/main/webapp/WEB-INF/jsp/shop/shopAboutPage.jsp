@@ -31,21 +31,6 @@
     <c:set var="foramter" value='${DateTimeFormatter.ofPattern(dateFormat)}'/>
 
     <style>
-        .number-column {
-            width: 20%;
-        !important;
-        }
-
-        .text-column {
-            width: 100%;
-        }
-
-        .submit-button {
-            display: block;
-            width: 98%;
-            margin: 0.5em;
-        }
-
         h2 {
             text-align: center;
         }
@@ -64,45 +49,18 @@
         <div class="col-sm-8 text-left container">
             <div class="table-wrapper">
                 <div class="table-title">
-                    <h2><spring:message code="shop.cartPage.title"/></h2>
+                    <h2><spring:message code="shop.aboutPage.title"/></h2>
                 </div>
-                <table class="table table-striped table-hover">
-                    <thead>
-                    <tr>
-                        <th class="col-md-8 text-column"><spring:message code="shop.buyPage.productNameLabel"/></th>
-                        <th class="col-md-2 number-column"><spring:message code="shop.buyPage.productPriceLabel"/></th>
-                        <th class="col-md-1 number-column" style="width: 20%"><spring:message
-                                code="shop.buyPage.productCount"/></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach items="${cart.products}" var="product">
-                        <tr>
-                            <th>${product.product.name}</th>
-                            <th><fmt:formatNumber type="number"
-                                                  maxFractionDigits="0"
-                                                  value="${product.product.price/100}"/>.<c:out
-                                    value="${product.product.price%100}"/> <spring:message
-                                    code="diagnosisPrediction.shop.priceHrivna"/></th>
-                            <th>${product.count}</th>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
-                <h4><spring:message code="shop.buyPage.totalPrice"/> <fmt:formatNumber type="number"
-                                                                                       maxFractionDigits="0"
-                                                                                       value="${totalPrice/100}"/>.<c:out
-                        value="${totalPrice%100}"/> <spring:message
-                        code="diagnosisPrediction.shop.priceHrivna"/></h4>
+                <h3><spring:message code="shop.aboutPage.generalInfoLabel"/></h3>
+                <p><spring:message code="shop.aboutPage.generalInfo"/></p>
+                <h3><spring:message code="shop.aboutPage.MethodsOfPaymentLabel"/></h3>
+                <p><spring:message code="shop.aboutPage.MethodsOfPayment"/></p>
+                <h3><spring:message code="shop.aboutPage.MethodsOfDeliveryLabel"/></h3>
+                <p><spring:message code="shop.aboutPage.delivery"/></p>
+                <h3><spring:message code="shop.aboutPage.AddressLabel"/></h3>
+                <p><spring:message code="shop.aboutPage.address"/></p>
 
             </div>
-            <springForm:form method="POST" modelAttribute="cart" action="/shop/buyFromCart">
-                <div class="form-group">
-                    <springForm:hidden path="products"/>
-                    <button type="submit" class="btn btn-primary btn-block btn-lg submit-button"><spring:message
-                            code="shop.cartPage.buyButton"/></button>
-                </div>
-            </springForm:form>
 
         </div>
         <div class="col-sm-2 sidenav"></div>

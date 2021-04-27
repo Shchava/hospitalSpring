@@ -111,37 +111,7 @@
     </style>
 </head>
 <body>
-<div>
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item passive">
-                    <label class="navbar-brand">${sessionScope.LoggedUser.name}</label>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/"><spring:message code="header.message"/><span class="sr-only">(current)</span></a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="dropdown" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false">${pageContext.response.locale.country}</a>
-                    <div class="dropdown-menu" aria-labelledby="dropdown">
-                        <a class="dropdown-item"
-                           href="?lang=<spring:message code="header.language.UA.tag"/>"><spring:message
-                                code="header.language.UA"/></a>
-                        <a class="dropdown-item"
-                           href="?lang=<spring:message code="header.language.EN.tag"/>"><spring:message
-                                code="header.language.EN"/></a>
-                    </div>
-                </li>
-                <li>
-                    <a class="nav-link" href="/logout"><spring:message code="header.logout"/><span class="sr-only">(current)</span></a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-</div>
+<%@ include file="reusable/navbar.jspf" %>
 
 <div class="container-fluid text-center">
     <div class="row content">
