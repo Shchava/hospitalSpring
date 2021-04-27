@@ -1,6 +1,7 @@
 package ua.training.hospital.entity.shop;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 import ua.training.hospital.entity.User;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@Builder
 
 @Entity
 public class Cart {
@@ -18,7 +20,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long cartId;
 
-    @OneToOne(mappedBy = "cart")
+    @OneToOne(cascade = CascadeType.ALL)
     private User owner;
 
     @OneToMany(cascade = { CascadeType.ALL})

@@ -51,7 +51,9 @@ public class User {
     @Column
     String info;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
+    @Transient
+    @OneToOne(mappedBy = "owner", fetch = FetchType.LAZY)
     Cart cart;
 
     @JsonIgnore

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import ua.training.hospital.entity.shop.BuyOrder;
+import ua.training.hospital.entity.shop.Cart;
 import ua.training.hospital.entity.shop.ProductOrder;
 import ua.training.hospital.service.shop.BuyOrderService;
 import ua.training.hospital.service.shop.ProductsService;
@@ -77,9 +78,18 @@ public class ShopBuyPageController {
     }
 
 
+
+    @RequestMapping(value = "/shop/buyFromCart", method = RequestMethod.POST)
+    public String buyProducts(@ModelAttribute("cart") Cart cart,
+                                    Model model) {
+
+        return getBuyPage(model, cart.getProducts());
+    }
+
+
     @ResponseBody
     @RequestMapping(value = "/shop/buy", method = RequestMethod.POST)
-    public ModelAndView register(
+    public ModelAndView buyProducts(
             @ModelAttribute("order") @Valid BuyOrder order,
             BindingResult result,
             WebRequest request,

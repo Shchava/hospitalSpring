@@ -217,7 +217,7 @@
                                             code="diagnosisPrediction.shop.buyButton"/></button>
                             </div>
                             <sec:authorize access="isAuthenticated()">
-                            <button type="button" class="btn btn-primary btn-lg btn-block add-to-cart-button">
+                            <button type="button" class="btn btn-primary btn-lg btn-block add-to-cart-button" id="addToCartButton">
                                 <spring:message
                                         code="diagnosisPrediction.shop.addToCart"/></button>
                             </sec:authorize>
@@ -278,6 +278,15 @@
             let buyForm = $("#buyForm");
             $("#buyFormCount").val($("#counter").val());
             // console.log()
+            buyForm.attr("action", "/shop/buySingle");
+            buyForm.submit();
+        })
+
+        $("#addToCartButton").click(()=>{
+            console.log("test");
+            let buyForm = $("#buyForm");
+            $("#buyFormCount").val($("#counter").val());
+            buyForm.attr("action", "/shop/addToCart");
             buyForm.submit();
         })
     });
