@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.training.hospital.entity.shop.Product;
 import ua.training.hospital.repository.shop.ProductsRepository;
@@ -29,5 +30,10 @@ public class ProductsServiceImpl implements ProductsService {
     public Page<Product> getAllProducts(int pageNumber, int requestsPerPage) {
         logger.debug("searching for products from page " + pageNumber + " with " + requestsPerPage + "entries on page");
         return repository.findAll(PageRequest.of(pageNumber,requestsPerPage));
+    }
+
+    @Override
+    public Page<Product> getAllProductsWithTitleContaining(int pageNumber, int requestsPerPage, String nameSearch) {
+        return repository.findByNameContaining(nameSearch, PageRequest.of(pageNumber,requestsPerPage));
     }
 }

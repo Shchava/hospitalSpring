@@ -25,6 +25,26 @@
     <link rel="stylesheet" href="/css/pagination.css"/>
     <link rel="stylesheet" href="/css/predictDiagnosisPageMarkup.css">
 
+    <style>
+        .show-entries {flex-grow: 7}
+
+        .search-container {
+            flex-grow: 6;
+            display: flex;
+            flex-direction: row;
+            width: max-content !important;
+        }
+
+        .filter-submit {
+            width: auto !important;
+            flex-grow: 3;
+        }
+        .filter-field {
+            width: auto !important;
+            flex-grow: 7;
+        }
+    </style>
+
     <title><spring:message code="shop.list.title"/></title>
     <spring:message var="dateFormat" code="dateFormat"/>
     <c:set var="foramter" value='${DateTimeFormatter.ofPattern(dateFormat)}'/>
@@ -41,7 +61,40 @@
                 <c:set var="refreshLink" value="/shop/{page}?recordsPerPage={records}"/>
                 <%@ include file="../reusable/pageableTableTitle.jspf"%>
 
-                <%@ include file="../reusable/pageableTableEntriesSelector.jspf"%>
+                <div class="table-filter">
+                    <div class="row">
+                        <%--        <div class="col-sm-3">--%>
+                        <div class="col-sm-3 show-entries">
+                            <span><spring:message code="pagination.show"/></span>
+                            <div class="dropdown">
+                                <button class="btn btn-primary  float-none dropdown-toggle paginationDropdown"
+                                        type="button" data-toggle="dropdown">${page.size}</button>
+                                <ul class="dropdown-menu ">
+                                    <c:set var = "refWithPage" value = "${fn:replace(refreshLink, '{page}', page.number)}"/>
+
+                                    <li><a class="dropdown-item"
+                                           href="<c:out value="${fn:replace(refWithPage, '{records}', '5')}"/>">5</a>
+                                    </li>
+                                    <li><a class="dropdown-item"
+                                           href="<c:out value="${fn:replace(refWithPage, '{records}', '10')}"/>">10</a>
+                                    </li>
+                                    <li><a class="dropdown-item"
+                                           href="<c:out value="${fn:replace(refWithPage, '{records}', '15')}"/>">15</a>
+                                    </li>
+                                    <li><a class="dropdown-item"
+                                           href="<c:out value="${fn:replace(refWithPage, '{records}', '20')}"/>">20</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <span> <spring:message code="pagination.entries"/></span>
+                        </div>
+                            <form action="${fullSelfLink}" method="get" class="search-container">
+                                <input type="text" name="nameSearch" class="filter-field">
+                                <input type="hidden" name="recordsPerPage" value="${page.size}" >
+                                <input type="submit" class="btn btn-primary filter-submit" value=<spring:message code="pagination.find"/> >
+                            </form>
+                    </div>
+                </div>
 
                 <table class="table table-striped table-hover">
                     <thead>

@@ -26,12 +26,13 @@ public class ShopPageController {
 
     @RequestMapping(value = "/shop/{pageNumber}", method = RequestMethod.GET)
     public String defaultShowPatient(@PathVariable(required = false) int pageNumber,
-                                     @RequestParam(defaultValue = "10") int recordsPerPage,
+                                     @RequestParam(defaultValue = "10", required = false) int recordsPerPage,
+                                     @RequestParam(defaultValue = "", required = false) String nameSearch,
                                      Model model) {
 
         logger.debug("requested /shop");
 
-        Page<Product> page = productsService.getAllProducts(pageNumber, recordsPerPage);
+        Page<Product> page = productsService.getAllProductsWithTitleContaining(pageNumber, recordsPerPage, nameSearch);
         model.addAttribute("page", page);
 
         logger.debug("returning shop/shopPage.jsp page");

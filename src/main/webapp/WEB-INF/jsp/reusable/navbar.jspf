@@ -49,6 +49,9 @@
                     <sec:authorize access="isAuthenticated()">
                         <a class="nav-link" href="/logout"><spring:message code="header.logout"/><span class="sr-only">(current)</span></a>
                     </sec:authorize>
+                    <sec:authorize access="!isAuthenticated()">
+                        <a class="nav-link" href="/login"><spring:message code="header.login"/><span class="sr-only">(current)</span></a>
+                    </sec:authorize>
                 </li>
             </ul>
         </div>

@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface ProductsService {
     Optional<Product> getProduct (long productId);
     Page<Product> getAllProducts(int pageNumber, int requestsPerPage);
+    Page<Product> getAllProductsWithTitleContaining(int pageNumber, int requestsPerPage, String nameSearch);
 }
