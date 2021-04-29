@@ -105,7 +105,7 @@ public class ShopBuyPageController {
             }
 
             if (created.isPresent()) {
-                ModelAndView success = new ModelAndView("shop/shopPage");
+                ModelAndView success = new ModelAndView("redirect:orders");
                 return success;
             } else {
                 result.rejectValue("order", "registration.error");

@@ -147,7 +147,7 @@
 
 
                 <div class="fill-order-form">
-                    <springForm:form method="POST" modelAttribute="order">
+                    <springForm:form method="POST" modelAttribute="order" action="/shop/buy">
                         <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
                         <h2><spring:message code="shop.buyPage.orderFormLabel"/></h2>
 
@@ -174,7 +174,7 @@
                         <div class="form-group">
                             <label><spring:message code="shop.buyPage.address"/></label>
                             <springForm:errors path="address" cssClass="alert-danger error-message"/>
-                            <springForm:input type="text" class="form-control" path="address" required="not-required"/>
+                            <springForm:input type="text" class="form-control" path="address"/>
                         </div>
 
 
@@ -205,7 +205,7 @@
                         <div class="form-group">
                             <label><spring:message code="shop.buyPage.comments"/></label>
                             <springForm:errors path="comment" cssClass="alert-danger error-message"/>
-                            <springForm:input type="text" class="form-control" path="comment" required="not-required"/>
+                            <springForm:input type="text" class="form-control" path="comment"/>
                         </div>
 
                         <div class="form-group">
