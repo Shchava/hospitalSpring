@@ -16,7 +16,9 @@ import org.springframework.web.servlet.ModelAndView;
 import ua.training.hospital.entity.shop.BuyOrder;
 import ua.training.hospital.entity.shop.Cart;
 import ua.training.hospital.entity.shop.ProductOrder;
+import ua.training.hospital.repository.shop.CartRepository;
 import ua.training.hospital.service.shop.BuyOrderService;
+import ua.training.hospital.service.shop.CartService;
 import ua.training.hospital.service.shop.ProductsService;
 
 import javax.validation.Valid;
@@ -33,6 +35,8 @@ public class ShopBuyPageController {
 
     private ProductsService productsService;
     private BuyOrderService buyOrderService;
+    private CartService cartService;
+    private CartRepository cartRepository;
 
     @RequestMapping(value = "/shop/buySingle", method = RequestMethod.POST)
     public String buySingleItem (Model model,
@@ -105,11 +109,21 @@ public class ShopBuyPageController {
             }
 
             if (created.isPresent()) {
+
+                Optional<Cart> cart = cartService.getCart(principal.getName());
+                if(cart.isPresent()) {
+                    Cart cart1 =  cart.get();
+                    cart1.setProducts(new ArrayList<>());
+                    cartRepository.save(cart1);
+                }
+
                 ModelAndView success = new ModelAndView("redirect:orders");
                 return success;
             } else {
                 result.rejectValue("order", "registration.error");
             }
+
+
         }
         return new ModelAndView("shop/shopBuyPage", "order", order);
     }
