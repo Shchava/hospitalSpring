@@ -1,0 +1,10 @@
+.navbar-upper-container {
+    background-color: #343a40;
+    padding-left: 0;
+    padding-right: 0
+}
+
+.navbar-inner-container {
+    padding-left: 2em;
+    padding-right: 2em
+}

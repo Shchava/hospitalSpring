@@ -1,13 +1,13 @@
 <div>
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-        <div class="collapse navbar-collapse">
+    <nav class="navbar navbar-expand-sm navbar-dark navbar-upper-container">
+        <div class="container-fluid navbar-inner-container">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item passive">
                     <label class="navbar-brand">${sessionScope.LoggedUser.name}</label>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="/"><spring:message code="header.message"/><span
-                            class="sr-only">(current)</span></a>
+                            class="sr-only"></span></a>
                 </li>
             </ul>
             <ul class="navbar-nav ">
@@ -24,7 +24,7 @@
                     </div>
                 </li>
                 <li>
-                    <a class="nav-link" href="/logout"><spring:message code="header.logout"/><span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/logout"><spring:message code="header.logout"/><span class="sr-only"></span></a>
                 </li>
             </ul>
         </div>

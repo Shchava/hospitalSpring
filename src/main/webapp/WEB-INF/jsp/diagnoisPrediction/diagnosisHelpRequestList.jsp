@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="/css/doctorPage.css">
     <link rel="stylesheet" href="/css/pagination.css"/>
     <link rel="stylesheet" href="/css/predictDiagnosisPageMarkup.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 
     <title><spring:message code="diagnosisPrediction.prediction.title"/></title>
     <spring:message var="dateFormat" code="dateFormat"/>

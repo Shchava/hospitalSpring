@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/css/listOfEntries.css"/>
     <link rel="stylesheet" href="/css/doctorPage.css">
     <link rel="stylesheet" href="/css/pagination.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 
 
     <title><spring:message code="patientList.title"/></title>
