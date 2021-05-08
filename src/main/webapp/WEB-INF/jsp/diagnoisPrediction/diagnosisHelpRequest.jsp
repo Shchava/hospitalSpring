@@ -146,7 +146,9 @@
 
                     <c:forEach items="${helpRequest.symptoms}" var="symptom">
                         <div class="alert alert-info alert-dismissible fade show symptom-box">
+                            <span>
                             <c:out value="${symptom}"/>
+                            </span>
                             <button class="btn-close" data-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </c:forEach>
@@ -254,6 +256,8 @@
                 }
             });
         });
+
+        updateSymptomLabels();
     })
 
     function updateComments() {
@@ -337,5 +341,33 @@
                 xhr.setRequestHeader(header, token);
             }
         });
+    }
+
+    function updateSymptomLabels () {
+        $(".symptom-box span").each((i, symptom) => {
+            console.log( "${pageContext.response.locale}");
+
+
+            $.ajax({
+                type: 'GET',
+                url: "/diagnosis-prediction/symptom-translation",
+                contentType: 'text',
+                dataType: 'text',
+                data: {
+                    lang: "${pageContext.response.locale}",
+                    symptomIdentifier: symptom.innerText
+                },
+                success: function (data) {
+                    symptom.innerText = data
+                },
+                error: function (data) {
+                    console.log("error")
+                    console.log(data);
+                }
+            });
+
+
+
+        })
     }
 </script>
