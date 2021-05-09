@@ -14,11 +14,14 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
     <link rel="stylesheet" href="/css/doctorPageMarkUp.css"/>
     <link rel="stylesheet" href="/css/listOfEntries.css"/>
     <link rel="stylesheet" href="/css/doctorPage.css">
     <link rel="stylesheet" href="/css/pagination.css">
+    <link rel="stylesheet" href="/css/predictDiagnosisPageMarkup.css">
     <link rel="stylesheet" href="/css/navbar.css">
 
     <title><spring:message code="diagnosisPrediction.predictionResultPage.title"/></title>
@@ -33,6 +36,8 @@
     <style>
         .symptom-list {
             display: flex;
+            max-width: 100%;
+            flex-wrap: wrap;
         }
 
         .symptom-list-label {
@@ -43,8 +48,10 @@
             align-self: center
         }
 
-        .symptom-box {
+        .show-symptom {
             margin: 0.5em;
+            flex-grow: 0;
+            width: fit-content !important;
         }
 
         .action-button-container {
@@ -61,13 +68,6 @@
             background-color: #eaeaea;
             padding: 0.2em 0.5em;
             border-radius: 0.5em;
-        }
-
-        .comment-own {
-            margin-left: auto;
-        }
-        .comment-others {
-            margin-right: auto;
         }
 
         .comment {
@@ -113,7 +113,7 @@
             margin-bottom: 0.2em;
         }
 
-        .hidden {
+        .select-symptom-box {
             display: none;
         }
     </style>
@@ -146,7 +146,7 @@
                             code="diagnosisPrediction.predictResultPage.symptomList"/></h3>
 
                     <c:forEach items="${helpRequest.symptoms}" var="symptom">
-                        <div class="alert alert-info alert-dismissible fade show symptom-box">
+                        <div class="alert alert-info alert-dismissible fade show show-symptom">
                             <span>
                             <c:out value="${symptom}"/>
                             </span>
@@ -181,8 +181,13 @@
                 </form>
 
                 <div class="action-button-container">
-                    <button type="button" class="btn btn-primary btn-lg action-button"><spring:message code="diagnosisPrediction.predictResultPage.addAdditionalSymptom"/></button>
+                    <button type="button" id="addMoreSymptomsButton" class="btn btn-primary btn-lg action-button"><spring:message code="diagnosisPrediction.predictResultPage.addAdditionalSymptom"/></button>
                     <button type="button" id="addCommentButton" class="btn btn-primary btn-lg action-button"><spring:message code="diagnosisPrediction.predictResultPage.addComment"/></button>
+                </div>
+
+                <div id="symptomSelector" class="select-symptom-box">
+                    <select data-live-search="true" id="selectSymptomBox" class="symptom-select ">
+                    </select>
                 </div>
 
             </div>
@@ -202,6 +207,7 @@
         crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 <script src="https://stevenlevithan.com/assets/misc/date.format.js"></script>
+<script src="/js/setupSymptomSelector.js"></script>
 </body>
 
 <script>
@@ -259,6 +265,16 @@
         });
 
         updateSymptomLabels();
+
+        $("#addMoreSymptomsButton").click(function () {
+            if ($("#symptomSelector").is(":visible")) {
+                $("#symptomSelector").hide();
+            } else {
+                $("#symptomSelector").show();
+            }
+        });
+
+        setupSymptomSelector();
     })
 
     function updateComments() {
@@ -345,7 +361,7 @@
     }
 
     function updateSymptomLabels () {
-        $(".symptom-box span").each((i, symptom) => {
+        $(".show-symptom span").each((i, symptom) => {
             console.log( "${pageContext.response.locale}");
 
 
