@@ -78,6 +78,13 @@
             margin-bottom: 1em;
         }
 
+        .comment-own {
+            margin-left: auto;
+        }
+        .comment-others {
+            margin-right: auto;
+        }
+
         .comment-header {
             display: flex;
             flex-direction: row;
@@ -116,18 +123,29 @@
         .select-symptom-box {
             display: none;
         }
+
+        .hidden {
+            display: none;
+        }
+
+        .hidden-form {
+            display: none;
+        }
+
+        .last-button {
+            margin-top: 1em;
+            margin-bottom: 0;
+            display: block;
+        }
     </style>
 </head>
 <body>
 <%@ include file="../reusable/navbar.jspf" %>
-<div class="container-fluid text-center">
-    <div class="row content">
-        <div class="col-sm-2 sidenav">
-
-
-        </div>
+<div class="container-fluid main-content">
+    <div class="row flex-xl-nowrap  main-content-inner">
+        <div class="col-sm-2 sidenav"></div>
         <div class="col-sm-8 text-left container">
-            <div class="table-wrapper">
+            <div class="table-wrapper clearfix">
                 <div class="table-title">
                     <div class="row">
                         <div class="col-sm-4">
@@ -190,14 +208,44 @@
                     </select>
                 </div>
 
+
+                <sec:authorize access="hasRole('DOCTOR')">
+                    <button type="button" id="showSetDiagnosis" class="btn btn-primary btn-lg action-button last-button"><spring:message code="diagnosisPrediction.predictResultPage.setDiagnosis"/></button>
+
+
+                    <div id="addDiagnosis" class="hidden-form">
+                        <springForm:form method="POST"  id="submitForm" modelAttribute="newDiagnosis" action="/doctor/patient${helpRequest.patient.idUser}/addDiagnosis">
+                            <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
+
+<%--                            <springForm:input path="symptoms" type="hidden"/>--%>
+                            <div class="form-group">
+                                <label><spring:message code="doctor.showPatient.newDiagnosis.name"/></label>
+                                <springForm:errors path="name" cssClass="alert-danger error-message" />
+                                <springForm:input type="text" path="name"  class="form-control" value="" required="required" />
+                            </div>
+                            <div class="form-group">
+                                <label><spring:message code="doctor.showPatient.newDiagnosis.description"/></label>
+                                <springForm:textarea path="description" type="text" class="form-control input-description"/>
+                            </div>
+
+                            <button type="submit" id="setDiagnosisButton" class="btn btn-primary btn-lg action-button last-button"><spring:message code="diagnosisPrediction.predictResultPage.setDiagnosis"/></button>
+                        </springForm:form>
+
+                    </div>
+
+                </sec:authorize>
+
+
+                <div class="set-diagnosis-box">
+                </div>
+
             </div>
         </div>
-        <div class="col-sm-2 sidenav">
-
-
-        </div>
+        <div class="col-sm-2 sidenav"></div>
     </div>
 </div>
+<footer class="container-fluid text-lg-start text-center">
+</footer>
 <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
@@ -227,19 +275,20 @@
     }
 
     $(document).ready(function () {
+
         refreshIntervalFunc = window.setInterval(()=>updateComments(), refreshInterval);
 
         // setupAjax(); todo: uncoment when csrf turned on
 
         $("#addCommentButton").click(function () {
-            let commentField = $("#commentField")
 
+            let commentField = $("#commentField")
             let comment =commentField.val();
 
             if(!comment.trim()) {
+
                 return;
             }
-
             $.ajax({
                 type: 'POST',
                 url: "/diagnosis-prediction/help${helpRequest.idPrediction}/addComment",
@@ -263,14 +312,23 @@
                 }
             });
         });
-
         updateSymptomLabels();
 
+        $("#showSetDiagnosis").click(function () {
+            $("#showSetDiagnosis").hide();
+            $("#addDiagnosis").show();
+        })
+
+        $("#setDiagnosisButton").on('click', () => {
+            submitCreateDiagnosisRequest();
+        })
+
         $("#addMoreSymptomsButton").click(function () {
-            if ($("#symptomSelector").is(":visible")) {
-                $("#symptomSelector").hide();
+            const symptomSelector = $("#symptomSelector");
+            if (symptomSelector.is(":visible")) {
+                symptomSelector.hide();
             } else {
-                $("#symptomSelector").show();
+                symptomSelector.show();
             }
         });
 
@@ -386,5 +444,28 @@
 
 
         })
+    }
+
+    function submitCreateDiagnosisRequest() {
+        let symptoms = [];
+
+        for (let symptomAlert of $("#selectedSymptoms > div")) {
+            symptoms.push(symptomAlert.getAttribute("symptom-id"))
+        }
+
+        let form = $("#submitForm");
+
+
+        $(".symptomArr").remove();
+        // form.remove(".symptomArr");
+        symptoms.forEach((symptom, index)=> {
+            let symptomInput = document.createElement("input");
+            symptomInput.classList.add("symptomArr");
+            symptomInput.setAttribute("id","symptoms" + index);
+            symptomInput.setAttribute("type","hidden");
+            symptomInput.setAttribute("value", symptom);
+            symptomInput.setAttribute("name", "symptoms[" + index + "]");
+            form[0].appendChild(symptomInput);
+        });
     }
 </script>

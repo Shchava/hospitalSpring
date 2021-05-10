@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import ua.training.hospital.controller.dto.DiagnosisDTO;
 import ua.training.hospital.entity.DiagnosisHelpRequest;
 import ua.training.hospital.entity.DiagnosisHelpRequestComment;
 import ua.training.hospital.entity.exceptions.ResourceNotFoundException;
@@ -52,6 +53,8 @@ public class DiagnosisPredictionHelpController {
             logger.debug("can't find help request with such id");
             throw new ResourceNotFoundException();
         }
+
+        model.addAttribute("newDiagnosis", new DiagnosisDTO());
 
         logger.debug("returning dignosisPrediction/diagnosisHelpRequest.jsp page");
         return "diagnoisPrediction/diagnosisHelpRequest";

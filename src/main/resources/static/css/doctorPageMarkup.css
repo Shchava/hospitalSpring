@@ -5,9 +5,9 @@
 
 /* Set gray background color and 100% height */
 .sidenav {
-    padding-top: 20px;
+    /*padding-top: 20px;*/
     background-color: #f1f1f1;
-    height: available;
+    /*height: 100%;*/
 }
 
 /* Set black background color, white text and some padding */
@@ -20,8 +20,7 @@ footer {
 /* On small screens, set height to 'auto' for sidenav and grid */
 @media screen and (max-width: 767px) {
     .sidenav {
-        height: auto;
-        padding: 15px;
+        height: 0;
     }
     .row.content {height:auto;}
 }
@@ -33,4 +32,19 @@ footer {
     margin: 0;
     padding: 0;
     font-size: 13px;
+    height: 100%;
+}
+
+.main-content {
+    flex: 1
+}
+
+.main-content-inner {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }

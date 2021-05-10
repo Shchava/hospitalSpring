@@ -84,6 +84,21 @@
 <script>
     $(document).ready(function () {
         setupSymptomSelector();
+
+        $("#submit-request").on('click', () => {
+            let data = {};
+            data.symptoms = [];
+
+            for (let symptomAlert of $("#selectedSymptoms > div")) {
+                data.symptoms.push(symptomAlert.getAttribute("symptom-id"))
+            }
+
+            let form = $("#submitForm");
+            $("#symptomsField").val(JSON.stringify(data));
+
+            console.log($("#symptomsField").value)
+            form.submit();
+        })
     });
 </script>
 </html>
