@@ -14,6 +14,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -79,8 +80,6 @@ public class AWSCallerImpl implements AWSCaller {
             con.setDoOutput(true);
             con.setConnectTimeout(AWS_REQUEST_TIMEOUT);
 
-
-
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
             String inputLine;
@@ -105,28 +104,42 @@ public class AWSCallerImpl implements AWSCaller {
         try {
             URL url = new URL(DIAGNOSIS_PREDICT_API_URL);
 
-//            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-//            con.setRequestMethod("POST");
-//            con.setRequestProperty("charset", "utf-8");
-//            con.setDoOutput(true);
-//            con.setConnectTimeout(AWS_REQUEST_TIMEOUT);
-//
-//            OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
-//            writer.write(objectMapper.writeValueAsString(symptoms));
-//            writer.close();
-//
-//            BufferedReader in = new BufferedReader(
-//                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
-//            String inputLine;
-//
-//            StringBuilder content = new StringBuilder();
-//            while ((inputLine = in.readLine()) != null) {
-//                content.append(inputLine);
-//            }
-//            in.close();
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("charset", "utf-8");
+            con.setDoOutput(true);
+            con.setConnectTimeout(AWS_REQUEST_TIMEOUT);
 
-            //todo: replace with actual logic
-            return Optional.of(new PredictionResult("testDisiease", 0.1));
+            OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+            writer.write(objectMapper.writeValueAsString(symptoms));
+            writer.close();
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+            String inputLine;
+
+            StringBuilder content = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+
+            JsonNode response = objectMapper.readTree(content.toString());
+            if(Objects.isNull(response) || response.findValue("statusCode").asInt() != 200) {
+                return Optional.empty();
+            }
+
+            JsonNode responseBody = response.findValue("body");
+            if(Objects.isNull(responseBody)) {
+                return Optional.empty();
+            }
+
+            PredictionResult result = new PredictionResult();
+            result.setName(responseBody.findValue("diagnosis").textValue());
+            result.setAccuracy(responseBody.findValue("probability").doubleValue());
+            result.setSymptoms(symptoms.getSymptoms());
+
+            return Optional.of(result);
 
 
 
