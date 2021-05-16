@@ -219,19 +219,12 @@
                     <div id="addDiagnosis" class="hidden-form">
                         <springForm:form method="POST"  id="submitForm" modelAttribute="newDiagnosis" action="/doctor/patient${helpRequest.patient.idUser}/addDiagnosis">
                             <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
-
-<%--                            <springForm:input path="symptoms" type="hidden"/>--%>
                             <div class="form-group">
                                 <label><spring:message code="doctor.showPatient.newDiagnosis.name"/></label>
                                 <springForm:errors path="name" cssClass="alert-danger error-message" />
                                 <div id="symptomSelector" class="select-diagnosis-box">
                                 <springForm:select path="name" id="diagnosisSelector" data-live-search="true" class="form-control symptom-select" required="required">
                                 </springForm:select>
-<%--                                <springForm:select path="name" id="diagnosisSelector" class="form-control" required="required">--%>
-<%--                                    <option value="PATIENT"><spring:message code="registration.patient"/></option>--%>
-<%--                                    <option value="NURSE"><spring:message code="registration.nurse"/></option>--%>
-<%--                                    <option value="DOCTOR"><spring:message code="registration.doctor"/></option>--%>
-<%--                                </springForm:select>--%>
                                 </div>
                             </div>
                             <div class="form-group">

@@ -30,8 +30,8 @@
 </head>
 <body>
 <%@ include file="../reusable/navbar.jspf"%>
-<div class="container-fluid text-center">
-    <div class="row content">
+<div class="container-fluid main-content">
+    <div class="row flex-xl-nowrap  main-content-inner">
         <div class="col-sm-2 sidenav"></div>
 
         <div class="col-sm-8 text-left container">
