@@ -31,8 +31,7 @@
         }
 
         .hidden-form {
-            /*display: none;*/
-            display: block;
+            display: none;
             padding: 1em;
             width: available;
             margin: auto;
@@ -54,6 +53,10 @@
 
         .table-wrapper {
             box-shadow: none;
+        }
+
+        .input-description {
+            margin-bottom: 1em;
         }
     </style>
 </head>
@@ -82,11 +85,11 @@
 
                 </div>
                 <div class="action-button-container">
-                    <button type="button" class="btn btn-primary btn-lg action-button"><spring:message code="diagnosisPrediction.predictResultPage.askHelp"/></button>
-                    <button type="button" class="btn btn-primary btn-lg action-button"><spring:message code="diagnosisPrediction.predictResultPage.predictDifferentDiagnosis"/></button>
+                    <button id="showCreateHelpRequestForm" type="button" class="btn btn-primary btn-lg action-button"><spring:message code="diagnosisPrediction.predictResultPage.askHelp"/></button>
+                    <a href="/diagnosis-prediction" class="btn btn-primary btn-lg action-button"><spring:message code="diagnosisPrediction.predictResultPage.predictDifferentDiagnosis"/></a>
                 </div>
 
-                <div id="addDiagnosis" class="hidden-form">
+                <div id="createHelpRequestForm" class="hidden-form">
                     <springForm:form method="POST" modelAttribute="prediction" action="/diagnosis-prediction/askHelp">
 <%--                        <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">--%>
                         <springForm:input type="hidden" path="name"/>
@@ -111,3 +114,23 @@
 <footer class="container-fluid text-center">
 </footer>
 </body>
+<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#showCreateHelpRequestForm").click(function () {
+            // $("#createHelpRequestForm").show();
+            // return false;
+            const createHelpRequestForm = $("#createHelpRequestForm");
+
+            if (createHelpRequestForm.is(":visible")) {
+                createHelpRequestForm.hide();
+            } else {
+                createHelpRequestForm.show();
+            }
+        });
+    });
+</script>
