@@ -31,7 +31,7 @@ public class DiagnosisPredictionSymptomsTranslator {
             @RequestParam String symptomIdentifier,
             @RequestParam String lang) {
 
-        log.debug("requested /symptoms-list");
+        log.debug("requested /diagnosis-prediction/symptom-translation");
 
         Optional<String> name = awsCaller.getSymptomName(symptomIdentifier, lang);
 

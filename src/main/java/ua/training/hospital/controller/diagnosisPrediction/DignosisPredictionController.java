@@ -46,11 +46,11 @@ public class DignosisPredictionController {
     }
 
     @RequestMapping(value = "/diagnosis-prediction/symptoms-list", method = RequestMethod.GET)
-    public ResponseEntity<JsonNode> getSymptomsList(Model model) {
+    public ResponseEntity<JsonNode> getSymptomsList(Model model, @RequestParam String lang) {
 
         logger.debug("requested /symptoms-list");
 
-        Optional<JsonNode> jsonNode = awsCaller.getSymptomList("ua");
+        Optional<JsonNode> jsonNode = awsCaller.getSymptomList(lang);
 
         if (jsonNode.isPresent()) {
             return new ResponseEntity<>(jsonNode.get(), HttpStatus.OK);

@@ -82,7 +82,7 @@
 
 <script>
     $(document).ready(function () {
-        setupSymptomSelector();
+        setupSymptomSelector("${pageContext.response.locale}");
 
         $("#submit-request").on('click', () => {
             let data = {};

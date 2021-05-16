@@ -1,4 +1,4 @@
-function setupSymptomSelector() {
+function setupSymptomSelector(lang, selectSymptomMessage) {
 
     let selectSymptomBox = $('#selectSymptomBox');
 
@@ -40,13 +40,13 @@ function setupSymptomSelector() {
     });
 
     selectSymptomBox.on('rendered.bs.select', () => {
-        $('.filter-option-inner-inner')[0].innerText = "Виберіть потрібні симптоми";
+        $('.filter-option-inner-inner')[0].innerText = selectSymptomMessage;
     })
 
 
     $.ajax({
         type: 'GET',
-        url: "/diagnosis-prediction/symptoms-list",
+        url: "/diagnosis-prediction/symptoms-list?lang="+lang,
         dataType: 'json',
         contentType: 'application/json',
         success: function (data) {
@@ -60,7 +60,7 @@ function setupSymptomSelector() {
             })
             selectSymptomBox.selectpicker({
                 style: "symptom-select-button",
-                title: "виберіть потрібні симптоми"
+                title: selectSymptomMessage
             });
         },
         error: function (data) {

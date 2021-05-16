@@ -31,6 +31,7 @@
     </c:set>
 
     <spring:message var="selectDiagnosisMessage" code="diagnosisPrediction.predictResultPage.selectDiagnosis"/>
+    <spring:message var="selectSymptomMessage" code="diagnosisPrediction.predictResultPage.selectSymptom"/>
 
     <c:set var="foramter" value='${DateTimeFormatter.ofPattern(dateFormat)}'/>
     <sec:authentication var="username" property="principal.username"/>
@@ -338,7 +339,7 @@
             }
         });
 
-        setupSymptomSelector();
+        setupSymptomSelector("${pageContext.response.locale}", "${selectSymptomMessage}");
         setupDiagnosisSelector("${selectDiagnosisMessage}");
     })
 
