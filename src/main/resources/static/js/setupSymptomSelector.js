@@ -58,7 +58,7 @@ function setupSymptomSelector() {
                 option.setAttribute("symptom-id", item.symptomIdentifier);
                 $("#selectSymptomBox")[0].appendChild(option);
             })
-            $('select').selectpicker({
+            selectSymptomBox.selectpicker({
                 style: "symptom-select-button",
                 title: "виберіть потрібні симптоми"
             });

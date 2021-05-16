@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface AWSCaller {
     Optional<JsonNode> getSymptomList(String lang);
+    Optional<JsonNode> getDiagnosesList(String lang);
     Optional<PredictionResult> predictDiagnosisList(SymptomDTO symptoms, String lang);
     Optional<String> getSymptomName (String SymptomIdentifier, String lang);
 }

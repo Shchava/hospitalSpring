@@ -21,6 +21,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class AWSCallerImpl implements AWSCaller {
     private static final String SYMPTOMS_LIST_API_URL = "https://3ncxlmxrbd.execute-api.us-east-1.amazonaws.com/prod2/get-symptoms-list";
+    private static final String DIAGNOSES_LIST_API_URL = "https://3ncxlmxrbd.execute-api.us-east-1.amazonaws.com/prod2/get-diagnoses-list";
     private static final String GET_SYMPTOM_NAME_API_URL = "https://3ncxlmxrbd.execute-api.us-east-1.amazonaws.com/prod2/get-symptom-name";
     private static final String DIAGNOSIS_PREDICT_API_URL = "https://3ncxlmxrbd.execute-api.us-east-1.amazonaws.com/prod2/perdict-diagnosis";
     private static final int AWS_REQUEST_TIMEOUT = 3000;
@@ -45,6 +46,40 @@ public class AWSCallerImpl implements AWSCaller {
             OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
             writer.write(String.format(langRequestPattern, lang));
             writer.close();
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+            String inputLine;
+
+            StringBuilder content = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+
+            return Optional.ofNullable(objectMapper.readTree(content.toString()));
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<JsonNode> getDiagnosesList(String lang) {
+        try {
+
+            String requestUrl = DIAGNOSES_LIST_API_URL +
+                    "?" + LANG_PARAM + "=" + lang;
+            URL url = new URL(requestUrl);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("charset", "utf-8");
+            con.setDoOutput(true);
+            con.setConnectTimeout(AWS_REQUEST_TIMEOUT);
+
+
 
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));

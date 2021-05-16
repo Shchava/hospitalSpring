@@ -29,6 +29,9 @@
     <c:set var="dateFormat">
         <spring:message code="dateFormat"/>
     </c:set>
+
+    <spring:message var="selectDiagnosisMessage" code="diagnosisPrediction.predictResultPage.selectDiagnosis"/>
+
     <c:set var="foramter" value='${DateTimeFormatter.ofPattern(dateFormat)}'/>
     <sec:authentication var="username" property="principal.username"/>
 
@@ -221,7 +224,15 @@
                             <div class="form-group">
                                 <label><spring:message code="doctor.showPatient.newDiagnosis.name"/></label>
                                 <springForm:errors path="name" cssClass="alert-danger error-message" />
-                                <springForm:input type="text" path="name"  class="form-control" value="" required="required" />
+                                <div id="symptomSelector" class="select-diagnosis-box">
+                                <springForm:select path="name" id="diagnosisSelector" data-live-search="true" class="form-control symptom-select" required="required">
+                                </springForm:select>
+<%--                                <springForm:select path="name" id="diagnosisSelector" class="form-control" required="required">--%>
+<%--                                    <option value="PATIENT"><spring:message code="registration.patient"/></option>--%>
+<%--                                    <option value="NURSE"><spring:message code="registration.nurse"/></option>--%>
+<%--                                    <option value="DOCTOR"><spring:message code="registration.doctor"/></option>--%>
+<%--                                </springForm:select>--%>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label><spring:message code="doctor.showPatient.newDiagnosis.description"/></label>
@@ -256,6 +267,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 <script src="https://stevenlevithan.com/assets/misc/date.format.js"></script>
 <script src="/js/setupSymptomSelector.js"></script>
+<script src="/js/setupDiagnosisSelector.js"></script>
 </body>
 
 <script>
@@ -333,6 +345,7 @@
         });
 
         setupSymptomSelector();
+        setupDiagnosisSelector("${selectDiagnosisMessage}");
     })
 
     function updateComments() {

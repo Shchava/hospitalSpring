@@ -1,5 +1,6 @@
 package ua.training.hospital.controller.diagnosisPrediction;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +19,7 @@ import ua.training.hospital.controller.dto.DiagnosisDTO;
 import ua.training.hospital.entity.DiagnosisHelpRequest;
 import ua.training.hospital.entity.DiagnosisHelpRequestComment;
 import ua.training.hospital.entity.exceptions.ResourceNotFoundException;
+import ua.training.hospital.service.aws.AWSCaller;
 import ua.training.hospital.service.diagnosisPrediction.DiagnosisHelpRequestCommentService;
 import ua.training.hospital.service.diagnosisPrediction.DiagnosisHelpRequestService;
 
@@ -33,8 +35,9 @@ import java.util.Optional;
 public class DiagnosisPredictionHelpController {
     private static final Logger logger = LogManager.getLogger(DignosisPredictionResultController.class);
 
-    private DiagnosisHelpRequestService helpRequestService;
-    private DiagnosisHelpRequestCommentService helpRequestCommentService;
+    final private AWSCaller awsCaller;
+    final private DiagnosisHelpRequestService helpRequestService;
+    final private DiagnosisHelpRequestCommentService helpRequestCommentService;
 
     @RequestMapping(value = "/diagnosis-prediction/help{idRequest}", method = RequestMethod.GET)
     public String showHelpRequest(@PathVariable long idRequest,
@@ -87,5 +90,20 @@ public class DiagnosisPredictionHelpController {
         }
 
         return new ResponseEntity<>(createdComment, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/diagnosis-prediction/diagnoses-list", method = RequestMethod.GET)
+    public ResponseEntity<JsonNode> getSymptomsList(Model model) {
+
+        logger.debug("requested /diagnoses-list");
+
+        Optional<JsonNode> jsonNode = awsCaller.getDiagnosesList("ua");
+
+        if (jsonNode.isPresent()) {
+            return new ResponseEntity<>(jsonNode.get(), HttpStatus.OK);
+        } else {
+            logger.error("AWS service call failed");
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
