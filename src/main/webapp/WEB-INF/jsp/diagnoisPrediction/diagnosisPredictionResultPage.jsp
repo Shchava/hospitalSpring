@@ -58,6 +58,28 @@
         .input-description {
             margin-bottom: 1em;
         }
+
+        .show-symptom {
+            margin: 0.5em;
+            flex-grow: 0;
+            padding-right: 0.5em;
+            padding-left: 0.5em;
+            width: fit-content !important;
+        }
+
+        .symptom-list {
+            display: flex;
+            max-width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .symptom-list-label {
+            display: inline-block;
+            height: available;
+            margin-right: 0.5em;
+            text-align: center;
+            align-self: center
+        }
     </style>
 </head>
 <body>
@@ -81,7 +103,17 @@
                 </h2>
                 <h3><spring:message code="diagnosisPrediction.predictResultPage.accuracy"/> <c:out value="${prediction.accuracy}"/>%</h3>
 
-                <div id="selectedSymptoms">
+                <div id="selectedSymptoms" class="symptom-list">
+                    <h3 class="symptom-list-label"><spring:message
+                            code="diagnosisPrediction.predictResultPage.symptomList"/></h3>
+
+                    <c:forEach items="${prediction.symptoms}" var="symptom">
+                        <div class="alert alert-info alert-dismissible fade show show-symptom">
+                            <span>
+                            <c:out value="${symptom}"/>
+                            </span>
+                        </div>
+                    </c:forEach>
 
                 </div>
                 <div class="action-button-container">
@@ -118,9 +150,12 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+<script src="/js/updateSymptomLabels.js"></script>
 
 <script>
     $(document).ready(function () {
+        updateSymptomLabels("${pageContext.response.locale}");
+
         $("#showCreateHelpRequestForm").click(function () {
             // $("#createHelpRequestForm").show();
             // return false;

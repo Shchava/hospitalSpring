@@ -261,6 +261,7 @@
 <script src="https://stevenlevithan.com/assets/misc/date.format.js"></script>
 <script src="/js/setupSymptomSelector.js"></script>
 <script src="/js/setupDiagnosisSelector.js"></script>
+<script src="/js/updateSymptomLabels.js"></script>
 </body>
 
 <script>
@@ -317,7 +318,7 @@
                 }
             });
         });
-        updateSymptomLabels();
+        updateSymptomLabels("${pageContext.response.locale}");
 
         $("#showSetDiagnosis").click(function () {
             $("#showSetDiagnosis").hide();
@@ -424,34 +425,6 @@
         });
     }
 
-    function updateSymptomLabels () {
-        $(".show-symptom span").each((i, symptom) => {
-            console.log( "${pageContext.response.locale}");
-
-
-            $.ajax({
-                type: 'GET',
-                url: "/diagnosis-prediction/symptom-translation",
-                contentType: 'text',
-                dataType: 'text',
-                data: {
-                    lang: "${pageContext.response.locale}",
-                    symptomIdentifier: symptom.innerText
-                },
-                success: function (data) {
-                    symptom.innerText = data
-                },
-                error: function (data) {
-                    console.log("error")
-                    console.log(data);
-                }
-            });
-
-
-
-        })
-    }
-
     function submitCreateDiagnosisRequest() {
         let symptoms = [];
 
@@ -463,7 +436,6 @@
 
 
         $(".symptomArr").remove();
-        // form.remove(".symptomArr");
         symptoms.forEach((symptom, index)=> {
             let symptomInput = document.createElement("input");
             symptomInput.classList.add("symptomArr");

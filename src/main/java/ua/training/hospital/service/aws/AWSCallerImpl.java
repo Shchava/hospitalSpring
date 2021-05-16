@@ -179,6 +179,8 @@ public class AWSCallerImpl implements AWSCaller {
             JsonNode response = objectMapper.readTree(content.toString());
             if(response.findValue(STATUS_CODE).asInt() == 200) {
                 return Optional.of(response.findValue(NAME).asText());
+            } else {
+                // TODO: add log
             }
         } catch (IOException e) {
             e.printStackTrace();
