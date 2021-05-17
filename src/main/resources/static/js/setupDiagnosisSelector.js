@@ -1,4 +1,4 @@
-function setupDiagnosisSelector(selectDiagnosisMessage) {
+function setupDiagnosisSelector(lang, selectDiagnosisMessage) {
 
     let selectDiagnosisBox = $('#diagnosisSelector');
 
@@ -9,7 +9,7 @@ function setupDiagnosisSelector(selectDiagnosisMessage) {
 
     $.ajax({
         type: 'GET',
-        url: "/diagnosis-prediction/diagnoses-list",
+        url: "/diagnosis-prediction/diagnoses-list?lang="+lang,
         dataType: 'json',
         contentType: 'application/json',
         success: function (data) {

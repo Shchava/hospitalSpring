@@ -11,10 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import ua.training.hospital.controller.dto.DiagnosisDTO;
 import ua.training.hospital.entity.DiagnosisHelpRequest;
 import ua.training.hospital.entity.DiagnosisHelpRequestComment;
@@ -93,11 +90,11 @@ public class DiagnosisPredictionHelpController {
     }
 
     @RequestMapping(value = "/diagnosis-prediction/diagnoses-list", method = RequestMethod.GET)
-    public ResponseEntity<JsonNode> getSymptomsList(Model model) {
+    public ResponseEntity<JsonNode> getSymptomsList(Model model, @RequestParam String lang) {
 
         logger.debug("requested /diagnoses-list");
 
-        Optional<JsonNode> jsonNode = awsCaller.getDiagnosesList("ua");
+        Optional<JsonNode> jsonNode = awsCaller.getDiagnosesList(lang);
 
         if (jsonNode.isPresent()) {
             return new ResponseEntity<>(jsonNode.get(), HttpStatus.OK);

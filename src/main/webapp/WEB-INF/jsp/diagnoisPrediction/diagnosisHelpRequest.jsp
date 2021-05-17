@@ -340,7 +340,7 @@
         });
 
         setupSymptomSelector("${pageContext.response.locale}", "${selectSymptomMessage}");
-        setupDiagnosisSelector("${selectDiagnosisMessage}");
+        setupDiagnosisSelector("${pageContext.response.locale}", "${selectDiagnosisMessage}");
     })
 
     function updateComments() {

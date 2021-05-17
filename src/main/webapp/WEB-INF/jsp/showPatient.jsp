@@ -54,8 +54,8 @@
     </nav>
 </div>
 
-<div class="container-fluid text-center">
-    <div class="row content">
+<div class="container-fluid main-content">
+    <div class="row flex-xl-nowrap  main-content-inner">
         <div class="col-sm-2 sidenav">
 
 

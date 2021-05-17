@@ -24,6 +24,7 @@
 
     <title><spring:message code="diagnosisPrediction.prediction.title"/></title>
 </head>
+<spring:message var="selectSymptomMessage" code="diagnosisPrediction.predictResultPage.selectSymptom"/>
 <body>
 <%@ include file="../reusable/navbar.jspf"%>
 <div class="container-fluid main-content">
@@ -82,7 +83,7 @@
 
 <script>
     $(document).ready(function () {
-        setupSymptomSelector("${pageContext.response.locale}");
+        setupSymptomSelector("${pageContext.response.locale}", "${selectSymptomMessage}");
 
         $("#submit-request").on('click', () => {
             let data = {};
