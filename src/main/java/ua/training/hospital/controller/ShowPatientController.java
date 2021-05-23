@@ -80,7 +80,13 @@ public class ShowPatientController {
                                      Principal principal,
                                      Model model) {
         logger.debug("requested /doctor/patient/" + idPatient + "/addDiagnosis");
-        final Optional<Diagnosis> createdDiagnosis = diagnosisService.addDiagnosis(diagnosisDTO, idPatient, principal.getName());
+        final Optional<Diagnosis> createdDiagnosis;
+
+        if(Objects.nonNull(helpRequestId)) {
+            createdDiagnosis = diagnosisService.addDiagnosis(diagnosisDTO, idPatient, principal.getName(), helpRequestId);
+        } else {
+            createdDiagnosis = diagnosisService.addDiagnosis(diagnosisDTO, idPatient, principal.getName());
+        }
 
         if (createdDiagnosis.isPresent()) {
             model.addAttribute("addedDiagnosis", true);

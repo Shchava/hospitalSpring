@@ -8,9 +8,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ua.training.hospital.controller.dto.DiagnosisDTO;
 import ua.training.hospital.entity.Diagnosis;
+import ua.training.hospital.entity.DiagnosisHelpRequest;
 import ua.training.hospital.entity.User;
 import ua.training.hospital.repository.DiagnosisRepository;
 import ua.training.hospital.repository.UserRepository;
+import ua.training.hospital.service.diagnosisPrediction.DiagnosisHelpRequestService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -26,6 +28,9 @@ public class DiagnosisServiceImpl implements DiagnosisService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    DiagnosisHelpRequestService diagnosisHelpRequestService;
 
     @Override
     public Page<Diagnosis> findDiagnosesByPatientId(int pageNumber, int DiagnosesPerPage, long patientId) {
@@ -59,6 +64,39 @@ public class DiagnosisServiceImpl implements DiagnosisService {
                         .assigned(getCurrentTime())
                         .patient(patient.get())
                         .doctor(doctor)
+                        .build())
+        );
+    }
+
+    @Override
+    public Optional<Diagnosis> addDiagnosis(DiagnosisDTO dto, long patientId, String doctorEmail, long causingHelpRequestId) {
+        Optional<DiagnosisHelpRequest> helpRequest = diagnosisHelpRequestService.getHelpRequest(causingHelpRequestId);
+        if(!helpRequest.isPresent()) {
+            return Optional.empty();
+        }
+        logger.info("trying to create diagnosis with name" + dto.getName() + "for user with id " + patientId);
+
+        Optional<User> patient = userRepository.findById(patientId);
+
+        if (!patient.isPresent()) {
+            return Optional.empty();
+        }
+
+        User doctor = userRepository.findByEmail(doctorEmail);
+
+        if (Objects.isNull(doctor)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(
+                repository.save(Diagnosis
+                        .builder()
+                        .name(dto.getName())
+                        .description(dto.getDescription())
+                        .assigned(getCurrentTime())
+                        .patient(patient.get())
+                        .doctor(doctor)
+                        .causingHelpRequest(helpRequest.get())
                         .build())
         );
     }

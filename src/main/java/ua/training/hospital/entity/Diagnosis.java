@@ -39,4 +39,6 @@ public class Diagnosis {
     @ManyToOne(fetch = FetchType.EAGER)
     User doctor;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    DiagnosisHelpRequest causingHelpRequest;
 }
