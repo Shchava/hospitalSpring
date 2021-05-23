@@ -10,4 +10,5 @@ public interface DiagnosisHelpRequestService {
     Optional<DiagnosisHelpRequest> createDiagnosisHelpRequest(PredictionResult prediction, String patientId);
     Optional<DiagnosisHelpRequest> getHelpRequest (long idHelpRequest);
     Page<DiagnosisHelpRequest> getAllHelpRequests(int pageNumber, int requestsPerPage);
+    Page<DiagnosisHelpRequest> getHelpRequestsOfUser(String userEmail, int pageNumber, int requestsPerPage);
 }

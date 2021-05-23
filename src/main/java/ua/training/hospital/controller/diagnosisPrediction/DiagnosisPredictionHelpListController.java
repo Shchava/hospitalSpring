@@ -6,6 +6,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,8 +39,15 @@ public class DiagnosisPredictionHelpListController {
 
         logger.debug("Requested /diagnosis-prediction/help/list");
 
-        //todo: different behaviour for doctor and patient
-        Page<DiagnosisHelpRequest> page = helpRequestService.getAllHelpRequests(pageNumber, recordsPerPage);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Page<DiagnosisHelpRequest> page;
+
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_DOCTOR") || a.getAuthority().equals("ROLE_NURSE"))) {
+            page = helpRequestService.getAllHelpRequests(pageNumber, recordsPerPage);
+        } else {
+            page = helpRequestService.getHelpRequestsOfUser(principal.getName(), pageNumber, recordsPerPage);
+        }
+
         model.addAttribute("page", page);
 
         logger.debug("Returning diagnoisPrediction/diagnosisHelpRequestList.jsp page to user");

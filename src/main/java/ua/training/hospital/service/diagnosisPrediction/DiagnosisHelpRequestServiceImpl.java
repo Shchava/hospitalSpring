@@ -57,4 +57,14 @@ public class DiagnosisHelpRequestServiceImpl implements DiagnosisHelpRequestServ
         logger.debug("searching for help requests from page " + pageNumber + " with " + requestsPerPage + "entries on page");
         return repository.findAll(PageRequest.of(pageNumber,requestsPerPage));
     }
+
+    @Override
+    public Page<DiagnosisHelpRequest> getHelpRequestsOfUser(String userEmail, int pageNumber, int requestsPerPage) {
+        final User patient = userRepository.findByEmail(userEmail);
+        if(Objects.isNull(patient)) {
+            return Page.empty();
+        }
+
+        return repository.getDiagnosisHelpRequestByPatient_IdUser(PageRequest.of(pageNumber,requestsPerPage), patient.getIdUser());
+    }
 }
