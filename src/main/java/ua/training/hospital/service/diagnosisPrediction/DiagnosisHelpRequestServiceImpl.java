@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import ua.training.hospital.controller.diagnosisPrediction.models.PredictionResult;
 import ua.training.hospital.entity.DiagnosisHelpRequest;
 import ua.training.hospital.entity.User;
-import ua.training.hospital.entity.dto.ShowUserToDoctorDTO;
 import ua.training.hospital.repository.DiagnosisHelpRequestRepository;
 import ua.training.hospital.repository.UserRepository;
 import ua.training.hospital.service.diagnosis.DiagnosisServiceImpl;
@@ -51,11 +50,24 @@ public class DiagnosisHelpRequestServiceImpl implements DiagnosisHelpRequestServ
         return repository.findById(idHelpRequest);
     }
 
+    @Override
+    public boolean setClosed(long idHelpRequest, boolean closed) {
+        Optional<DiagnosisHelpRequest> helpRequest = repository.findById(idHelpRequest);
+        if(!helpRequest.isPresent()) {
+            return false;
+        } else {
+            DiagnosisHelpRequest toUpdate = helpRequest.get();
+            toUpdate.setClosed(closed);
+            repository.save(toUpdate);
+            return true;
+        }
+    }
+
 
     @Override
     public Page<DiagnosisHelpRequest> getAllHelpRequests(int pageNumber, int requestsPerPage) {
         logger.debug("searching for help requests from page " + pageNumber + " with " + requestsPerPage + "entries on page");
-        return repository.findAll(PageRequest.of(pageNumber,requestsPerPage));
+        return repository.getDiagnosisHelpRequestByClosedNull(PageRequest.of(pageNumber,requestsPerPage));
     }
 
     @Override
@@ -65,6 +77,6 @@ public class DiagnosisHelpRequestServiceImpl implements DiagnosisHelpRequestServ
             return Page.empty();
         }
 
-        return repository.getDiagnosisHelpRequestByPatient_IdUser(PageRequest.of(pageNumber,requestsPerPage), patient.getIdUser());
+        return repository.getDiagnosisHelpRequestByPatient_IdUserAndClosedIsFalse(PageRequest.of(pageNumber,requestsPerPage), patient.getIdUser());
     }
 }

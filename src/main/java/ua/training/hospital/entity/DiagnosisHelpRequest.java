@@ -40,4 +40,7 @@ public class DiagnosisHelpRequest {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private User patient;
+
+    @Column
+    private Boolean closed;
 }

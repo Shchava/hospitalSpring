@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface DiagnosisService {
     Page<Diagnosis> findDiagnosesByPatientId(int pageNumber, int DiagnosesPerPage, long patientId);
-    boolean addDiagnosis(DiagnosisDTO dto,long patientId,String doctorEmail);
+    Optional<Diagnosis> addDiagnosis(DiagnosisDTO dto,long patientId,String doctorEmail);
     Optional<Diagnosis> getDiagnosis(long idDiagnosis);
     boolean closeDiagnosis(long idDiagnosis);
 }

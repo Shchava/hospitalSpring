@@ -18,10 +18,12 @@ import ua.training.hospital.entity.Diagnosis;
 import ua.training.hospital.entity.User;
 import ua.training.hospital.entity.exceptions.ResourceNotFoundException;
 import ua.training.hospital.service.diagnosis.DiagnosisService;
+import ua.training.hospital.service.diagnosisPrediction.DiagnosisHelpRequestService;
 import ua.training.hospital.service.user.UserService;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -37,6 +39,9 @@ public class ShowPatientController {
 
     @Autowired
     PaginationUtils paginationUtils;
+
+    @Autowired
+    DiagnosisHelpRequestService helpRequestService;
 
     @RequestMapping(value = "/patient{idPatient}", method = RequestMethod.GET)
     @PreAuthorize("hasAnyRole('DOCTOR','NURSE') or #idPatient == authentication.principal.id")
@@ -63,14 +68,25 @@ public class ShowPatientController {
     @RequestMapping(value = "/doctor/patient{idPatient}/addDiagnosis", method = RequestMethod.POST)
     public ModelAndView addDiagnosis(@PathVariable long idPatient,
                                      @ModelAttribute("newDiagnosis") @Valid DiagnosisDTO diagnosisDTO,
+                                     @RequestParam(required = false) Long helpRequestId,
                                      @RequestParam(defaultValue = "0") int pageNumber,
                                      @RequestParam(defaultValue = "10") int recordsPerPage,
                                      BindingResult result,
                                      Principal principal,
                                      Model model) {
         logger.debug("requested /doctor/patient/" + idPatient + "/addDiagnosis");
-        if (diagnosisService.addDiagnosis(diagnosisDTO, idPatient, principal.getName())) {
+        final Optional<Diagnosis> createdDiagnosis = diagnosisService.addDiagnosis(diagnosisDTO, idPatient, principal.getName());
+
+        if (createdDiagnosis.isPresent()) {
             model.addAttribute("addedDiagnosis", true);
+
+
+            if(Objects.nonNull(helpRequestId)) {
+
+                helpRequestService.setClosed(helpRequestId,true);
+                return new ModelAndView("redirect:/patient" + idPatient + "/diagnosis" + createdDiagnosis.get().getIdDiagnosis());
+            }
+
             diagnosisDTO = new DiagnosisDTO();
             logger.debug("creation successful, page will contain plain DiagnosisDTO");
         } else {

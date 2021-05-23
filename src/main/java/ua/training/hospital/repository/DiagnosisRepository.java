@@ -22,7 +22,7 @@ public interface DiagnosisRepository extends JpaRepository<Diagnosis, Long> {
             "FROM hospital.user " +
             "WHERE hospital.user.email=:doctorEmail"
             , nativeQuery = true)
-    int addDiagnosis(
+    Optional<Diagnosis> addDiagnosis(
             @Param("name") String name,
             @Param("description") String description,
             @Param("assigned") LocalDateTime assigned,

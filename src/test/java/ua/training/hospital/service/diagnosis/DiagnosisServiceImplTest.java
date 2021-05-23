@@ -48,7 +48,7 @@ public class DiagnosisServiceImplTest {
     public void setUp() throws Exception {
         initMocks(this);
         given(repository.findDiagnosesByPatient_IdUser(any(), any())).willReturn(diagnoses);
-        given(repository.addDiagnosis(anyString(), anyString(), any(), anyLong(), eq(doctorEmail))).willReturn(1);
+        given(repository.addDiagnosis(anyString(), anyString(), any(), anyLong(), eq(doctorEmail))).willReturn(Optional.of(new Diagnosis()));
         given(repository.closeDiagnosis(anyLong(),any())).willReturn(1);
     }
 
@@ -68,7 +68,7 @@ public class DiagnosisServiceImplTest {
     @Test
     public void addDiagnosis() {
         LocalDateTime before = LocalDateTime.now();
-        assertTrue(service.addDiagnosis(diagnosisDTO, 7, doctorEmail));
+        assertTrue(service.addDiagnosis(diagnosisDTO, 7, doctorEmail).isPresent());
         LocalDateTime after = LocalDateTime.now();
 
         verify(repository, times(1)).addDiagnosis(
@@ -84,7 +84,7 @@ public class DiagnosisServiceImplTest {
     @Test
     public void addDiagnosisWithWrongDoctorEmail() {
         LocalDateTime before = LocalDateTime.now();
-        assertFalse(service.addDiagnosis(diagnosisDTO, 7, "wrong@email.com"));
+        assertFalse(service.addDiagnosis(diagnosisDTO, 7, "wrong@email.com").isPresent());
         LocalDateTime after = LocalDateTime.now();
 
         verify(repository, times(1)).addDiagnosis(

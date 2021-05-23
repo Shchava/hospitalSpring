@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ua.training.hospital.entity.DiagnosisHelpRequest;
 
 public interface DiagnosisHelpRequestRepository extends JpaRepository<DiagnosisHelpRequest, Long> {
-    Page<DiagnosisHelpRequest> getDiagnosisHelpRequestByPatient_IdUser(Pageable page, Long patientId);
+    Page<DiagnosisHelpRequest> getDiagnosisHelpRequestByClosedNull(Pageable page);
+    Page<DiagnosisHelpRequest> getDiagnosisHelpRequestByPatient_IdUserAndClosedIsFalse(Pageable page, Long patientId);
+
 }

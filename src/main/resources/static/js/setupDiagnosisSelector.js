@@ -18,7 +18,7 @@ function setupDiagnosisSelector(lang, selectDiagnosisMessage) {
                 let option = document.createElement("option");
                 option.innerHTML = item.name;
                 option.setAttribute("data-tokens", item.synonyms);
-                option.setAttribute("value", item.symptomIdentifier);
+                option.setAttribute("value", item.diagnosisIdentifier);
                 selectDiagnosisBox[0].appendChild(option);
             })
             selectDiagnosisBox.selectpicker({

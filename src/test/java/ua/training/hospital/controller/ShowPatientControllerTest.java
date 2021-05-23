@@ -67,7 +67,7 @@ public class ShowPatientControllerTest {
         given(diagnosisService.findDiagnosesByPatientId(Mockito.anyInt(),Mockito.anyInt(),Mockito.anyLong()))
                 .willReturn(mockDiagnosisPage);
         given(diagnosisService.addDiagnosis(Mockito.any(),Mockito.anyLong(),Mockito.anyString()))
-                .willReturn(true);
+                .willReturn(Optional.of(new Diagnosis()));
     }
 
     @Test

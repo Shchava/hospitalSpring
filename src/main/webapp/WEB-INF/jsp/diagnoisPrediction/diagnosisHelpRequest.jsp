@@ -222,6 +222,7 @@
                     <div id="addDiagnosis" class="hidden-form">
                         <springForm:form method="POST"  id="submitForm" modelAttribute="newDiagnosis" action="/doctor/patient${helpRequest.patient.idUser}/addDiagnosis">
                             <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
+                            <input type="hidden" name="helpRequestId" value="${helpRequest.idPrediction}"/>
                             <div class="form-group">
                                 <label><spring:message code="doctor.showPatient.newDiagnosis.name"/></label>
                                 <springForm:errors path="name" cssClass="alert-danger error-message" />

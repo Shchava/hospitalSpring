@@ -8,10 +8,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ua.training.hospital.controller.dto.DiagnosisDTO;
 import ua.training.hospital.entity.Diagnosis;
+import ua.training.hospital.entity.User;
 import ua.training.hospital.repository.DiagnosisRepository;
+import ua.training.hospital.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -20,6 +23,9 @@ public class DiagnosisServiceImpl implements DiagnosisService {
 
     @Autowired
     DiagnosisRepository repository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     public Page<Diagnosis> findDiagnosesByPatientId(int pageNumber, int DiagnosesPerPage, long patientId) {
@@ -30,14 +36,30 @@ public class DiagnosisServiceImpl implements DiagnosisService {
 
     @Override
     @Transactional
-    public boolean addDiagnosis(DiagnosisDTO dto, long patientId, String doctorEmail) {
+    public Optional<Diagnosis> addDiagnosis(DiagnosisDTO dto, long patientId, String doctorEmail) {
         logger.info("trying to create diagnosis with name" + dto.getName() + "for user with id " + patientId);
-        return 1 == repository.addDiagnosis(
-                dto.getName(),
-                dto.getDescription(),
-                getCurrentTime(),
-                patientId,
-                doctorEmail
+
+        Optional<User> patient = userRepository.findById(patientId);
+
+        if (!patient.isPresent()) {
+            return Optional.empty();
+        }
+
+        User doctor = userRepository.findByEmail(doctorEmail);
+
+        if (Objects.isNull(doctor)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(
+                repository.save(Diagnosis
+                        .builder()
+                        .name(dto.getName())
+                        .description(dto.getDescription())
+                        .assigned(getCurrentTime())
+                        .patient(patient.get())
+                        .doctor(doctor)
+                        .build())
         );
     }
 
@@ -48,7 +70,7 @@ public class DiagnosisServiceImpl implements DiagnosisService {
     }
 
     @Transactional
-    public boolean closeDiagnosis(long idDiagnosis){
+    public boolean closeDiagnosis(long idDiagnosis) {
         logger.info("trying to close diagnosis with id: " + idDiagnosis);
         return repository.closeDiagnosis(idDiagnosis, getCurrentTime()) == 1;
     }
