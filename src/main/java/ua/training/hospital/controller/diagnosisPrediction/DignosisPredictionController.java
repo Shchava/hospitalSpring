@@ -2,11 +2,9 @@ package ua.training.hospital.controller.diagnosisPrediction;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jdk.nashorn.internal.ir.RuntimeNode;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -17,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.training.hospital.controller.diagnosisPrediction.models.PredictionResult;
 import ua.training.hospital.controller.diagnosisPrediction.models.SymptomDTO;
-import ua.training.hospital.controller.dto.DiagnosisDTO;
 import ua.training.hospital.service.aws.AWSCaller;
 import ua.training.hospital.service.user.UserService;
 
@@ -67,7 +64,7 @@ public class DignosisPredictionController {
 
         try {
             SymptomDTO symptomDTO = objectMapper.readValue(symptoms, SymptomDTO.class);
-            response = awsCaller.predictDiagnosisList(symptomDTO, "ua");
+            response = awsCaller.predictDiagnosis(symptomDTO, "ua");
             model.addAttribute("newDiagnosis", new PredictionResult());
             response.ifPresent(
                     predictionResult -> {

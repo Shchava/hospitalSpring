@@ -12,11 +12,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import ua.training.hospital.controller.diagnosisPrediction.models.HumanPredictionDto;
 import ua.training.hospital.controller.dto.DiagnosisDTO;
 import ua.training.hospital.controller.utils.PaginationUtils;
 import ua.training.hospital.entity.Diagnosis;
 import ua.training.hospital.entity.User;
 import ua.training.hospital.entity.exceptions.ResourceNotFoundException;
+import ua.training.hospital.service.aws.AWSCaller;
 import ua.training.hospital.service.diagnosis.DiagnosisService;
 import ua.training.hospital.service.diagnosisPrediction.DiagnosisHelpRequestService;
 import ua.training.hospital.service.user.UserService;
@@ -42,6 +44,9 @@ public class ShowPatientController {
 
     @Autowired
     DiagnosisHelpRequestService helpRequestService;
+
+    @Autowired
+    AWSCaller awsCaller;
 
     @RequestMapping(value = "/patient{idPatient}", method = RequestMethod.GET)
     @PreAuthorize("hasAnyRole('DOCTOR','NURSE') or #idPatient == authentication.principal.id")
@@ -82,6 +87,8 @@ public class ShowPatientController {
 
 
             if(Objects.nonNull(helpRequestId)) {
+
+                awsCaller.saveDiagnosisPredictionByPredictionRequestId(diagnosisDTO.getName(), helpRequestId);
 
                 helpRequestService.setClosed(helpRequestId,true);
                 return new ModelAndView("redirect:/patient" + idPatient + "/diagnosis" + createdDiagnosis.get().getIdDiagnosis());

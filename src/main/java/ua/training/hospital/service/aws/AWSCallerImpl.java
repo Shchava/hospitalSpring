@@ -4,8 +4,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ua.training.hospital.controller.diagnosisPrediction.models.HumanPredictionDto;
 import ua.training.hospital.controller.diagnosisPrediction.models.PredictionResult;
 import ua.training.hospital.controller.diagnosisPrediction.models.SymptomDTO;
+import ua.training.hospital.entity.DiagnosisHelpRequest;
+import ua.training.hospital.service.diagnosisPrediction.DiagnosisHelpRequestService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +17,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -26,6 +30,7 @@ public class AWSCallerImpl implements AWSCaller {
     private static final String GET_SYMPTOM_NAME_API_URL = "https://3ncxlmxrbd.execute-api.us-east-1.amazonaws.com/prod2/get-symptom-name";
     private static final String GET_DIAGNOSIS_NAME_API_URL = "https://3ncxlmxrbd.execute-api.us-east-1.amazonaws.com/prod2/get-diagnosis-name";
     private static final String DIAGNOSIS_PREDICT_API_URL = "https://3ncxlmxrbd.execute-api.us-east-1.amazonaws.com/prod2/perdict-diagnosis";
+    private static final String SAVE_PREDICTION_API_URL = "https://3ncxlmxrbd.execute-api.us-east-1.amazonaws.com/prod2/save-human-prediction";
     private static final int AWS_REQUEST_TIMEOUT = 3000;
     private static final String langRequestPattern = "{\n\"lang\": \"%s\"\n}";
     public static final String SYMPTOM_IDENTIFIER_PARAM = "symptomIdentifier";
@@ -35,6 +40,8 @@ public class AWSCallerImpl implements AWSCaller {
     public static final String NAME = "name";
 
     private ObjectMapper objectMapper;
+
+    private DiagnosisHelpRequestService diagnosisHelpRequestService;
 
     @Override
     public Optional<JsonNode> getSymptomList(String lang) {
@@ -102,7 +109,7 @@ public class AWSCallerImpl implements AWSCaller {
     }
 
     @Override
-    public Optional<PredictionResult>  predictDiagnosisList(SymptomDTO symptoms, String lang) {
+    public Optional<PredictionResult> predictDiagnosis(SymptomDTO symptoms, String lang) {
         try {
             URL url = new URL(DIAGNOSIS_PREDICT_API_URL);
 
@@ -149,11 +156,6 @@ public class AWSCallerImpl implements AWSCaller {
             e.printStackTrace();
             return Optional.empty();
         }
-    }
-
-
-    public static void main(String[] args) {
-        new AWSCallerImpl(new ObjectMapper()).getSymptomName("itching", "ua");
     }
 
     @Override
@@ -222,5 +224,55 @@ public class AWSCallerImpl implements AWSCaller {
             e.printStackTrace();
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Boolean saveDiagnosisPrediction(HumanPredictionDto prediction) {
+        try {
+            URL url = new URL(SAVE_PREDICTION_API_URL);
+
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("charset", "utf-8");
+            con.setDoOutput(true);
+            con.setConnectTimeout(AWS_REQUEST_TIMEOUT);
+
+            OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+            writer.write(objectMapper.writeValueAsString(prediction));
+            writer.close();
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+            String inputLine;
+
+            StringBuilder content = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+
+            JsonNode response = objectMapper.readTree(content.toString());
+            if(Objects.isNull(response) || response.findValue("statusCode").asInt() != 200) {
+                return false;
+            }
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean saveDiagnosisPredictionByPredictionRequestId(String diagnosisName, long predictionHelpRequestId) {
+        Optional<DiagnosisHelpRequest> helpRequest = diagnosisHelpRequestService.getHelpRequest(predictionHelpRequestId);
+
+        if(!helpRequest.isPresent()) {
+            return false;
+        }
+
+        List<String> symptoms = helpRequest.get().getSymptoms();
+
+        return saveDiagnosisPrediction(new HumanPredictionDto(diagnosisName, symptoms));
     }
 }
