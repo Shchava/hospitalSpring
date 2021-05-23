@@ -41,7 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/css/**","/js/**","/webjars/**","/login/**","/registration/**", "/error", "/diagnosis-prediction/**").permitAll()
+                .antMatchers("/css/**","/js/**","/webjars/**","/login/**","/registration/**", "/error", "/diagnosis-prediction",
+                        "/diagnosis-prediction/symptoms-list", "/diagnosis-prediction/predict", "diagnoisPrediction/diagnosisPredictionResultPage",
+                        "/diagnosis-prediction/symptom-translation", "/diagnosis-prediction/diagnoses-list", "/diagnosis-prediction/diagnosis-translation").permitAll()
                 .antMatchers("/doctor/diagnosis*/addSurgery","/doctor/patient*/addDiagnosis","/doctor/diagnosis*/closeDiagnosis").hasRole(UserRole.DOCTOR.name())
                 .antMatchers("/patientsList/**","/doctor/diagnosis*/addMedicine","/doctor/diagnosis*/addProcedure").hasAnyRole(UserRole.DOCTOR.name(),UserRole.NURSE.name())
 

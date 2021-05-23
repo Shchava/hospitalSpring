@@ -24,7 +24,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="dropdown" data-toggle="dropdown" aria-haspopup="true"
                        aria-expanded="false">${pageContext.response.locale.country}</a>
-                    <div class="dropdown-menu" aria-labelledby="dropdown">
+                    <div class="dropdown-menu lang-select" aria-labelledby="dropdown">
                         <a class="dropdown-item"
                            href="?lang=<spring:message code="header.language.UA.tag"/>"><spring:message
                                 code="header.language.UA"/></a>

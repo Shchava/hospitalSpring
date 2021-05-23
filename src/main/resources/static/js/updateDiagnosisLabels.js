@@ -1,16 +1,16 @@
-function updateSymptomLabels (lang) {
-    $(".show-symptom span").each((i, symptom) => {
+function updateDiagnosisLabels (lang) {
+    $(".display-diagnosis").each((i, diagnosis) => {
         $.ajax({
             type: 'GET',
-            url: "/diagnosis-prediction/symptom-translation",
+            url: "/diagnosis-prediction/diagnosis-translation",
             contentType: 'text',
             dataType: 'text',
             data: {
                 lang: lang,
-                symptomIdentifier: symptom.innerText
+                diagnosisIdentifier: diagnosis.innerText
             },
             success: function (data) {
-                symptom.innerText = data
+                diagnosis.innerText = data
             },
             error: function (data) {
                 console.log("error")

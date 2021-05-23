@@ -99,7 +99,7 @@
                         </div>
                     </div>
                 </div>
-                <h2><spring:message code="diagnosisPrediction.predictResultPage.explanation"/> <b><c:out value="${prediction.name}"/></b>
+                <h2><spring:message code="diagnosisPrediction.predictResultPage.explanation"/> <b><span class="display-diagnosis"><c:out value="${prediction.name}"/><</span>/b>
                 </h2>
                 <h3><spring:message code="diagnosisPrediction.predictResultPage.accuracy"/> <c:out value="${prediction.accuracy}"/>%</h3>
 
@@ -155,10 +155,9 @@
 <script>
     $(document).ready(function () {
         updateSymptomLabels("${pageContext.response.locale}");
+        updateDiagnosisLabels("${pageContext.response.locale}");
 
         $("#showCreateHelpRequestForm").click(function () {
-            // $("#createHelpRequestForm").show();
-            // return false;
             const createHelpRequestForm = $("#createHelpRequestForm");
 
             if (createHelpRequestForm.is(":visible")) {

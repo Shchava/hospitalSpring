@@ -43,6 +43,6 @@ public class DignosisPredictionResultController {
             }
         }
         model.addAttribute("prediction", prediction);
-        return new ModelAndView("diagnoisPrediction/diagnosisPredictionResultPage", model);
+        return new ModelAndView("diagnoisPrediction/diagnosisHelpRequest", model);
     }
 }

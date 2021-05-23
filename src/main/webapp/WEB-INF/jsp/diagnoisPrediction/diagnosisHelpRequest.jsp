@@ -157,8 +157,8 @@
                         </div>
                     </div>
                 </div>
-                <h2 class=""><spring:message code="diagnosisPrediction.predictResultPage.explanation"/> <b><c:out
-                        value="${helpRequest.predictedName}"/></b>
+                <h2 class=""><spring:message code="diagnosisPrediction.predictResultPage.explanation"/> <b><span class="display-diagnosis"><c:out
+                        value="${helpRequest.predictedName}"/></span></b>
                 </h2>
                 <h3><spring:message code="diagnosisPrediction.predictResultPage.accuracy"/> <c:out
                         value="${helpRequest.predictedAccuracy*100}"/>%</h3>
@@ -265,6 +265,7 @@
 <script src="/js/setupSymptomSelector.js"></script>
 <script src="/js/setupDiagnosisSelector.js"></script>
 <script src="/js/updateSymptomLabels.js"></script>
+<script src="/js/updateDiagnosisLabels.js"></script>
 </body>
 
 <script>
@@ -321,6 +322,7 @@
                 }
             });
         });
+        updateDiagnosisLabels("${pageContext.response.locale}");
         updateSymptomLabels("${pageContext.response.locale}");
 
         $("#showSetDiagnosis").click(function () {
