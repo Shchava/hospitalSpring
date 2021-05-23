@@ -37,7 +37,7 @@
             <div class="table-wrapper">
                 <div class="table-title">
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <h2><spring:message code="diagnosisPrediction.predictPage.name"/></h2>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
 
                 </div>
                 <div class="select-symptom-box" id="submit-request">
-                    <button type="button" class="btn btn-primary btn-lg btn-block symptom-select">submit</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block symptom-select"><spring:message code="diagnosisPrediction.predictPage.submit"/></button>
                 </div>
 
                 <form id="submitForm" method="post" action="/diagnosis-prediction/predict" target="_self">

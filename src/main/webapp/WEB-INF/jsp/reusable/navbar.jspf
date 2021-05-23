@@ -13,10 +13,12 @@
                     <a class="nav-link" href="/diagnosis-prediction"><spring:message code="header.diagnosisPrediction"/><span
                             class="sr-only"></span></a>
                 </li>
+                <sec:authorize access="isAuthenticated()">
                 <li>
                     <a class="nav-link" href="/diagnosis-prediction/help/list/0"><spring:message code="header.diagnosisHelpRequests"/><span
                             class="sr-only"></span></a>
                 </li>
+                </sec:authorize>
             </ul>
             <ul class="navbar-nav ">
                 <li class="nav-item dropdown">
@@ -31,9 +33,16 @@
                                 code="header.language.EN"/></a>
                     </div>
                 </li>
+                <sec:authorize access="isAuthenticated()">
                 <li>
                     <a class="nav-link" href="/logout"><spring:message code="header.logout"/><span class="sr-only"></span></a>
                 </li>
+                </sec:authorize>
+                <sec:authorize access="!isAuthenticated()">
+                <li>
+                    <a class="nav-link" href="/login"><spring:message code="header.login"/><span class="sr-only"></span></a>
+                </li>
+                </sec:authorize>
             </ul>
         </div>
     </nav>

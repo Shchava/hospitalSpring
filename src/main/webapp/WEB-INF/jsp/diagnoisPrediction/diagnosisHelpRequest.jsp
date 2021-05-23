@@ -152,7 +152,7 @@
             <div class="table-wrapper clearfix">
                 <div class="table-title">
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <h2><spring:message code="diagnosisPrediction.predictHelpPage.name"/></h2>
                         </div>
                     </div>
@@ -161,7 +161,9 @@
                         value="${helpRequest.predictedName}"/></b>
                 </h2>
                 <h3><spring:message code="diagnosisPrediction.predictResultPage.accuracy"/> <c:out
-                        value="${helpRequest.predictedAccuracy}"/>%</h3>
+                        value="${helpRequest.predictedAccuracy*100}"/>%</h3>
+
+                <h3 style="display: inline"><spring:message code="diagnosisPrediction.predictResultPage.description"/></h3> <h4 style="display: inline"><c:out value="${helpRequest.comments}"/></h4>
 
                 <div id="selectedSymptoms" class="symptom-list">
                     <h3 class="symptom-list-label"><spring:message
