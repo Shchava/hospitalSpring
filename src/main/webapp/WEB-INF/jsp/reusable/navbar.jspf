@@ -9,6 +9,10 @@
                     <a class="nav-link" href="/"><spring:message code="header.message"/><span
                             class="sr-only"></span></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><spring:message code="header.checkDiagnoses"/><span
+                            class="sr-only"></span></a>
+                </li>
                 <li>
                     <a class="nav-link" href="/diagnosis-prediction"><spring:message code="header.diagnosisPrediction"/><span
                             class="sr-only"></span></a>
