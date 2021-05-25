@@ -16,15 +16,15 @@ import javax.validation.constraints.NotNull;
 @PasswordMatches(password = "password",confirmPassword = "confirmPassword")
 public class UserDTO {
     @NotEmpty(message = "{name.empty}")
-    @NameValidation
+//    @NameValidation
     private String name;
 
     @NotEmpty(message = "{surname.empty}")
-    @NameValidation(message = "{surname.validation}")
+//    @NameValidation(message = "{surname.validation}")//todo: fix and turn on
     private String surname;
 
     @NotEmpty(message = "{patronymic.empty}")
-    @NameValidation(message = "{patronymic.validation}")
+//    @NameValidation(message = "{patronymic.validation}")
     private String patronymic;
 
 
