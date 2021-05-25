@@ -134,7 +134,7 @@
                 <div class="table-title">
                     <div class="row">
                         <div class="col-sm-9">
-                            <h2>${diagnosis.name}</h2>
+                            <h2><span class="display-diagnosis">${diagnosis.name}</span></h2>
                         </div>
                         <div class="col-sm-3">
                             <sec:authorize access="hasRole('DOCTOR')">
@@ -515,8 +515,11 @@
         integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
         crossorigin="anonymous"></script>
 <script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="/js/updateDiagnosisLabels.js"></script>
 <script>
     $(document).ready(function () {
+        updateDiagnosisLabels("${pageContext.response.locale}");
+
         $("#showMedicine").click(function () {
             if ($("#medicineContainer").is(":visible")) {
                 $("#medicineContainer").hide();
