@@ -1,10 +1,5 @@
 function setupDiagnosisSelector(lang, selectDiagnosisMessage) {
 
-    let selectDiagnosisBox = $('#diagnosisSelector');
-
-    selectDiagnosisBox.on('rendered.bs.select', () => {
-        $('.filter-option-inner-inner')[0].innerText = selectDiagnosisMessage;
-    })
 
 
     $.ajax({

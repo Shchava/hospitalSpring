@@ -10,17 +10,26 @@
 <head>
     <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+
     <link rel="stylesheet" href="/css/doctorPageMarkUp.css"/>
     <link rel="stylesheet" href="/css/listOfEntries.css"/>
     <link rel="stylesheet" href="/css/pagination.css"/>
     <link rel="stylesheet" href="/css/showPatient.css"/>
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/predictDiagnosisPageMarkup.css">
     <title>${patient.surname} ${patient.name} ${patient.patronymic}</title>
     <c:set var="dateFormat">
         <spring:message code="dateFormat"/>
     </c:set>
     <c:set var="foramter" value='${DateTimeFormatter.ofPattern(dateFormat)}'/>
+    <spring:message var="selectDiagnosisMessage" code="diagnosisPrediction.predictResultPage.selectDiagnosis"/>
+
 </head>
 <body>
 <%@ include file="reusable/navbar.jspf"%>
@@ -102,7 +111,7 @@
                     <c:forEach items="${page.content}" var="diagnosis">
                         <tr>
                             <th><c:out value="${diagnosis.idDiagnosis}"/></th>
-                            <th><c:out value="${diagnosis.name}"/>
+                            <th><span class="display-diagnosis"><c:out value="${diagnosis.name}"/></span></th>
                             <th><c:out value="${diagnosis.assigned.format(foramter)}"/></th>
                             <th><c:out value="${diagnosis.doctor.surname}"/> <c:out
                                     value="${diagnosis.doctor.name}"/></th>
@@ -123,7 +132,10 @@
                             <div class="form-group">
                                 <label><spring:message code="doctor.showPatient.newDiagnosis.name"/></label>
                                 <springForm:errors path="name" cssClass="alert-danger error-message" />
-                                <springForm:input path="name" type="text" class="form-control" required="required"/>
+                                <div id="" class="select-diagnosis-box">
+                                    <springForm:select path="name" id="diagnosisSelector" data-live-search="true" class="form-control symptom-select" required="required">
+                                    </springForm:select>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label><spring:message code="doctor.showPatient.newDiagnosis.description"/></label>
@@ -181,16 +193,21 @@
         </div>
     </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
+</body>
+</html>
+<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+<script src="/js/setupDiagnosisSelector.js"></script>
+<script src="/js/updateDiagnosisLabels.js"></script>
+<script>
+    updateDiagnosisLabels("${pageContext.response.locale}");
+</script>
 
 <sec:authorize access="hasRole('DOCTOR')">
     <script>
@@ -200,8 +217,7 @@
                 $("#addDiagnosis").show();
                 return false;
             });
+        setupDiagnosisSelector("${pageContext.response.locale}", "${selectDiagnosisMessage}");
         });
     </script>
 </sec:authorize>
-</body>
-</html>

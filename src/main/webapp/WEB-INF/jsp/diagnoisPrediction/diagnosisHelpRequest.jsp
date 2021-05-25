@@ -233,7 +233,7 @@
                             <div class="form-group">
                                 <label><spring:message code="doctor.showPatient.newDiagnosis.name"/></label>
                                 <springForm:errors path="name" cssClass="alert-danger error-message" />
-                                <div id="symptomSelector" class="select-diagnosis-box">
+                                <div class="select-diagnosis-box">
                                 <springForm:select path="name" id="diagnosisSelector" data-live-search="true" class="form-control symptom-select" required="required">
                                 </springForm:select>
                                 </div>
