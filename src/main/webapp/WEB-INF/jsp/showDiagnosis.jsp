@@ -109,6 +109,14 @@
             width: max-content;
             max-width: 600px;
         }
+
+        .helpRequestLink{
+            text-align: center;
+            color: #555555;
+            font-size: 2em;
+            margin-top: 0.5em;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -486,7 +494,12 @@
                             <spring:message code="doctor.showSurgery.addSurgery.button"/></button>
                     </sec:authorize>
                 </div>
+                <c:if test="${!empty diagnosis.causingHelpRequest}">
+                    <a class="helpRequestLink" href="/diagnosis-prediction/help${diagnosis.causingHelpRequest.idPrediction}">
+                        <spring:message code="doctor.showDiagnosis.helpRequestLink"/></a>
+                </c:if>
             </div>
+
             <div><h1 id="ankor">.</h1></div>
         </div>
         <div class="col-sm-2 sidenav">

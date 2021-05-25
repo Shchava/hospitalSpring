@@ -141,6 +141,11 @@
             margin-bottom: 0;
             display: block;
         }
+
+        .closed-label {
+            text-align: center;
+            color: #9ba5a8;
+        }
     </style>
 </head>
 <body>
@@ -152,11 +157,13 @@
             <div class="table-wrapper clearfix">
                 <div class="table-title">
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-9">
                             <h2><spring:message code="diagnosisPrediction.predictHelpPage.name"/></h2>
                         </div>
                     </div>
                 </div>
+                <c:if test="${helpRequest.closed}"><h2 class="closed-label"><spring:message code="diagnosisPrediction.predictHelpPage.requestClosed"/></h2></c:if>
+
                 <h2 class=""><spring:message code="diagnosisPrediction.predictResultPage.explanation"/> <b><span class="display-diagnosis"><c:out
                         value="${helpRequest.predictedName}"/></span></b>
                 </h2>
