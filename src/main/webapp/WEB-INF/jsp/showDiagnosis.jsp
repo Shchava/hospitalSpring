@@ -511,10 +511,12 @@
 
 
 <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
-        integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
-<script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 <script src="/js/updateDiagnosisLabels.js"></script>
 <script>
     $(document).ready(function () {
@@ -993,11 +995,11 @@
         var token = $("meta[name='_csrf']").attr("content");
         var header = $("meta[name='_csrf_header']").attr("content");
 
-        $.ajaxSetup({
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader(header, token);
-            }
-        });
+        // $.ajaxSetup({ //todo: tirn on csrf
+        //     beforeSend: function (xhr) {
+        //         xhr.setRequestHeader(header, token);
+        //     }
+        // });
 
         $.ajax({
             type: 'POST',
@@ -1054,11 +1056,11 @@
         var token = $("meta[name='_csrf']").attr("content");
         var header = $("meta[name='_csrf_header']").attr("content");
 
-        $.ajaxSetup({
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader(header, token);
-            }
-        });
+        // $.ajaxSetup({ //todo: tirn on csrf
+        //     beforeSend: function (xhr) {
+        //         xhr.setRequestHeader(header, token);
+        //     }
+        // });
 
         $.ajax({
             type: 'POST',
@@ -1122,11 +1124,11 @@
         var token = $("meta[name='_csrf']").attr("content");
         var header = $("meta[name='_csrf_header']").attr("content");
 
-        $.ajaxSetup({
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader(header, token);
-            }
-        });
+        // $.ajaxSetup({ //todo: tirn on csrf
+        //     beforeSend: function (xhr) {
+        //         xhr.setRequestHeader(header, token);
+        //     }
+        // });
 
         $.ajax({
             type: 'POST',
@@ -1205,11 +1207,11 @@
         var token = $("meta[name='_csrf']").attr("content");
         var header = $("meta[name='_csrf_header']").attr("content");
 
-        $.ajaxSetup({
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader(header, token);
-            }
-        });
+        // $.ajaxSetup({ //todo: tirn on csrf
+        //     beforeSend: function (xhr) {
+        //         xhr.setRequestHeader(header, token);
+        //     }
+        // });
 
         $.ajax({
             type: 'PATCH',

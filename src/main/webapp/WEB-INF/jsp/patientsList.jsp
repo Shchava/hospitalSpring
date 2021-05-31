@@ -58,7 +58,7 @@
                             <th><c:out value="${patient.name}"/> <c:out value="${patient.patronymic}"/> <c:out
                                     value="${patient.surname}"/></th>
                             <th><c:out value="${patient.email}"/></th>
-                            <th><c:out value="${patient.lastDiagnosisName}"/></th>
+                            <th><span class="display-diagnosis"><c:out value="${patient.lastDiagnosisName}"/></span></th>
                             <th><a class="btn btn-primary" href="/patient${patient.id}/0?recordsPerPage=${page.size}" role="button"><spring:message
                                     code="doctor.page.patientsList.open"/></a>
                             </th>
@@ -80,9 +80,7 @@
 <footer class="container-fluid text-center">
 </footer>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
+<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
@@ -91,3 +89,7 @@
         crossorigin="anonymous"></script>
 </body>
 </html>
+<script src="/js/updateDiagnosisLabels.js"></script>
+<script>
+    updateDiagnosisLabels("${pageContext.response.locale}");
+</script>

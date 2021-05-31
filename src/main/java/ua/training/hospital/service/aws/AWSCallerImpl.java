@@ -194,6 +194,7 @@ public class AWSCallerImpl implements AWSCaller {
 
     @Override
     public Optional<String> getDiagnosisName(String diagnosisIdentifier, String lang) {
+        diagnosisIdentifier = diagnosisIdentifier.replace(" ", "_");
         try {
             String requestUrl = GET_DIAGNOSIS_NAME_API_URL +
                     "?" + DIAGNOSIS_IDENTIFIER_PARAM + "=" + diagnosisIdentifier +

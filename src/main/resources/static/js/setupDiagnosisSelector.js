@@ -1,6 +1,6 @@
 function setupDiagnosisSelector(lang, selectDiagnosisMessage) {
 
-
+    let selectDiagnosisBox = $('#diagnosisSelector');
 
     $.ajax({
         type: 'GET',
