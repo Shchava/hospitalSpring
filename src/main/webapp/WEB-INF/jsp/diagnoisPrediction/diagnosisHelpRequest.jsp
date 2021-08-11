@@ -168,7 +168,7 @@
                         value="${helpRequest.predictedName}"/></span></b>
                 </h2>
                 <h3><spring:message code="diagnosisPrediction.predictResultPage.accuracy"/> <c:out
-                        value="${helpRequest.predictedAccuracy*100}"/>%</h3>
+                        value="${helpRequest.predictedAccuracy*10}"/>%</h3>
 
                 <h3 style="display: inline"><spring:message code="diagnosisPrediction.predictResultPage.description"/></h3> <h4 style="display: inline"><c:out value="${helpRequest.comments}"/></h4>
 

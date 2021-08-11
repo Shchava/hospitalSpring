@@ -25,12 +25,12 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class AWSCallerImpl implements AWSCaller {
-    private static final String SYMPTOMS_LIST_API_URL = "https://3ncxlmxrbd.execute-api.us-east-1.amazonaws.com/prod2/get-symptoms-list";
-    private static final String DIAGNOSES_LIST_API_URL = "https://3ncxlmxrbd.execute-api.us-east-1.amazonaws.com/prod2/get-diagnoses-list";
-    private static final String GET_SYMPTOM_NAME_API_URL = "https://3ncxlmxrbd.execute-api.us-east-1.amazonaws.com/prod2/get-symptom-name";
-    private static final String GET_DIAGNOSIS_NAME_API_URL = "https://3ncxlmxrbd.execute-api.us-east-1.amazonaws.com/prod2/get-diagnosis-name";
-    private static final String DIAGNOSIS_PREDICT_API_URL = "https://3ncxlmxrbd.execute-api.us-east-1.amazonaws.com/prod2/perdict-diagnosis";
-    private static final String SAVE_PREDICTION_API_URL = "https://3ncxlmxrbd.execute-api.us-east-1.amazonaws.com/prod2/save-human-prediction";
+    private static final String SYMPTOMS_LIST_API_URL = "https://kmvx1r5jfk.execute-api.us-east-1.amazonaws.com/prod/get-symptoms-list";
+    private static final String DIAGNOSES_LIST_API_URL = "https://kmvx1r5jfk.execute-api.us-east-1.amazonaws.com/prod/get-diagnoses-list";
+    private static final String GET_SYMPTOM_NAME_API_URL = "https://kmvx1r5jfk.execute-api.us-east-1.amazonaws.com/prod/get-symptom-name";
+    private static final String GET_DIAGNOSIS_NAME_API_URL = "https://kmvx1r5jfk.execute-api.us-east-1.amazonaws.com/prod/get-diagnosis-name";
+    private static final String DIAGNOSIS_PREDICT_API_URL = "https://kmvx1r5jfk.execute-api.us-east-1.amazonaws.com/prod/predict-diagnosis";
+    private static final String SAVE_PREDICTION_API_URL = "https://kmvx1r5jfk.execute-api.us-east-1.amazonaws.com/prod/save-human-prediction";
     private static final int AWS_REQUEST_TIMEOUT = 3000;
     private static final String langRequestPattern = "{\n\"lang\": \"%s\"\n}";
     public static final String SYMPTOM_IDENTIFIER_PARAM = "symptomIdentifier";

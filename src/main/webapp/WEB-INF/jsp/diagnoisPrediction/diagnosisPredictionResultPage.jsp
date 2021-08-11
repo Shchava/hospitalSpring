@@ -100,7 +100,7 @@
                     </div>
                 </div>
                 <h2><spring:message code="diagnosisPrediction.predictResultPage.explanation"/> <b><span class="display-diagnosis"><c:out value="${prediction.name}"/></span></b></h2>
-                <h3><spring:message code="diagnosisPrediction.predictResultPage.accuracy"/> <c:out value="${prediction.accuracy}"/>%</h3>
+                <h3><spring:message code="diagnosisPrediction.predictResultPage.accuracy"/> <c:out value="${prediction.accuracy*10}"/>%</h3>
 
                 <div id="selectedSymptoms" class="symptom-list">
                     <h3 class="symptom-list-label"><spring:message
