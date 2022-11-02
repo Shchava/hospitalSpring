@@ -94,6 +94,7 @@
                     <option value="PATIENT"><spring:message code="registration.patient"/></option>
                     <option value="NURSE"><spring:message code="registration.nurse"/></option>
                     <option value="DOCTOR"><spring:message code="registration.doctor"/></option>
+                    <option value="SHOP_WORKER"><spring:message code="registration.shopWorker"/></option>
                 </springForm:select>
             </div>
 

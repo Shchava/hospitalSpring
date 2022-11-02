@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 import ua.training.hospital.controller.dto.MedicineDTO;
 import ua.training.hospital.entity.Diagnosis;
 import ua.training.hospital.entity.Medicine;
+import ua.training.hospital.entity.Prescription;
 import ua.training.hospital.repository.DiagnosisRepository;
 import ua.training.hospital.repository.MedicineRepository;
 import ua.training.hospital.repository.UserRepository;
@@ -20,6 +23,8 @@ import java.util.Optional;
 @Service
 public class MedicineServiceImpl implements MedicineService{
     private static final Logger logger = LogManager.getLogger(MedicineServiceImpl.class);
+
+    WebClient client = WebClient.create("http://localhost:8081/createPrescription");
 
     @Autowired
     MedicineRepository repository;
@@ -41,16 +46,37 @@ public class MedicineServiceImpl implements MedicineService{
     @Transactional
     public Optional<Medicine> createMedicine(MedicineDTO dto, long diagnosisId, String doctorEmail) {
         logger.info("trying to create medicine with name" + dto.getName() + "for diagnosis with id " + diagnosisId);
+        Diagnosis diagnosis = diagnosisRepository.getOne(diagnosisId);
+
         Medicine toCreate = new Medicine();
         toCreate.setName(dto.getName());
         toCreate.setDescription(dto.getDescription());
         toCreate.setCount(dto.getCount());
         toCreate.setRefill(dto.getRefill());
         toCreate.setAssigned(getAssignedTime());
-        toCreate.setDiagnosis(diagnosisRepository.getOne(diagnosisId));
+        toCreate.setDiagnosis(diagnosis);
         toCreate.setAssignedBy(userRepository.findByEmail(doctorEmail));
 
-        return Optional.ofNullable(repository.save(toCreate));
+        Optional<Medicine> created = Optional.ofNullable(repository.save(toCreate));
+
+        if(!created.isPresent()) {
+            return created;
+        }
+
+        Prescription prescription = Prescription
+                .builder()
+                .name(dto.getName())
+                .diagnosisName(diagnosis.getName())
+                .prescriptionDate(getAssignedTime())
+                .idUser(diagnosis.getPatient().getIdUser())
+                .build();
+
+        client.post()
+                .body(BodyInserters.fromObject(prescription))
+                .retrieve();
+
+
+        return created;
     }
 
     private LocalDateTime getAssignedTime() {

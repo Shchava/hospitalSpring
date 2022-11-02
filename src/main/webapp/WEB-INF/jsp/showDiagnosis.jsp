@@ -117,6 +117,54 @@
             margin-top: 0.5em;
             display: block;
         }
+
+        .autocomplete {
+            position: relative;
+            display: inline-block;
+        }
+
+        input {
+            border: 1px solid transparent;
+            background-color: #f1f1f1;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        input[type=submit] {
+            background-color: DodgerBlue;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            /*position the autocomplete items to be the same width as the container:*/
+            left: 0;
+            right: 0;
+        }
+
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border-bottom: 1px solid #d4d4d4;
+        }
+
+        /*when hovering an item:*/
+        .autocomplete-items div:hover {
+            background-color: #e9e9e9;
+        }
+
+        /*when navigating through the items using the arrow keys:*/
+        .autocomplete-active {
+            background-color: DodgerBlue !important;
+            color: #ffffff;
+        }
+
     </style>
 </head>
 <body>
@@ -240,14 +288,16 @@
                         </div>
                     </div>
                     <sec:authorize access="hasAnyRole('DOCTOR','NURSE')">
-                        <div id="addMedicine" class="addNewMedicine">
+                        <div id="addMedicine" class="addNewMedicine" >
                             <form id="addMedicineForm" action="/doctor/diagnosis${diagnosis.idDiagnosis}/addMedicine"
-                                  method="POST" enctype="utf8">
+                                  method="POST" enctype="utf8" autocomplete="off">
                                 <div class="form-group">
                                     <label><spring:message code="doctor.showDiagnosis.addTherapy.name"/></label>
                                     <div id="medicineNameFieldError" class="alert alert-danger fieldError" role="alert"
                                          required="required"></div>
-                                    <input type="text" name="name" class="form-control" value=""/>
+                                    <div id="medicineNameFieldContainer">
+                                        <input id="medicineNameField" type="text" name="name" class="form-control" value=""/>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label><spring:message code="doctor.showDiagnosis.addTherapy.description"/></label>
@@ -608,6 +658,8 @@
         });
 
         $("#ankor").hide();
+
+        autocomplete($("#medicineNameField"));
     });
 
     //Loading medicine
@@ -1236,6 +1288,119 @@
             }
         });
     }
+
+    function autocomplete(inp) {
+
+
+        var currentFocus;
+        inp.on("input", function(e) {
+            var a, b, i, val = this.value;
+            closeAllLists();
+            if (!val) { return false;}
+            currentFocus = -1;
+            a = document.createElement("DIV");
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+            const medicineNameContainer = $("#medicineNameFieldContainer")
+            medicineNameContainer.append(a);
+            a.setAttribute("style",
+                "top:" + (medicineNameContainer.position().top + medicineNameContainer.height() + ";" +
+                "left:" + medicineNameContainer.position().left + ";" +
+                "width:" + medicineNameContainer.width())
+            );
+
+            $.ajax({
+                type: 'GET',
+                url: "http://localhost:8081/shop/medicinefillhelper?query=" + inp.val(),
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (data) {
+                    let value = inp.val();
+                    let arr = data;
+                    for (i = 0; i < arr.length; i++) {
+                            b = document.createElement("DIV");
+                            let indexOfFound = arr[i].toUpperCase().indexOf(value.toUpperCase());
+                            if(indexOfFound !== -1) {
+                                b.innerHTML = arr[i].substring(0, indexOfFound);
+                                console.log(arr[i].substring(0, indexOfFound))
+                                console.log(arr[i].substring(indexOfFound, val.length))
+                                console.log(arr[i].substring(indexOfFound))
+                                b.innerHTML += "<strong style='color: black'>" + arr[i].substring(indexOfFound,indexOfFound + val.length) + "</strong>";
+                                b.innerHTML += arr[i].substring(indexOfFound + val.length);
+                            } else {
+                                b.innerHTML += arr[i];
+                            }
+                            b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                            b.addEventListener("click", function(e) {
+                                inp.val(this.getElementsByTagName("input")[0].value);
+                                closeAllLists();
+                            });
+                            a.appendChild(b);
+
+                    }
+                }
+            });
+
+
+
+
+        });
+        inp.on("keydown", function(e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
+            if (e.keyCode == 40) {
+                /*If the arrow DOWN key is pressed,
+                increase the currentFocus variable:*/
+                currentFocus++;
+                addActive(x);
+            } else if (e.keyCode == 38) { //up
+                /*If the arrow UP key is pressed,
+                decrease the currentFocus variable:*/
+                currentFocus--;
+                /*and and make the current item more visible:*/
+                addActive(x);
+            } else if (e.keyCode == 13) {
+                /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    /*and simulate a click on the "active" item:*/
+                    if (x) x[currentFocus].click();
+                }
+            }
+        });
+        function addActive(x) {
+            /*a function to classify an item as "active":*/
+            if (!x) return false;
+            /*start by removing the "active" class on all items:*/
+            removeActive(x);
+            if (currentFocus >= x.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = (x.length - 1);
+            /*add class "autocomplete-active":*/
+            x[currentFocus].classList.add("autocomplete-active");
+        }
+        function removeActive(x) {
+            /*a function to remove the "active" class from all autocomplete items:*/
+            for (var i = 0; i < x.length; i++) {
+                x[i].classList.remove("autocomplete-active");
+            }
+        }
+        function closeAllLists(elmnt) {
+            /*close all autocomplete lists in the document,
+            except the one passed as an argument:*/
+            var x = document.getElementsByClassName("autocomplete-items");
+            for (var i = 0; i < x.length; i++) {
+                if (elmnt != x[i] && elmnt != inp) {
+                    x[i].parentNode.removeChild(x[i]);
+                }
+            }
+        }
+        /*execute a function when someone clicks in the document:*/
+        document.addEventListener("click", function (e) {
+            closeAllLists(e.target);
+        });
+    }
+
+
 </script>
 </body>
 </html>

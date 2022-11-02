@@ -61,7 +61,7 @@ public class HospitalAuthenticationSuccessHandler implements AuthenticationSucce
             if (grantedAuthority.getAuthority().equals("ROLE_DOCTOR") || grantedAuthority.getAuthority().equals("ROLE_NURSE")) {
                 isPersonal = true;
                 break;
-            } else if (grantedAuthority.getAuthority().equals("ROLE_PATIENT")) {
+            } else if (grantedAuthority.getAuthority().equals("ROLE_PATIENT") || grantedAuthority.getAuthority().equals("ROLE_SHOP_WORKER")) {
                 isPatient = true;
                 break;
             }

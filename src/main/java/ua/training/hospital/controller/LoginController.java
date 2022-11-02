@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 @RequestMapping("/login")
 public class LoginController {
@@ -16,6 +18,7 @@ public class LoginController {
     @RequestMapping(method = RequestMethod.GET)
     public String loginPage(@RequestParam(value = "error", required = false)String error,
                             @RequestParam(value = "logout", required = false)String logout,
+                            HttpServletRequest request,
                             Model model){
         model.addAttribute("error",error != null);
         model.addAttribute("logout",logout != null);
